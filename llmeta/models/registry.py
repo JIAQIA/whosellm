@@ -11,6 +11,7 @@
 Provides registration and query interfaces for model family configurations
 """
 
+import copy
 from typing import TYPE_CHECKING, Any
 
 from llmeta.capabilities import ModelCapabilities
@@ -117,10 +118,11 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
     # [Highest Priority] Iterate all specific_models sub-patterns in family configs
     for config in _FAMILY_CONFIGS.values():
         for _spec_model_name, spec_config in config.specific_models.items():
-            if not spec_config.patterns:
-                continue
+            patterns = copy.copy(spec_config.patterns)
+            if _spec_model_name not in patterns:
+                patterns.append(_spec_model_name)
 
-            for pattern in spec_config.patterns:
+            for pattern in patterns:
                 result = parse.parse(pattern, model_lower)
                 if result:
                     # 转换为字典并添加默认值 / Convert to dict and add defaults

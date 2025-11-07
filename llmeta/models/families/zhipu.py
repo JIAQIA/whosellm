@@ -36,6 +36,25 @@ GLM_4V = ModelFamilyConfig(
     ),
     # 特定模型的精确配置 / Precise configuration for specific models
     specific_models={
+        "glm-4v-plus-0111": SpecificModelConfig(
+            version="4.0",
+            variant="vision-plus",
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_video=True,
+                supports_streaming=True,
+                max_tokens=8192,
+                context_window=8192,
+                max_image_size_mb=5.0,
+                max_image_pixels=(6000, 6000),
+                supports_image_base64=True,
+                max_video_size_mb=200.0,  # 更大的视频限制
+                max_video_duration_seconds=None,  # 无时长限制
+            ),
+            patterns=[
+                "glm-4v-plus-0111",
+            ],
+        ),
         "glm-4v-plus": SpecificModelConfig(
             version="4.0",
             variant="vision-plus",
@@ -55,22 +74,6 @@ GLM_4V = ModelFamilyConfig(
                 "glm-4v-plus-{mmdd:4d}",
                 "glm-4v-plus",
             ],
-        ),
-        "glm-4v-plus-0111": SpecificModelConfig(
-            version="4.0",
-            variant="vision-plus",
-            capabilities=ModelCapabilities(
-                supports_vision=True,
-                supports_video=True,
-                supports_streaming=True,
-                max_tokens=8192,
-                context_window=8192,
-                max_image_size_mb=5.0,
-                max_image_pixels=(6000, 6000),
-                supports_image_base64=True,
-                max_video_size_mb=200.0,  # 更大的视频限制
-                max_video_duration_seconds=None,  # 无时长限制
-            ),
         ),
         "glm-4v-flash": SpecificModelConfig(
             version="4.0",
