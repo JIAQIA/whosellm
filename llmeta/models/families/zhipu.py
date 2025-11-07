@@ -58,7 +58,7 @@ GLM_4V = ModelFamilyConfig(
         ),
         "glm-4v-plus-0111": SpecificModelConfig(
             version="4.0",
-            variant="vision-plus-0111",
+            variant="vision-plus",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,

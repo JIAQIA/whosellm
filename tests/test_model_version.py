@@ -239,3 +239,84 @@ class TestModelVersion(unittest.TestCase):
         # 测试完整的比较链
         # base(有日期) < base(无日期/最新) < turbo(有日期) < turbo(无日期/最新)
         assert gpt4_base_with_date < gpt4_base_no_date < gpt4_turbo_with_date < gpt4_turbo_no_date
+
+    def test_specific_model_capabilities(self) -> None:
+        """测试子 SpecificModel 的 capabilities 覆盖 / Test specific model capabilities override"""
+        # 测试 GPT-4 Turbo 的特殊 capabilities
+        gpt4_turbo = LLMeta("gpt-4-turbo")
+        assert gpt4_turbo.capabilities.supports_vision is True
+        assert gpt4_turbo.capabilities.context_window == 128000  # 上下文窗口
+        assert gpt4_turbo.capabilities.max_tokens == 4096  # 最大输出token
+        assert gpt4_turbo.variant == "turbo"
+
+        # 测试 GPT-4o 的特殊 capabilities
+        gpt4o = LLMeta("gpt-4o")
+        assert gpt4o.capabilities.supports_vision is True
+        assert gpt4o.capabilities.supports_audio is True
+        assert gpt4o.variant == "omni"
+
+        # 测试 GLM-4V-Plus 的特殊 capabilities
+        glm4v_plus = LLMeta("glm-4v-plus")
+        assert glm4v_plus.capabilities.supports_vision is True
+        assert glm4v_plus.capabilities.supports_video is True
+        assert glm4v_plus.capabilities.max_video_size_mb == 20.0
+        assert glm4v_plus.variant == "vision-plus"
+
+        # 测试 GLM-4V-Plus-0111 的特殊 capabilities（不同的视频限制）
+        glm4v_plus_0111 = LLMeta("glm-4v-plus-0111")
+        assert glm4v_plus_0111.capabilities.supports_vision is True
+        assert glm4v_plus_0111.capabilities.supports_video is True
+        assert glm4v_plus_0111.capabilities.max_video_size_mb == 200.0
+        assert glm4v_plus_0111.capabilities.max_video_duration_seconds is None
+        assert glm4v_plus_0111.variant == "vision-plus"
+
+        # 测试 GLM-4V-Flash 的特殊 capabilities（不支持 base64）
+        glm4v_flash = LLMeta("glm-4v-flash")
+        assert glm4v_flash.capabilities.supports_vision is True
+        assert glm4v_flash.capabilities.supports_image_base64 is False
+        assert glm4v_flash.variant == "vision-flash"
+
+    def test_specific_model_pattern_matching(self) -> None:
+        """测试子 SpecificModel 的 pattern 匹配优先级 / Test specific model pattern matching priority"""
+        # 测试子 pattern 优先于父 pattern
+        # GPT-4 Turbo 应该匹配子 pattern，而不是父 pattern
+        gpt4_turbo = LLMeta("gpt-4-turbo")
+        assert gpt4_turbo.variant == "turbo"
+        assert gpt4_turbo.capabilities.supports_vision is True
+
+        # 测试带版本号的子 pattern 匹配
+        gpt4_turbo_with_date = LLMeta("gpt-4-turbo-2024-04-09")
+        assert gpt4_turbo_with_date.variant == "turbo"
+        assert gpt4_turbo_with_date.capabilities.supports_vision is True
+
+        # 测试普通的父 pattern 匹配
+        gpt4_base = LLMeta("gpt-4")
+        assert gpt4_base.variant == "base"
+        # base 版本不应该有 vision 能力（除非在配置中明确指定）
+        # 这里需要根据实际配置来验证
+
+    def test_specific_model_capabilities_inheritance(self) -> None:
+        """测试子 SpecificModel 的 capabilities 继承和覆盖 / Test specific model capabilities inheritance and override"""
+        # 测试子 model 继承父 family 的基础 capabilities，并覆盖特定字段
+
+        # GPT-4 家族的基础 capabilities
+        gpt4_base = LLMeta("gpt-4")
+        base_supports_function_calling = gpt4_base.capabilities.supports_function_calling
+
+        # GPT-4 Turbo 应该继承 function_calling，但有自己的 vision 和 context_window
+        gpt4_turbo = LLMeta("gpt-4-turbo")
+        assert gpt4_turbo.capabilities.supports_function_calling == base_supports_function_calling
+        assert gpt4_turbo.capabilities.supports_vision is True
+        assert gpt4_turbo.capabilities.context_window == 128000  # 上下文窗口
+
+        # GLM-4V 系列测试
+        glm4v_base = LLMeta("glm-4v")
+        glm4v_plus = LLMeta("glm-4v-plus")
+
+        # 两者都支持 vision，但 plus 有额外的 video 支持
+        assert glm4v_base.capabilities.supports_vision is True
+        assert glm4v_plus.capabilities.supports_vision is True
+        assert glm4v_plus.capabilities.supports_video is True
+
+        # plus 的 max_tokens 应该更大或相同
+        assert glm4v_plus.capabilities.max_tokens >= glm4v_base.capabilities.max_tokens

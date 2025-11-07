@@ -123,7 +123,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                 result = parse.parse(pattern, model_lower)
                 if result:
                     # 转换为字典并添加默认值 / Convert to dict and add defaults
-                    matched: dict[str, Any] = dict(result.named)
+                    matched = dict(result.named)
                     if not matched.get("version"):
                         matched["version"] = spec_config.version
                     matched["family"] = config.family
@@ -140,7 +140,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
             result = parse.parse(pattern, model_lower)
             if result:
                 # 转换为字典并添加默认值 / Convert to dict and add defaults
-                matched: dict[str, Any] = dict(result.named)
+                matched = dict(result.named)
                 if not matched.get("version"):
                     matched["version"] = config.version_default
                 matched["family"] = config.family
@@ -204,7 +204,7 @@ def get_specific_model_config(
     Returns:
         tuple | None: (version, variant, capabilities) 或 None
     """
-    import parse  # type: ignore[import-untyped]
+    import parse
 
     model_lower = model_name.lower()
 
@@ -212,7 +212,7 @@ def get_specific_model_config(
     for config in _FAMILY_CONFIGS.values():
         if model_lower in config.specific_models:
             spec_config = config.specific_models[model_lower]
-            return (spec_config.version, spec_config.variant, spec_config.capabilities)
+            return spec_config.version, spec_config.variant, spec_config.capabilities
 
     # 方式2：通过子 patterns 匹配 / Method 2: Match by sub-patterns
     for config in _FAMILY_CONFIGS.values():
@@ -223,7 +223,7 @@ def get_specific_model_config(
             for pattern in spec_config.patterns:
                 result = parse.parse(pattern, model_lower)
                 if result:
-                    return (spec_config.version, spec_config.variant, spec_config.capabilities)
+                    return spec_config.version, spec_config.variant, spec_config.capabilities
 
     return None
 

@@ -22,8 +22,8 @@ def test_basic_functionality():
     print("=" * 80)
 
     # 动态添加 Mock Provider 和 ModelFamily 以避免冲突
-    Provider.add_member('MOCK_PROVIDER_1', 'mock-provider-1')
-    ModelFamily.add_member('MOCK_FAMILY_1', 'mock-family-1')
+    Provider.add_member("MOCK_PROVIDER_1", "mock-provider-1")
+    ModelFamily.add_member("MOCK_FAMILY_1", "mock-family-1")
 
     # 创建一个测试配置
     ModelFamilyConfig(
@@ -101,8 +101,8 @@ def test_validation():
     print("=" * 80)
 
     # 动态添加 Mock Provider 和 ModelFamily 以避免冲突
-    Provider.add_member('MOCK_PROVIDER_2', 'mock-provider-2')
-    ModelFamily.add_member('MOCK_FAMILY_2', 'mock-family-2')
+    Provider.add_member("MOCK_PROVIDER_2", "mock-provider-2")
+    ModelFamily.add_member("MOCK_FAMILY_2", "mock-family-2")
 
     # 测试无效的子 pattern（不匹配父 pattern）
     print("\n1. 测试无效的子 pattern（应该抛出异常）:")
@@ -139,8 +139,8 @@ def test_priority():
     print("=" * 80)
 
     # 动态添加 Mock Provider 和 ModelFamily 以避免冲突
-    Provider.add_member('MOCK_PROVIDER_3', 'mock-provider-3')
-    ModelFamily.add_member('MOCK_FAMILY_3', 'mock-family-3')
+    Provider.add_member("MOCK_PROVIDER_3", "mock-provider-3")
+    ModelFamily.add_member("MOCK_FAMILY_3", "mock-family-3")
 
     # 创建配置，子 pattern 和父 pattern 都能匹配同一个模型名
     ModelFamilyConfig(
@@ -211,6 +211,7 @@ def test_existing_models():
     print(f"   配置: {config}")
     assert config is not None, "应该找到配置"
     version, variant, capabilities = config
+    assert version == "4.0", "版本匹配为4.0"
     assert variant == "vision-plus", f"variant 应该是 'vision-plus'，实际是 {variant}"
     assert capabilities.supports_video is True, "应该支持 video"
     print("   ✓ 通过")
