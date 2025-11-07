@@ -8,8 +8,7 @@ OpenAI 模型定义 / OpenAI model definitions
 """
 
 from llmver.capabilities import ModelCapabilities
-from llmver.models.base import ModelInfo, parse_version
-from llmver.models.registry import register_model
+from llmver.models.base import ModelInfo, parse_version, register_model
 from llmver.provider import Provider
 
 # GPT-4 系列 / GPT-4 series

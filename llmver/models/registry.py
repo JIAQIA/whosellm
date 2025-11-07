@@ -5,20 +5,13 @@
 # @Software: PyCharm
 """
 模型注册表 / Model registry
+
+注意：此文件已废弃，注册表功能已移至 base.py
+Note: This file is deprecated, registry functionality has been moved to base.py
 """
 
-from llmver.models.base import ModelInfo
+# 为了向后兼容，从 base 导入
+# For backward compatibility, import from base
+from llmver.models.base import MODEL_REGISTRY, register_model
 
-# 全局模型注册表 / Global model registry
-MODEL_REGISTRY: dict[str, ModelInfo] = {}
-
-
-def register_model(model_name: str, info: ModelInfo) -> None:
-    """
-    注册模型信息 / Register model information
-
-    Args:
-        model_name: 模型名称（小写） / Model name (lowercase)
-        info: 模型信息 / Model information
-    """
-    MODEL_REGISTRY[model_name.lower()] = info
+__all__ = ["MODEL_REGISTRY", "register_model"]

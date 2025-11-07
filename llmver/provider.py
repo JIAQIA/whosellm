@@ -39,40 +39,23 @@ class Provider(str, Enum):
         """
         model_lower = model_name.lower()
 
-        # OpenAI 系列
-        if any(x in model_lower for x in ["gpt", "o1", "o3"]):
-            return cls.OPENAI
+        # 定义提供商关键词映射 / Define provider keyword mapping
+        provider_keywords = {
+            cls.OPENAI: ["gpt", "o1", "o3"],
+            cls.ANTHROPIC: ["claude"],
+            cls.ZHIPU: ["glm", "chatglm", "cogview", "cogvideo"],
+            cls.ALIBABA: ["qwen", "tongyi"],
+            cls.BAIDU: ["ernie", "wenxin"],
+            cls.TENCENT: ["hunyuan"],
+            cls.MOONSHOT: ["moonshot"],
+            cls.DEEPSEEK: ["deepseek"],
+            cls.MINIMAX: ["minimax", "abab"],
+        }
 
-        # Anthropic 系列
-        if "claude" in model_lower:
-            return cls.ANTHROPIC
-
-        # 智谱 AI
-        if any(x in model_lower for x in ["glm", "chatglm", "cogview", "cogvideo"]):
-            return cls.ZHIPU
-
-        # 阿里云
-        if any(x in model_lower for x in ["qwen", "tongyi"]):
-            return cls.ALIBABA
-
-        # 百度
-        if any(x in model_lower for x in ["ernie", "wenxin"]):
-            return cls.BAIDU
-
-        # 腾讯
-        if "hunyuan" in model_lower:
-            return cls.TENCENT
-
-        # 月之暗面
-        if "moonshot" in model_lower:
-            return cls.MOONSHOT
-
-        # DeepSeek
-        if "deepseek" in model_lower:
-            return cls.DEEPSEEK
-
-        # MiniMax
-        if "minimax" in model_lower or "abab" in model_lower:
-            return cls.MINIMAX
+        # 匹配提供商 / Match provider
+        for provider, keywords in provider_keywords.items():
+            match any(keyword in model_lower for keyword in keywords):
+                case True:
+                    return provider
 
         return cls.UNKNOWN

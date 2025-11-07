@@ -10,7 +10,6 @@
 from dataclasses import dataclass
 
 from llmver.capabilities import ModelCapabilities
-from llmver.models.registry import MODEL_REGISTRY
 from llmver.provider import Provider
 
 
@@ -25,6 +24,21 @@ class ModelInfo:
     variant: str
     capabilities: ModelCapabilities
     version_tuple: tuple[int, ...]
+
+
+# 全局模型注册表 / Global model registry
+MODEL_REGISTRY: dict[str, ModelInfo] = {}
+
+
+def register_model(model_name: str, info: ModelInfo) -> None:
+    """
+    注册模型信息 / Register model information
+
+    Args:
+        model_name: 模型名称（小写） / Model name (lowercase)
+        info: 模型信息 / Model information
+    """
+    MODEL_REGISTRY[model_name.lower()] = info
 
 
 def parse_version(version_str: str) -> tuple[int, ...]:

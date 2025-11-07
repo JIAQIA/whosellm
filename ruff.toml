@@ -29,6 +29,8 @@ ignore = [
     "B008",   # do not perform function calls in argument defaults
     "B904",   # raise-without-from-inside-except
     "RUF001", # ambiguous-unicode-character-string (允许中文标点 / Allow Chinese punctuation)
+    "RUF002", # ambiguous-unicode-character-docstring (允许文档字符串中的中文标点 / Allow Chinese punctuation in docstrings)
+    "RUF003", # ambiguous-unicode-character-comment (允许注释中的中文标点 / Allow Chinese punctuation in comments)
 ]
 
 # 每个文件允许的未使用导入 / Allow unused imports per file

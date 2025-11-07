@@ -8,8 +8,7 @@
 """
 
 from llmver.capabilities import ModelCapabilities
-from llmver.models.base import ModelInfo, parse_version
-from llmver.models.registry import register_model
+from llmver.models.base import ModelInfo, parse_version, register_model
 from llmver.provider import Provider
 
 # GLM-4 系列 / GLM-4 series
@@ -75,7 +74,6 @@ register_model(
             context_window=8192,
             max_image_size_mb=5.0,
             max_image_pixels=(6000, 6000),
-            supported_image_formats=["jpg", "jpeg", "png"],
             supports_image_base64=True,
         ),
         version_tuple=parse_version("4.0"),
@@ -96,7 +94,6 @@ register_model(
             context_window=8192,
             max_image_size_mb=5.0,
             max_image_pixels=(6000, 6000),
-            supported_image_formats=["jpg", "jpeg", "png"],
             supports_image_base64=True,
             max_video_size_mb=20.0,
             max_video_duration_seconds=30,
@@ -119,7 +116,6 @@ register_model(
             context_window=8192,
             max_image_size_mb=5.0,
             max_image_pixels=(6000, 6000),
-            supported_image_formats=["jpg", "jpeg", "png"],
             supports_image_base64=True,
             max_video_size_mb=200.0,  # 更大的视频限制 / Larger video limit
             max_video_duration_seconds=None,  # 无时长限制 / No duration limit
@@ -141,7 +137,6 @@ register_model(
             context_window=8192,
             max_image_size_mb=5.0,
             max_image_pixels=(6000, 6000),
-            supported_image_formats=["jpg", "jpeg", "png"],
             supports_image_base64=False,  # 不支持 base64 / Does not support base64
         ),
         version_tuple=parse_version("4.0.0"),
