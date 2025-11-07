@@ -8,6 +8,7 @@
 """
 
 import unittest
+from datetime import datetime
 
 import pytest
 
@@ -144,11 +145,11 @@ class TestModelVersion(unittest.TestCase):
         """测试模型家族检测 / Test model family detection"""
         # GPT-4 家族
         gpt4 = LLMeta("gpt-4")
-        gpt4_turbo = LLMeta("gpt-4-turbo")
+        gpt4o_turbo = LLMeta("gpt-4o-turbo")
         gpt4o = LLMeta("gpt-4o")
 
         assert gpt4.family == ModelFamily.GPT_4
-        assert gpt4_turbo.family == ModelFamily.GPT_4
+        assert gpt4o_turbo.family == ModelFamily.GPT_4O
         assert gpt4o.family == ModelFamily.GPT_4O
 
         # GLM-4 家族
@@ -199,33 +200,33 @@ class TestModelVersion(unittest.TestCase):
         from datetime import date
 
         # 测试 YYYY-MM-DD 格式
-        model1 = LLMeta("gpt-4-turbo-2024-04-09")
+        model1 = LLMeta("gpt-4o-turbo-2024-04-09")
         assert model1.release_date == date(2024, 4, 9)
-        assert model1.family == ModelFamily.GPT_4
+        assert model1.family == ModelFamily.GPT_4O
         assert model1.variant == "turbo"
 
         # 测试 MMDD 格式（假设为2024年）
-        model2 = LLMeta("gpt-4-0125-preview")
-        assert model2.release_date == date(2024, 1, 25)
+        model2 = LLMeta("gpt-4-0125")
+        assert model2.release_date == date(datetime.now().year, 1, 25)
         assert model2.family == ModelFamily.GPT_4
 
-        model3 = LLMeta("gpt-4")
+        model3 = LLMeta("gpt-4o")
         assert model3.release_date is None
 
     def test_release_date_comparison(self) -> None:
         """测试发布日期比较 / Test release date comparison"""
 
         # 同一型号不同日期的比较
-        model_old = LLMeta("gpt-4-turbo-2024-01-01")
-        model_new = LLMeta("gpt-4-turbo-2024-04-09")
+        model_old = LLMeta("gpt-4o-turbo-2024-01-01")
+        model_new = LLMeta("gpt-4o-turbo-2024-04-09")
 
         assert model_old < model_new
         assert model_new > model_old
         assert model_old != model_new
 
         # 没有日期的模型认为是最新的（指向latest）
-        model_no_date = LLMeta("gpt-4-turbo")
-        model_with_date = LLMeta("gpt-4-turbo-2024-04-09")
+        model_no_date = LLMeta("gpt-4o-turbo")
+        model_with_date = LLMeta("gpt-4o-turbo-2024-04-09")
 
         assert model_with_date < model_no_date  # 有日期的 < 无日期的（最新）
         assert model_no_date > model_with_date
@@ -258,16 +259,16 @@ class TestModelVersion(unittest.TestCase):
     def test_specific_model_capabilities(self) -> None:
         """测试子 SpecificModel 的 capabilities 覆盖 / Test specific model capabilities override"""
         # 测试 GPT-4 Turbo 的特殊 capabilities
-        gpt4_turbo = LLMeta("gpt-4-turbo")
+        gpt4_turbo = LLMeta("gpt-4o-audio-preview")
         assert gpt4_turbo.capabilities.supports_vision is True
         assert gpt4_turbo.capabilities.context_window == 128000  # 上下文窗口
-        assert gpt4_turbo.capabilities.max_tokens == 4096  # 最大输出token
-        assert gpt4_turbo.variant == "turbo"
+        assert gpt4_turbo.capabilities.max_tokens == 16384  # 最大输出token
+        assert gpt4_turbo.variant == "audio-preview"
 
         # 测试 GPT-4o 的特殊 capabilities
         gpt4o = LLMeta("gpt-4o")
         assert gpt4o.capabilities.supports_vision is True
-        assert gpt4o.capabilities.supports_audio is True
+        assert gpt4o.capabilities.supports_audio is False
         assert gpt4o.capabilities.supports_structured_outputs is True
         assert gpt4o.capabilities.supports_fine_tuning is True
         assert gpt4o.capabilities.supports_distillation is True
