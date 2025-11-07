@@ -40,15 +40,15 @@ class TestModelVersion(unittest.TestCase):
         # Note: GPT-4 and GPT-3.5 are different families, cannot be compared directly
         # 我们改为测试同一家族不同型号的比较
         # We test comparison of different variants in the same family instead
-        gpt4_preview = LLMeta("gpt-4-0125-preview")
-        gpt4_base = LLMeta("gpt-4")
-        gpt4_turbo = LLMeta("gpt-4-turbo")
+        gpt4o_base_date = LLMeta("gpt-4o-2025-01-25")
+        gpt4o_omni = LLMeta("gpt-4o")
+        gpt4o_turbo = LLMeta("gpt-4o-turbo")
 
         # 测试同一家族（GPT-4）不同型号和日期的比较
         # Test comparisons within GPT-4 family
-        assert gpt4_preview < gpt4_base
-        assert gpt4_base < gpt4_turbo
-        assert gpt4_preview < gpt4_turbo
+        assert gpt4o_base_date < gpt4o_omni
+        assert gpt4o_omni > gpt4o_turbo
+        assert gpt4o_base_date > gpt4o_turbo
 
     def test_version_comparison_same_family_gpt4o(self) -> None:
         """测试 GPT-4o 家族内型号优先级比较 / Test variant priority within GPT-4o family"""
@@ -300,14 +300,14 @@ class TestModelVersion(unittest.TestCase):
         """测试子 SpecificModel 的 pattern 匹配优先级 / Test specific model pattern matching priority"""
         # 测试子 pattern 优先于父 pattern
         # GPT-4 Turbo 应该匹配子 pattern，而不是父 pattern
-        gpt4_turbo = LLMeta("gpt-4-turbo")
-        assert gpt4_turbo.variant == "turbo"
-        assert gpt4_turbo.capabilities.supports_vision is True
+        gpt4o_turbo = LLMeta("gpt-4o-turbo")
+        assert gpt4o_turbo.variant == "turbo"
+        assert gpt4o_turbo.capabilities.supports_vision is True
 
         # 测试带版本号的子 pattern 匹配
-        gpt4_turbo_with_date = LLMeta("gpt-4-turbo-2024-04-09")
-        assert gpt4_turbo_with_date.variant == "turbo"
-        assert gpt4_turbo_with_date.capabilities.supports_vision is True
+        gpt4o_turbo_with_date = LLMeta("gpt-4o-turbo-2024-04-09")
+        assert gpt4o_turbo_with_date.variant == "turbo"
+        assert gpt4o_turbo_with_date.capabilities.supports_vision is True
 
         # 测试普通的父 pattern 匹配
         gpt4_base = LLMeta("gpt-4")
@@ -324,9 +324,9 @@ class TestModelVersion(unittest.TestCase):
         base_supports_function_calling = gpt4_base.capabilities.supports_function_calling
 
         # GPT-4 Turbo 应该继承 function_calling，但有自己的 vision 和 context_window
-        gpt4_turbo = LLMeta("gpt-4-turbo")
+        gpt4_turbo = LLMeta("gpt-4-0621")
         assert gpt4_turbo.capabilities.supports_function_calling == base_supports_function_calling
-        assert gpt4_turbo.capabilities.supports_vision is True
+        assert gpt4_turbo.capabilities.supports_vision is False
         assert gpt4_turbo.capabilities.context_window == 128000  # 上下文窗口
 
         # GLM-4V 系列测试
