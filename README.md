@@ -19,14 +19,17 @@
 ## 特性 / Features
 
 1. **简单初始化** - 仅需要一个字符串即可完成模型配置的初始化
-2. **版本比较** - 自动匹配到厂商/版本/型号，支持同一厂商下不同版本/型号的大小比较和运算符比较
-3. **能力范围说明** - 提供模型能力范围说明：
+2. **模型家族管理** - 区分模型家族（ModelFamily）和提供商（Provider），同一模型家族可能由多个Provider提供
+3. **型号优先级比较** - 支持同一家族下不同型号的智能比较（如 gpt-4o-mini < gpt-4 < gpt-4-turbo < gpt-4o）
+4. **Provider指定** - 支持 `{{Provider::ModelName}}` 语法来指定特定的Provider
+5. **能力范围说明** - 提供模型能力范围说明：
    - 是否支持 thinking（reasoning）模式
    - 是否支持图片
    - 是否支持音频
    - 是否支持视频
    - 是否支持 PDF
-4. **参数验证** - 针对具体模型，提供请求参数验证的可选实现，基于 VRL 脚本语言自动整改参数
+   - 各类资源的大小和格式限制
+6. **参数验证** - 针对具体模型，提供请求参数验证的可选实现，基于 VRL 脚本语言自动整改参数
 
 ## 安装 / Installation
 
@@ -40,6 +43,8 @@ pip install llmver
 
 ## 快速开始 / Quick Start
 
+### 基础用法 / Basic Usage
+
 ```python
 from llmver import ModelVersion
 
@@ -49,15 +54,85 @@ model = ModelVersion("glm-4v-plus")
 # 检查能力
 print(model.capabilities.supports_vision)  # True
 print(model.capabilities.supports_video)   # True
-
-# 版本比较
-model1 = ModelVersion("gpt-4")
-model2 = ModelVersion("gpt-3.5-turbo")
-print(model1 > model2)  # True
+print(model.capabilities.max_video_size_mb)  # 20.0
 
 # 参数验证（可选）
 validated_params = model.validate_params(your_params)
 ```
+
+### 型号优先级比较 / Variant Priority Comparison
+
+```python
+from llmver import ModelVersion
+
+# GPT-4 系列型号比较: mini < base < turbo < omni
+gpt4o_mini = ModelVersion("gpt-4o-mini")
+gpt4_base = ModelVersion("gpt-4")
+gpt4_turbo = ModelVersion("gpt-4-turbo")
+gpt4o = ModelVersion("gpt-4o")
+
+print(gpt4o_mini < gpt4_base)   # True
+print(gpt4_base < gpt4_turbo)   # True
+print(gpt4_turbo < gpt4o)       # True
+
+# GLM-4V 系列型号比较: flash < base < plus < plus-0111
+glm4v_flash = ModelVersion("glm-4v-flash")
+glm4v_plus = ModelVersion("glm-4v-plus")
+glm4v_plus_0111 = ModelVersion("glm-4v-plus-0111")
+
+print(glm4v_flash < glm4v_plus)        # True
+print(glm4v_plus < glm4v_plus_0111)    # True
+```
+
+### 模型家族与Provider / Model Family and Provider
+
+```python
+from llmver import ModelVersion, ModelFamily, Provider
+
+# 检查模型家族
+gpt4 = ModelVersion("gpt-4")
+gpt4_turbo = ModelVersion("gpt-4-turbo")
+
+print(gpt4.family == gpt4_turbo.family)  # True (都是 GPT_4 家族)
+print(gpt4.family)  # ModelFamily.GPT_4
+
+# 使用 {{Provider::ModelName}} 语法指定Provider
+model1 = ModelVersion("gpt-4")                    # 使用默认Provider
+model2 = ModelVersion("{{openai::gpt-4}}")        # 显式指定Provider（带大括号）
+model3 = ModelVersion("openai::gpt-4")            # 显式指定Provider（不带大括号）
+
+print(model1.provider)  # Provider.OPENAI
+print(model2.provider)  # Provider.OPENAI
+print(model3.provider)  # Provider.OPENAI
+```
+
+### 实际应用场景 / Practical Usage
+
+```python
+from llmver import ModelVersion
+
+# 场景1: 选择支持视觉的最便宜模型
+available_models = [
+    ModelVersion("gpt-4o-mini"),
+    ModelVersion("gpt-4"),
+    ModelVersion("gpt-4-turbo"),
+    ModelVersion("gpt-4o"),
+]
+
+vision_models = [m for m in available_models if m.capabilities.supports_vision]
+cheapest_vision = min(vision_models)  # 自动选择最便宜的（优先级最低的）
+print(f"推荐模型: {cheapest_vision.model_name}")  # gpt-4o-mini
+
+# 场景2: 检查模型升级
+current = ModelVersion("glm-4v-plus")
+new = ModelVersion("glm-4v-plus-0111")
+
+if new > current:
+    print("这是一个升级版本")
+    print(f"视频大小限制提升: {current.capabilities.max_video_size_mb}MB → {new.capabilities.max_video_size_mb}MB")
+```
+
+更多示例请参考 [examples/advanced_usage.py](examples/advanced_usage.py)
 
 ## 开发 / Development
 

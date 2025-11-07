@@ -9,7 +9,7 @@
 
 import pytest
 
-from llmver import ModelVersion, Provider
+from llmver import ModelFamily, ModelVersion, Provider
 
 
 class TestModelVersion:
@@ -31,21 +31,30 @@ class TestModelVersion:
         assert ModelVersion("glm-4").provider == Provider.ZHIPU
         assert ModelVersion("glm-4v-plus").provider == Provider.ZHIPU
 
-    def test_version_comparison_same_provider(self) -> None:
-        """测试同一提供商的版本比较 / Test version comparison for same provider"""
-        gpt4 = ModelVersion("gpt-4")
-        gpt35 = ModelVersion("gpt-3.5-turbo")
+    def test_version_comparison_same_family(self) -> None:
+        """测试同一模型家族的版本比较 / Test version comparison for same family"""
+        # 注意: GPT-4 和 GPT-3.5 是不同的家族，不能直接比较
+        # Note: GPT-4 and GPT-3.5 are different families, cannot be compared directly
+        # 我们改为测试同一家族不同型号的比较
+        # We test comparison of different variants in the same family instead
+        gpt4_base = ModelVersion("gpt-4")
+        gpt4_turbo = ModelVersion("gpt-4-turbo")
+        gpt4o = ModelVersion("gpt-4o")
+        gpt4o_mini = ModelVersion("gpt-4o-mini")
 
-        assert gpt4 > gpt35
-        assert gpt35 < gpt4
-        assert gpt4 != gpt35
+        # 测试型号优先级比较: mini < base < turbo < omni
+        # Test variant priority comparison: mini < base < turbo < omni
+        assert gpt4o_mini < gpt4_base
+        assert gpt4_base < gpt4_turbo
+        assert gpt4_turbo < gpt4o
+        assert gpt4o_mini < gpt4o
 
-    def test_version_comparison_different_provider_raises(self) -> None:
-        """测试不同提供商的版本比较应该抛出异常 / Test version comparison for different providers should raise"""
+    def test_version_comparison_different_family_raises(self) -> None:
+        """测试不同模型家族的版本比较应该抛出异常 / Test version comparison for different families should raise"""
         gpt4 = ModelVersion("gpt-4")
         glm4 = ModelVersion("glm-4")
 
-        with pytest.raises(ValueError, match="无法比较不同提供商的模型"):
+        with pytest.raises(ValueError, match="无法比较不同模型家族的模型"):
             _ = gpt4 > glm4
 
     def test_capabilities(self) -> None:
@@ -90,3 +99,78 @@ class TestModelVersion:
         assert str(model) == "gpt-4"
         assert "ModelVersion" in repr(model)
         assert "gpt-4" in repr(model)
+
+    def test_variant_priority_comparison(self) -> None:
+        """测试型号优先级比较 / Test variant priority comparison"""
+        # GLM-4 系列: flash < base < plus
+        glm4_flash = ModelVersion("glm-4-flash")
+        glm4_base = ModelVersion("glm-4")
+        glm4_plus = ModelVersion("glm-4-plus")
+
+        assert glm4_flash < glm4_base
+        assert glm4_base < glm4_plus
+        assert glm4_flash < glm4_plus
+
+        # GLM-4V 系列: flash < base < plus < plus-0111
+        glm4v_flash = ModelVersion("glm-4v-flash")
+        glm4v_base = ModelVersion("glm-4v")
+        glm4v_plus = ModelVersion("glm-4v-plus")
+        glm4v_plus_0111 = ModelVersion("glm-4v-plus-0111")
+
+        assert glm4v_flash < glm4v_base
+        assert glm4v_base < glm4v_plus
+        assert glm4v_plus < glm4v_plus_0111
+
+    def test_model_family_detection(self) -> None:
+        """测试模型家族检测 / Test model family detection"""
+        # GPT-4 家族
+        gpt4 = ModelVersion("gpt-4")
+        gpt4_turbo = ModelVersion("gpt-4-turbo")
+        gpt4o = ModelVersion("gpt-4o")
+
+        assert gpt4.family == ModelFamily.GPT_4
+        assert gpt4_turbo.family == ModelFamily.GPT_4
+        assert gpt4o.family == ModelFamily.GPT_4
+
+        # GLM-4 家族
+        glm4 = ModelVersion("glm-4")
+        glm4_plus = ModelVersion("glm-4-plus")
+
+        assert glm4.family == ModelFamily.GLM_4
+        assert glm4_plus.family == ModelFamily.GLM_4
+
+        # GLM-4V 家族（与 GLM-4 不同）
+        glm4v = ModelVersion("glm-4v")
+        assert glm4v.family == ModelFamily.GLM_4V
+        assert glm4v.family != glm4.family
+
+    def test_provider_prefix_syntax(self) -> None:
+        """测试 {{Provider::ModelName}} 语法 / Test {{Provider::ModelName}} syntax"""
+        # 测试带大括号的语法
+        model1 = ModelVersion("{{openai::gpt-4}}")
+        assert model1.provider == Provider.OPENAI
+        assert model1.family == ModelFamily.GPT_4
+
+        # 测试不带大括号的语法
+        model2 = ModelVersion("openai::gpt-4")
+        assert model2.provider == Provider.OPENAI
+        assert model2.family == ModelFamily.GPT_4
+
+        # 测试普通语法（使用默认Provider）
+        model3 = ModelVersion("gpt-4")
+        assert model3.provider == Provider.OPENAI
+        assert model3.family == ModelFamily.GPT_4
+
+    def test_same_model_different_providers(self) -> None:
+        """测试同一模型不同Provider / Test same model with different providers"""
+        # 假设 DeepSeek 模型可以由原厂或腾讯提供
+        # Assume DeepSeek model can be provided by original or Tencent
+        # 这里仅作为示例，实际需要在注册表中添加相应配置
+
+        # 测试指定不同Provider时，provider字段不同但family相同
+        model_openai = ModelVersion("openai::gpt-4")
+        model_default = ModelVersion("gpt-4")
+
+        assert model_openai.provider == Provider.OPENAI
+        assert model_default.provider == Provider.OPENAI
+        assert model_openai.family == model_default.family

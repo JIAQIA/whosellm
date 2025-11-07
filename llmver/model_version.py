@@ -13,6 +13,7 @@ from typing import Any
 
 from llmver.capabilities import ModelCapabilities
 from llmver.models import get_model_info
+from llmver.models.base import ModelFamily
 from llmver.provider import Provider
 
 
@@ -28,10 +29,12 @@ class ModelVersion:
 
     model_name: str
     provider: Provider = Provider.UNKNOWN
+    family: ModelFamily = ModelFamily.UNKNOWN
     version: str = ""
     variant: str = ""
     capabilities: ModelCapabilities = field(default_factory=ModelCapabilities)
     _version_tuple: tuple[int, ...] = field(default_factory=tuple, repr=False)
+    _variant_priority: tuple[int, ...] = field(default_factory=tuple, repr=False)
 
     def __post_init__(self) -> None:
         """
@@ -46,6 +49,8 @@ class ModelVersion:
         # 如果字段为默认值，则使用解析的值 / Use parsed values if fields are default values
         if self.provider == Provider.UNKNOWN:
             self.provider = model_info.provider
+        if self.family == ModelFamily.UNKNOWN:
+            self.family = model_info.family
         if not self.version:
             self.version = model_info.version
         if not self.variant:
@@ -53,8 +58,9 @@ class ModelVersion:
         # 检查 capabilities 是否为默认的空对象 / Check if capabilities is default empty object
         if self.capabilities == ModelCapabilities():
             self.capabilities = model_info.capabilities
-        # 设置版本元组用于比较 / Set version tuple for comparison
+        # 设置版本元组和型号优先级用于比较 / Set version tuple and variant priority for comparison
         self._version_tuple = model_info.version_tuple
+        self._variant_priority = model_info.variant_priority
 
     def __str__(self) -> str:
         """字符串表示 / String representation"""
@@ -68,34 +74,39 @@ class ModelVersion:
         """
         相等比较 / Equality comparison
 
-        只有同一提供商的模型才能比较
-        Only models from the same provider can be compared
+        同一模型家族的模型才能比较，比较版本和型号优先级
+        Only models from the same family can be compared, comparing version and variant priority
         """
         if not isinstance(other, ModelVersion):
             return NotImplemented
 
-        if self.provider != other.provider:
+        if self.family != other.family:
             return False
 
-        return self._version_tuple == other._version_tuple
+        return self._version_tuple == other._version_tuple and self._variant_priority == other._variant_priority
 
     def __lt__(self, other: object) -> bool:
         """
         小于比较 / Less than comparison
 
-        只有同一提供商的模型才能比较
-        Only models from the same provider can be compared
+        同一模型家族的模型才能比较，先比较版本，再比较型号优先级
+        Only models from the same family can be compared, first compare version, then variant priority
         """
         if not isinstance(other, ModelVersion):
             return NotImplemented
 
-        if self.provider != other.provider:
+        if self.family != other.family:
             raise ValueError(
-                f"无法比较不同提供商的模型: {self.provider} vs {other.provider} / "
-                f"Cannot compare models from different providers: {self.provider} vs {other.provider}",
+                f"无法比较不同模型家族的模型: {self.family} vs {other.family} / "
+                f"Cannot compare models from different families: {self.family} vs {other.family}",
             )
 
-        return self._version_tuple < other._version_tuple
+        # 先比较版本 / First compare version
+        if self._version_tuple != other._version_tuple:
+            return self._version_tuple < other._version_tuple
+
+        # 版本相同时，比较型号优先级 / When versions are the same, compare variant priority
+        return self._variant_priority < other._variant_priority
 
     def validate_params(self, params: dict[str, Any]) -> dict[str, Any]:
         """

@@ -31,3 +31,12 @@ GLM-4V-Plus-0111视频大小限制为 200M 以内。
 使用ruff进行格式检查
 使用mypy进行类型检查
 使用bump-my-version管理版本
+
+测试的时候注意使用 uv run pytest 激活虚拟环境进行测试
+
+---
+
+需要继续实现的功能：
+
+1. 相同provider提供的相同版本的模型，会有型号的不同，比如GPT系列有 base turbo omni等，一般来讲，我们需要添加 gpt-4-turbo < gpt-4 < gpt-4o的判断能力。也就是不同的型号也有高低之分，因为这一般意味着每百万Token的价格区别。因此元数据需要有一个类似的字段，而且这个字段需要参数大小比较，同时每个模型家族这个字段的大小比较方法需要能自定义，建议使用tuple从左向右越来越大
+2. 当前只有Provider字段的时候我发现一个问题，同一个模型，比如Deepseek，可能是原厂提供，也可能由Tencent提供，不同的Provider其能力可能不一样。因此我们需要添加一个「模型家族」的字段和Provider区分开，同一个模型家族，可能有多个Provider，同时其Capibility可能不同。某个模型家族有默认的Provider，但同时，可以在模型名称前通过 {{Provider::ModelName}}的形式来指定Provider。

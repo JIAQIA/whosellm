@@ -11,10 +11,12 @@ __version__ = "0.1.0"
 
 from llmver.capabilities import ModelCapabilities
 from llmver.model_version import ModelVersion
+from llmver.models.base import ModelFamily
 from llmver.provider import Provider
 
 __all__ = [
     "ModelCapabilities",
+    "ModelFamily",
     "ModelVersion",
     "Provider",
     "__version__",
