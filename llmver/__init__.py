@@ -10,14 +10,14 @@ LLMVer - 统一的大语言模型版本和能力管理库 / A unified LLM model 
 __version__ = "0.1.0"
 
 from llmver.capabilities import ModelCapabilities
-from llmver.model_version import ModelVersion
+from llmver.model_version import LLM
 from llmver.models.base import ModelFamily
 from llmver.provider import Provider
 
 __all__ = [
+    "LLM",
     "ModelCapabilities",
     "ModelFamily",
-    "ModelVersion",
     "Provider",
     "__version__",
 ]

@@ -20,7 +20,7 @@ from llmver.provider import Provider
 
 @total_ordering
 @dataclass
-class ModelVersion:
+class LLM:
     """
     模型版本类 / Model version class
 
@@ -81,7 +81,7 @@ class ModelVersion:
         同一模型家族的模型才能比较，比较版本、型号优先级和日期
         Only models from the same family can be compared, comparing version, variant priority and date
         """
-        if not isinstance(other, ModelVersion):
+        if not isinstance(other, LLM):
             return NotImplemented
 
         if self.family != other.family:
@@ -100,7 +100,7 @@ class ModelVersion:
         同一模型家族的模型才能比较，先比较版本，再比较型号优先级，最后比较日期
         Only models from the same family can be compared, first compare version, then variant priority, finally date
         """
-        if not isinstance(other, ModelVersion):
+        if not isinstance(other, LLM):
             return NotImplemented
 
         if self.family != other.family:

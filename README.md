@@ -46,14 +46,14 @@ pip install llmver
 ### 基础用法 / Basic Usage
 
 ```python
-from llmver import ModelVersion
+from llmver import LLM
 
 # 初始化模型版本
-model = ModelVersion("glm-4v-plus")
+model = LLM("glm-4v-plus")
 
 # 检查能力
 print(model.capabilities.supports_vision)  # True
-print(model.capabilities.supports_video)   # True
+print(model.capabilities.supports_video)  # True
 print(model.capabilities.max_video_size_mb)  # 20.0
 
 # 参数验证（可选）
@@ -63,43 +63,43 @@ validated_params = model.validate_params(your_params)
 ### 型号优先级比较 / Variant Priority Comparison
 
 ```python
-from llmver import ModelVersion
+from llmver import LLM
 
 # GPT-4 系列型号比较: mini < base < turbo < omni
-gpt4o_mini = ModelVersion("gpt-4o-mini")
-gpt4_base = ModelVersion("gpt-4")
-gpt4_turbo = ModelVersion("gpt-4-turbo")
-gpt4o = ModelVersion("gpt-4o")
+gpt4o_mini = LLM("gpt-4o-mini")
+gpt4_base = LLM("gpt-4")
+gpt4_turbo = LLM("gpt-4-turbo")
+gpt4o = LLM("gpt-4o")
 
-print(gpt4o_mini < gpt4_base)   # True
-print(gpt4_base < gpt4_turbo)   # True
-print(gpt4_turbo < gpt4o)       # True
+print(gpt4o_mini < gpt4_base)  # True
+print(gpt4_base < gpt4_turbo)  # True
+print(gpt4_turbo < gpt4o)  # True
 
 # GLM-4V 系列型号比较: flash < base < plus < plus-0111
-glm4v_flash = ModelVersion("glm-4v-flash")
-glm4v_plus = ModelVersion("glm-4v-plus")
-glm4v_plus_0111 = ModelVersion("glm-4v-plus-0111")
+glm4v_flash = LLM("glm-4v-flash")
+glm4v_plus = LLM("glm-4v-plus")
+glm4v_plus_0111 = LLM("glm-4v-plus-0111")
 
-print(glm4v_flash < glm4v_plus)        # True
-print(glm4v_plus < glm4v_plus_0111)    # True
+print(glm4v_flash < glm4v_plus)  # True
+print(glm4v_plus < glm4v_plus_0111)  # True
 ```
 
 ### 模型家族与Provider / Model Family and Provider
 
 ```python
-from llmver import ModelVersion, ModelFamily, Provider
+from llmver import LLM, ModelFamily, Provider
 
 # 检查模型家族
-gpt4 = ModelVersion("gpt-4")
-gpt4_turbo = ModelVersion("gpt-4-turbo")
+gpt4 = LLM("gpt-4")
+gpt4_turbo = LLM("gpt-4-turbo")
 
 print(gpt4.family == gpt4_turbo.family)  # True (都是 GPT_4 家族)
 print(gpt4.family)  # ModelFamily.GPT_4
 
 # 使用 Provider::ModelName 语法指定Provider
-model1 = ModelVersion("gpt-4")                    # 使用默认Provider
-model2 = ModelVersion("openai::gpt-4")            # 显式指定Provider
-model3 = ModelVersion("Tencent::deepseek-chat")   # 指定不同的Provider
+model1 = LLM("gpt-4")  # 使用默认Provider
+model2 = LLM("openai::gpt-4")  # 显式指定Provider
+model3 = LLM("Tencent::deepseek-chat")  # 指定不同的Provider
 
 print(model1.provider)  # Provider.OPENAI
 print(model2.provider)  # Provider.OPENAI
@@ -109,14 +109,14 @@ print(model3.provider)  # Provider.TENCENT
 ### 实际应用场景 / Practical Usage
 
 ```python
-from llmver import ModelVersion
+from llmver import LLM
 
 # 场景1: 选择支持视觉的最便宜模型
 available_models = [
-    ModelVersion("gpt-4o-mini"),
-    ModelVersion("gpt-4"),
-    ModelVersion("gpt-4-turbo"),
-    ModelVersion("gpt-4o"),
+    LLM("gpt-4o-mini"),
+    LLM("gpt-4"),
+    LLM("gpt-4-turbo"),
+    LLM("gpt-4o"),
 ]
 
 vision_models = [m for m in available_models if m.capabilities.supports_vision]
@@ -124,8 +124,8 @@ cheapest_vision = min(vision_models)  # 自动选择最便宜的（优先级最�
 print(f"推荐模型: {cheapest_vision.model_name}")  # gpt-4o-mini
 
 # 场景2: 检查模型升级
-current = ModelVersion("glm-4v-plus")
-new = ModelVersion("glm-4v-plus-0111")
+current = LLM("glm-4v-plus")
+new = LLM("glm-4v-plus-0111")
 
 if new > current:
     print("这是一个升级版本")

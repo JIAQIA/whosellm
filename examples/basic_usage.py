@@ -7,7 +7,7 @@
 基础使用示例 / Basic usage examples
 """
 
-from llmver import ModelVersion
+from llmver import LLM
 
 
 def main() -> None:
@@ -16,9 +16,9 @@ def main() -> None:
 
     # 1. 初始化模型 / Initialize models
     print("1. 初始化模型 / Initialize models")
-    gpt4 = ModelVersion("gpt-4")
-    gpt35 = ModelVersion("gpt-3.5-turbo")
-    glm4v = ModelVersion("glm-4v-plus")
+    gpt4 = LLM("gpt-4")
+    gpt35 = LLM("gpt-3.5-turbo")
+    glm4v = LLM("glm-4v-plus")
 
     print(f"  - {gpt4}")
     print(f"  - {gpt35}")
@@ -32,7 +32,7 @@ def main() -> None:
     # 3. 能力检查 / Capability check
     print("3. 能力检查 / Capability check")
     print(f"  - GPT-4 支持视觉 / supports vision: {gpt4.capabilities.supports_vision}")
-    print(f"  - GPT-4 Turbo 支持视觉 / supports vision: {ModelVersion('gpt-4-turbo').capabilities.supports_vision}")
+    print(f"  - GPT-4 Turbo 支持视觉 / supports vision: {LLM('gpt-4-turbo').capabilities.supports_vision}")
     print(f"  - GLM-4V-Plus 支持视觉 / supports vision: {glm4v.capabilities.supports_vision}")
     print(f"  - GLM-4V-Plus 支持视频 / supports video: {glm4v.capabilities.supports_video}")
     print(f"  - GLM-4V-Plus 视频大小限制 / video size limit: {glm4v.capabilities.max_video_size_mb}MB")
@@ -40,14 +40,14 @@ def main() -> None:
 
     # 4. 推理模型 / Reasoning models
     print("4. 推理模型 / Reasoning models")
-    o1 = ModelVersion("o1")
+    o1 = LLM("o1")
     print(f"  - O1 支持思考模式 / supports thinking: {o1.capabilities.supports_thinking}")
     print(f"  - O1 支持流式输出 / supports streaming: {o1.capabilities.supports_streaming}\n")
 
     # 5. 多模态检查 / Multimodal check
     print("5. 多模态检查 / Multimodal check")
     print(f"  - GPT-4 支持多模态 / supports multimodal: {gpt4.supports_multimodal}")
-    print(f"  - GPT-4 Turbo 支持多模态 / supports multimodal: {ModelVersion('gpt-4-turbo').supports_multimodal}")
+    print(f"  - GPT-4 Turbo 支持多模态 / supports multimodal: {LLM('gpt-4-turbo').supports_multimodal}")
     print(f"  - GLM-4V-Plus 支持多模态 / supports multimodal: {glm4v.supports_multimodal}\n")
 
     # 6. 提供商信息 / Provider information

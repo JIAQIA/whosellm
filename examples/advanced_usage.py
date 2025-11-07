@@ -10,7 +10,7 @@
 Demonstrates variant priority comparison and Provider specification features
 """
 
-from llmver import ModelVersion
+from llmver import LLM
 
 
 def demo_variant_priority():
@@ -23,10 +23,10 @@ def demo_variant_priority():
 
     # GPT-4 系列型号比较 / GPT-4 series variant comparison
     print("\n1. GPT-4 系列型号比较 (mini < base < turbo < omni):")
-    gpt4o_mini = ModelVersion("gpt-4o-mini")
-    gpt4_base = ModelVersion("gpt-4")
-    gpt4_turbo = ModelVersion("gpt-4-turbo")
-    gpt4o = ModelVersion("gpt-4o")
+    gpt4o_mini = LLM("gpt-4o-mini")
+    gpt4_base = LLM("gpt-4")
+    gpt4_turbo = LLM("gpt-4-turbo")
+    gpt4o = LLM("gpt-4o")
 
     print(f"   {gpt4o_mini.model_name} < {gpt4_base.model_name}: {gpt4o_mini < gpt4_base}")
     print(f"   {gpt4_base.model_name} < {gpt4_turbo.model_name}: {gpt4_base < gpt4_turbo}")
@@ -34,19 +34,19 @@ def demo_variant_priority():
 
     # GLM-4 系列型号比较 / GLM-4 series variant comparison
     print("\n2. GLM-4 系列型号比较 (flash < base < plus):")
-    glm4_flash = ModelVersion("glm-4-flash")
-    glm4_base = ModelVersion("glm-4")
-    glm4_plus = ModelVersion("glm-4-plus")
+    glm4_flash = LLM("glm-4-flash")
+    glm4_base = LLM("glm-4")
+    glm4_plus = LLM("glm-4-plus")
 
     print(f"   {glm4_flash.model_name} < {glm4_base.model_name}: {glm4_flash < glm4_base}")
     print(f"   {glm4_base.model_name} < {glm4_plus.model_name}: {glm4_base < glm4_plus}")
 
     # GLM-4V 系列型号比较 / GLM-4V series variant comparison
     print("\n3. GLM-4V 系列型号比较 (flash < base < plus < plus-0111):")
-    glm4v_flash = ModelVersion("glm-4v-flash")
-    glm4v_base = ModelVersion("glm-4v")
-    glm4v_plus = ModelVersion("glm-4v-plus")
-    glm4v_plus_0111 = ModelVersion("glm-4v-plus-0111")
+    glm4v_flash = LLM("glm-4v-flash")
+    glm4v_base = LLM("glm-4v")
+    glm4v_plus = LLM("glm-4v-plus")
+    glm4v_plus_0111 = LLM("glm-4v-plus-0111")
 
     print(f"   {glm4v_flash.model_name} < {glm4v_base.model_name}: {glm4v_flash < glm4v_base}")
     print(f"   {glm4v_base.model_name} < {glm4v_plus.model_name}: {glm4v_base < glm4v_plus}")
@@ -72,9 +72,9 @@ def demo_model_family():
 
     # 同一家族的不同型号 / Different variants in the same family
     print("\n1. 同一家族的不同型号:")
-    gpt4 = ModelVersion("gpt-4")
-    gpt4_turbo = ModelVersion("gpt-4-turbo")
-    gpt4o = ModelVersion("gpt-4o")
+    gpt4 = LLM("gpt-4")
+    gpt4_turbo = LLM("gpt-4-turbo")
+    gpt4o = LLM("gpt-4o")
 
     print(f"   {gpt4.model_name}: family={gpt4.family}, provider={gpt4.provider}")
     print(f"   {gpt4_turbo.model_name}: family={gpt4_turbo.family}, provider={gpt4_turbo.provider}")
@@ -83,8 +83,8 @@ def demo_model_family():
 
     # 不同家族无法比较 / Different families cannot be compared
     print("\n2. 不同家族的模型无法比较:")
-    gpt4 = ModelVersion("gpt-4")
-    glm4 = ModelVersion("glm-4")
+    gpt4 = LLM("gpt-4")
+    glm4 = LLM("glm-4")
 
     print(f"   {gpt4.model_name}: family={gpt4.family}")
     print(f"   {glm4.model_name}: family={glm4.family}")
@@ -106,21 +106,21 @@ def demo_provider_specification():
 
     # 使用默认Provider / Use default Provider
     print("\n1. 使用默认Provider:")
-    model1 = ModelVersion("gpt-4")
+    model1 = LLM("gpt-4")
     print(f"   模型: {model1.model_name}")
     print(f"   Provider: {model1.provider}")
     print(f"   Family: {model1.family}")
 
     # 使用 Provider::ModelName 语法 / Use Provider::ModelName syntax
     print("\n2. 使用 Provider::ModelName 语法:")
-    model2 = ModelVersion("openai::gpt-4")
+    model2 = LLM("openai::gpt-4")
     print(f"   模型: {model2.model_name}")
     print(f"   Provider: {model2.provider}")
     print(f"   Family: {model2.family}")
 
     # 使用 Provider::ModelName 语法指定不同的Provider / Use Provider::ModelName syntax with different provider
     print("\n3. 使用 Provider::ModelName 语法指定不同的Provider:")
-    model3 = ModelVersion("Tencent::deepseek-chat")
+    model3 = LLM("Tencent::deepseek-chat")
     print(f"   模型: {model3.model_name}")
     print(f"   Provider: {model3.provider}")
     print(f"   Family: {model3.family}")
@@ -145,10 +145,10 @@ def demo_practical_usage():
     print("假设价格: mini < base < turbo < omni")
 
     available_models = [
-        ModelVersion("gpt-4o-mini"),
-        ModelVersion("gpt-4"),
-        ModelVersion("gpt-4-turbo"),
-        ModelVersion("gpt-4o"),
+        LLM("gpt-4o-mini"),
+        LLM("gpt-4"),
+        LLM("gpt-4-turbo"),
+        LLM("gpt-4o"),
     ]
 
     # 按价格排序（从低到高） / Sort by price (low to high)
@@ -168,8 +168,8 @@ def demo_practical_usage():
 
     # 场景3: 检查模型升级路径 / Scenario 3: Check model upgrade path
     print("\n场景3: 检查模型升级路径")
-    current_model = ModelVersion("glm-4v-plus")
-    new_model = ModelVersion("glm-4v-plus-0111")
+    current_model = LLM("glm-4v-plus")
+    new_model = LLM("glm-4v-plus-0111")
 
     print(f"   当前模型: {current_model.model_name}")
     print(f"   新模型: {new_model.model_name}")
