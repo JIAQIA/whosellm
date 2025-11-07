@@ -6,6 +6,8 @@ Test specific_models sub-patterns functionality
 
 # 导入所有模型家族配置以触发注册
 # Import all model family configurations to trigger registration
+import pytest
+
 from llmeta.capabilities import ModelCapabilities
 from llmeta.models.base import ModelFamily
 from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
@@ -123,7 +125,7 @@ def test_validation():
             },
         )
         print("   ✗ 失败：应该抛出 ValueError")
-        assert False, "应该抛出 ValueError"
+        pytest.fail("应该抛出 ValueError")
     except ValueError as e:
         print(f"   ✓ 通过：正确抛出异常 - {e}")
 
