@@ -1,6 +1,7 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0" is_locked="false">
     <option name="myName" value="Project Default" />
+    <option name="myName" value="Project Default" />
     <inspection_tool class="CustomRegExpInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PyArgumentListInspection" enabled="true" level="WARNING" enabled_by_default="true" editorAttributes="WARNING_ATTRIBUTES" />
@@ -16,6 +17,7 @@
         </value>
       </option>
     </inspection_tool>
+    <inspection_tool class="PyDataclassInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PyPackageRequirementsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="ignoredErrors">

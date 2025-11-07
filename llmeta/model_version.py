@@ -1,28 +1,26 @@
-# filename: model_version.py
 # @Time    : 2025/11/7 13:56
 # @Author  : JQQ
 # @Email   : jqq1716@gmail.com
 # @Software: PyCharm
 """
-模型版本管理核心类 / Core model version management class
+模型版本管理 / Model version management
 """
 
+import functools
 from dataclasses import dataclass, field
 from datetime import date
-from functools import total_ordering
 from typing import Any
 
 from llmeta.capabilities import ModelCapabilities
-from llmeta.models import get_model_info
-from llmeta.models.base import ModelFamily
+from llmeta.models.base import ModelFamily, get_model_info
 from llmeta.provider import Provider
 
 
-@total_ordering
+@functools.total_ordering
 @dataclass
 class LLMeta:
     """
-    模型版本类 / Model version class
+    LLM 元数据类 / LLM metadata class
 
     支持从单个字符串初始化，自动识别提供商、版本和型号
     Supports initialization from a single string, automatically recognizing provider, version, and model

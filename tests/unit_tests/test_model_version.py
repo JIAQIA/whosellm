@@ -113,7 +113,8 @@ class TestModelVersion(unittest.TestCase):
         assert glm4_base < glm4_plus
         assert glm4_flash < glm4_plus
 
-        # GLM-4V 系列: flash < base < plus < plus-0111
+        # GLM-4V 系列: flash < base < plus-0111 <= plus (plus 指向最新版)
+        # GLM-4V series: flash < base < plus-0111 <= plus (plus points to latest)
         glm4v_flash = LLMeta("glm-4v-flash")
         glm4v_base = LLMeta("glm-4v")
         glm4v_plus = LLMeta("glm-4v-plus")
@@ -121,7 +122,8 @@ class TestModelVersion(unittest.TestCase):
 
         assert glm4v_flash < glm4v_base
         assert glm4v_base < glm4v_plus
-        assert glm4v_plus < glm4v_plus_0111
+        # plus 是最新版，应该 >= 特定日期版本 / plus is latest, should be >= specific date version
+        assert glm4v_plus >= glm4v_plus_0111
 
     def test_model_family_detection(self) -> None:
         """测试模型家族检测 / Test model family detection"""

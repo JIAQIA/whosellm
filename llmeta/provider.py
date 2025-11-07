@@ -9,10 +9,20 @@
 
 from enum import Enum
 
+from llmeta.models.dynamic_enum import DynamicEnumMeta
 
-class Provider(str, Enum):
+
+class Provider(str, Enum, metaclass=DynamicEnumMeta):
     """
     支持的模型提供商 / Supported model providers
+
+    支持动态添加新成员，第三方用户可以在运行时扩展
+    Supports dynamically adding new members, third-party users can extend at runtime
+
+    Example:
+        >>> # 动态添加新的提供商 / Dynamically add new provider
+        >>> Provider.add_member("GOOGLE", "google")
+        >>> Provider.add_member("META", "meta")
     """
 
     OPENAI = "openai"
