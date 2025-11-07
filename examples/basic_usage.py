@@ -7,12 +7,12 @@
 基础使用示例 / Basic usage examples
 """
 
-from llmver import LLMeta
+from llmeta import LLMeta
 
 
 def main() -> None:
     """主函数 / Main function"""
-    print("=== LLMVer 基础使用示例 / Basic Usage Examples ===\n")
+    print("=== LLMeta 基础使用示例 / Basic Usage Examples ===\n")
 
     # 1. 初始化模型 / Initialize models
     print("1. 初始化模型 / Initialize models")

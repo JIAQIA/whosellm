@@ -11,7 +11,7 @@ import unittest
 
 import pytest
 
-from llmver import LLMeta, ModelFamily, Provider
+from llmeta import LLMeta, ModelFamily, Provider
 
 
 class TestModelVersion(unittest.TestCase):

@@ -7,9 +7,9 @@
 智谱 AI 模型定义 / Zhipu AI model definitions
 """
 
-from llmver.capabilities import ModelCapabilities
-from llmver.models.base import ModelFamily, ModelInfo, parse_version, register_model
-from llmver.provider import Provider
+from llmeta.capabilities import ModelCapabilities
+from llmeta.models.base import ModelFamily, ModelInfo, parse_version, register_model
+from llmeta.provider import Provider
 
 # GLM-4 系列 / GLM-4 series
 # variant_priority: flash < base < plus

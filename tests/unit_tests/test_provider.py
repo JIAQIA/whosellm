@@ -9,7 +9,7 @@
 
 import unittest
 
-from llmver.provider import Provider
+from llmeta.provider import Provider
 
 
 class TestProvider(unittest.TestCase):

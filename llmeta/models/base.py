@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 
-from llmver.capabilities import ModelCapabilities
-from llmver.provider import Provider
+from llmeta.capabilities import ModelCapabilities
+from llmeta.provider import Provider
 
 
 class ModelFamily(str, Enum):

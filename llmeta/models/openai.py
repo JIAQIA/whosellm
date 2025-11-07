@@ -9,9 +9,9 @@ OpenAI 模型定义 / OpenAI model definitions
 
 from datetime import date
 
-from llmver.capabilities import ModelCapabilities
-from llmver.models.base import ModelFamily, ModelInfo, parse_version, register_model
-from llmver.provider import Provider
+from llmeta.capabilities import ModelCapabilities
+from llmeta.models.base import ModelFamily, ModelInfo, parse_version, register_model
+from llmeta.provider import Provider
 
 # GPT-4 系列 / GPT-4 series
 # variant_priority: (0,) < (1,) < (2,) 表示 base < turbo < omni

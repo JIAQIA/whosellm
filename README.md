@@ -1,4 +1,4 @@
-# LLMVer
+# LLMeta
 
 一个统一的大语言模型版本和能力管理库 / A unified LLM model version and capability management library
 
@@ -35,10 +35,10 @@
 
 ```bash
 # 使用 uv
-uv add llmver
+uv add llmeta
 
 # 使用 pip
-pip install llmver
+pip install llmeta
 ```
 
 ## 快速开始 / Quick Start
@@ -46,7 +46,7 @@ pip install llmver
 ### 基础用法 / Basic Usage
 
 ```python
-from llmver import LLMeta
+from llmeta import LLMeta
 
 # 初始化模型版本
 model = LLMeta("glm-4v-plus")
@@ -63,7 +63,7 @@ validated_params = model.validate_params(your_params)
 ### 型号优先级比较 / Variant Priority Comparison
 
 ```python
-from llmver import LLMeta
+from llmeta import LLMeta
 
 # GPT-4 系列型号比较: mini < base < turbo < omni
 gpt4o_mini = LLMeta("gpt-4o-mini")
@@ -87,7 +87,7 @@ print(glm4v_plus < glm4v_plus_0111)  # True
 ### 模型家族与Provider / Model Family and Provider
 
 ```python
-from llmver import LLMeta, ModelFamily, Provider
+from llmeta import LLMeta, ModelFamily, Provider
 
 # 检查模型家族
 gpt4 = LLMeta("gpt-4")
@@ -109,7 +109,7 @@ print(model3.provider)  # Provider.TENCENT
 ### 实际应用场景 / Practical Usage
 
 ```python
-from llmver import LLMeta
+from llmeta import LLMeta
 
 # 场景1: 选择支持视觉的最便宜模型
 available_models = [

@@ -27,7 +27,7 @@ search = "version = \"{current_version}\""
 replace = "version = \"{new_version}\""
 
 [[tool.bumpversion.files]]
-filename = "llmver/__init__.py"
+filename = "llmeta/__init__.py"
 
 [tool.bumpversion.parts.release]
 optional_value = "final"

@@ -8,8 +8,8 @@
 """
 
 # 导入模型定义以触发注册 / Import model definitions to trigger registration
-from llmver.models import openai, zhipu
-from llmver.models.base import ModelInfo, get_model_info, register_model
+from llmeta.models import openai, zhipu
+from llmeta.models.base import ModelInfo, get_model_info, register_model
 
 __all__ = [
     "ModelInfo",

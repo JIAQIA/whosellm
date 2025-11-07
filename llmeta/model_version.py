@@ -12,10 +12,10 @@ from datetime import date
 from functools import total_ordering
 from typing import Any
 
-from llmver.capabilities import ModelCapabilities
-from llmver.models import get_model_info
-from llmver.models.base import ModelFamily
-from llmver.provider import Provider
+from llmeta.capabilities import ModelCapabilities
+from llmeta.models import get_model_info
+from llmeta.models.base import ModelFamily
+from llmeta.provider import Provider
 
 
 @total_ordering

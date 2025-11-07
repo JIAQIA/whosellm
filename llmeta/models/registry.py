@@ -12,6 +12,6 @@ Note: This file is deprecated, registry functionality has been moved to base.py
 
 # 为了向后兼容，从 base 导入
 # For backward compatibility, import from base
-from llmver.models.base import MODEL_REGISTRY, register_model
+from llmeta.models.base import MODEL_REGISTRY, register_model
 
 __all__ = ["MODEL_REGISTRY", "register_model"]

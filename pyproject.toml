@@ -1,5 +1,5 @@
 [project]
-name = "llmver"
+name = "llmeta"
 version = "0.1.0"
 description = "A unified LLM model version and capability management library"
 authors = [
@@ -46,14 +46,14 @@ lint = "ruff check --fix ."
 check = "ruff check ."
 
 # 类型检查 / Type checking
-typecheck = "mypy llmver"
-mypy = "mypy llmver"
+typecheck = "mypy llmeta"
+mypy = "mypy llmeta"
 
 # 测试 / Testing
 test = "pytest tests/unit_tests tests/integration_tests"
 test-unit = "pytest tests/unit_tests -v"
 test-integration = "pytest tests/integration_tests -v"
-test-cov = "pytest tests -m 'not e2e' --cov llmver --cov-report=term-missing --cov-fail-under=0 --cov-config=.coveragerc"
+test-cov = "pytest tests -m 'not e2e' --cov llmeta --cov-report=term-missing --cov-fail-under=0 --cov-config=.coveragerc"
 test-e2e = "pytest tests -m e2e"
 test-all = "pytest tests -v"
 
