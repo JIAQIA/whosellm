@@ -11,7 +11,7 @@ Using parse library for pattern matching, providing clear and high-performance m
 """
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 import parse  # type: ignore[import-untyped]
@@ -236,7 +236,9 @@ def parse_date_from_match(matched: dict[str, Any]) -> date | None:
             mmdd_str = str(matched["mmdd"]).zfill(4)
             month = int(mmdd_str[:2])
             day = int(mmdd_str[2:])
-            return date(2024, month, day)
+            # 默认当前年份
+            year = datetime.now().year
+            return date(year=year, month=month, day=day)
         except (ValueError, TypeError):
             pass
 

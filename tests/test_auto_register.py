@@ -7,6 +7,7 @@
 自动注册功能测试 / Auto-registration feature tests
 """
 
+import datetime
 import unittest
 
 from llmeta import LLMeta, ModelFamily, Provider
@@ -19,13 +20,13 @@ class TestAutoRegister(unittest.TestCase):
     def test_infer_model_family(self) -> None:
         """测试模型家族推断 / Test model family inference"""
         # GPT 系列 / GPT series
-        assert infer_model_family("gpt-4-new-variant") == ModelFamily.GPT_4
+        assert infer_model_family("gpt-4o-new-variant") == ModelFamily.GPT_4O
         assert infer_model_family("gpt-3.5-custom") == ModelFamily.GPT_3_5
         assert infer_model_family("o1-custom") == ModelFamily.O1
 
         # 智谱 AI 系列 / Zhipu AI series
-        assert infer_model_family("glm-4-custom") == ModelFamily.GLM_4
-        assert infer_model_family("glm-4v-custom") == ModelFamily.GLM_4V
+        assert infer_model_family("glm-4-0621") == ModelFamily.GLM_4
+        assert infer_model_family("glm-4v-preview") == ModelFamily.GLM_4V
         assert infer_model_family("glm-3-custom") == ModelFamily.GLM_3
 
         # 其他厂商 / Other providers
@@ -59,7 +60,7 @@ class TestAutoRegister(unittest.TestCase):
         assert model._variant_priority == (2,)  # turbo 的优先级
 
         # 测试 mini 型号 / Test mini variant
-        model_mini = LLMeta("gpt-4-mini-custom")
+        model_mini = LLMeta("gpt-4o-mini-custom")
         assert model_mini.variant == "mini"
         # mini 的优先级是 0，但如果没有匹配到关键词可能会是 base(1)
         # mini priority is 0, but if not matched to keyword it might be base(1)
@@ -81,18 +82,18 @@ class TestAutoRegister(unittest.TestCase):
         """测试自动注册带日期的模型 / Test auto-register with date"""
         from datetime import date
 
-        model = LLMeta("gpt-4-turbo-2024-12-01")
+        model = LLMeta("gpt-4o-turbo-2024-12-01")
 
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT_4O
         assert model.variant == "turbo"
         assert model.release_date == date(2024, 12, 1)
 
     def test_auto_register_with_provider_prefix(self) -> None:
         """测试自动注册带 Provider 前缀的模型 / Test auto-register with provider prefix"""
-        model = LLMeta("openai::gpt-4-custom")
+        model = LLMeta("openai::gpt-4o-custom")
 
         assert model.provider == Provider.OPENAI
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT_4O
 
     def test_auto_register_deepseek_variant(self) -> None:
         """测试自动注册 DeepSeek 新型号 / Test auto-register DeepSeek new variant"""
@@ -139,7 +140,7 @@ class TestAutoRegister(unittest.TestCase):
     def test_auto_register_with_multiple_variants(self) -> None:
         """测试自动注册包含多个型号关键词的模型 / Test auto-register with multiple variant keywords"""
         # 包含多个关键词时，取最高优先级 / When multiple keywords present, take highest priority
-        model = LLMeta("gpt-4-turbo-plus")
+        model = LLMeta("gpt-4o-turbo-plus")
 
         assert model.variant == "turbo-plus"
         # plus(3) > turbo(2)，所以优先级应该是 3
@@ -167,24 +168,24 @@ class TestAutoRegister(unittest.TestCase):
 
     def test_manual_auto_register(self) -> None:
         """测试手动调用自动注册函数 / Test manually calling auto-register function"""
-        model_info = auto_register_model("gpt-4-experimental")
+        model_info = auto_register_model("gpt-4-0621")
 
         assert model_info.family == ModelFamily.GPT_4
         assert model_info.provider == Provider.OPENAI
         assert model_info.capabilities.supports_function_calling is True
 
         # 验证已注册到全局注册表 / Verify registered to global registry
-        model = LLMeta("gpt-4-experimental")
+        model = LLMeta("gpt-4-0621")
         assert model.family == ModelFamily.GPT_4
 
     def test_auto_register_with_mmdd_date(self) -> None:
         """测试自动注册带 MMDD 格式日期的模型 / Test auto-register with MMDD format date"""
         from datetime import date
 
-        model = LLMeta("gpt-4-turbo-1225")
+        model = LLMeta("gpt-4-1225")
 
         assert model.family == ModelFamily.GPT_4
-        assert model.release_date == date(2024, 12, 25)
+        assert model.release_date == date(datetime.datetime.now().year, 12, 25)
 
     def test_auto_register_variant_priority_order(self) -> None:
         """测试自动注册的型号优先级顺序 / Test auto-register variant priority order"""
