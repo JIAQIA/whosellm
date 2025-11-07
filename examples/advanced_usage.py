@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # filename: advanced_usage.py
 # @Time    : 2025/11/7 15:19
 # @Author  : JQQ
@@ -11,7 +10,7 @@
 Demonstrates variant priority comparison and Provider specification features
 """
 
-from llmver import ModelFamily, ModelVersion, Provider
+from llmver import ModelVersion
 
 
 def demo_variant_priority():
@@ -54,7 +53,7 @@ def demo_variant_priority():
     print(f"   {glm4v_plus.model_name} < {glm4v_plus_0111.model_name}: {glm4v_plus < glm4v_plus_0111}")
 
     # 展示能力差异 / Show capability differences
-    print(f"\n4. GLM-4V 不同型号的能力差异:")
+    print("\n4. GLM-4V 不同型号的能力差异:")
     print(f"   {glm4v_plus.model_name}:")
     print(f"      - 最大视频大小: {glm4v_plus.capabilities.max_video_size_mb}MB")
     print(f"      - 最大视频时长: {glm4v_plus.capabilities.max_video_duration_seconds}秒")
@@ -89,7 +88,7 @@ def demo_model_family():
 
     print(f"   {gpt4.model_name}: family={gpt4.family}")
     print(f"   {glm4.model_name}: family={glm4.family}")
-    print(f"   尝试比较会抛出异常...")
+    print("   尝试比较会抛出异常...")
 
     try:
         _ = gpt4 > glm4
@@ -112,24 +111,25 @@ def demo_provider_specification():
     print(f"   Provider: {model1.provider}")
     print(f"   Family: {model1.family}")
 
-    # 使用 {{Provider::ModelName}} 语法 / Use {{Provider::ModelName}} syntax
-    print("\n2. 使用 {{Provider::ModelName}} 语法:")
-    model2 = ModelVersion("{{openai::gpt-4}}")
+    # 使用 Provider::ModelName 语法 / Use Provider::ModelName syntax
+    print("\n2. 使用 Provider::ModelName 语法:")
+    model2 = ModelVersion("openai::gpt-4")
     print(f"   模型: {model2.model_name}")
     print(f"   Provider: {model2.provider}")
     print(f"   Family: {model2.family}")
 
-    # 使用 Provider::ModelName 语法（无大括号） / Use Provider::ModelName syntax (without braces)
-    print("\n3. 使用 Provider::ModelName 语法（无大括号）:")
-    model3 = ModelVersion("openai::gpt-4")
+    # 使用 Provider::ModelName 语法指定不同的Provider / Use Provider::ModelName syntax with different provider
+    print("\n3. 使用 Provider::ModelName 语法指定不同的Provider:")
+    model3 = ModelVersion("Tencent::deepseek-chat")
     print(f"   模型: {model3.model_name}")
     print(f"   Provider: {model3.provider}")
     print(f"   Family: {model3.family}")
 
-    # 验证它们是等价的 / Verify they are equivalent
-    print("\n4. 验证三种方式的等价性:")
-    print(f"   model1.family == model2.family == model3.family: {model1.family == model2.family == model3.family}")
-    print(f"   model1.provider == model2.provider == model3.provider: {model1.provider == model2.provider == model3.provider}")
+    # 验证默认Provider和显式指定的等价性 / Verify equivalence between default and explicit provider
+    print("\n4. 验证默认Provider和显式指定的等价性:")
+    print(f"   model1.family == model2.family: {model1.family == model2.family}")
+    print(f"   model1.provider == model2.provider: {model1.provider == model2.provider}")
+    print("   注意: model3 使用了不同的Provider (Tencent)")
 
 
 def demo_practical_usage():
@@ -174,9 +174,13 @@ def demo_practical_usage():
     print(f"   当前模型: {current_model.model_name}")
     print(f"   新模型: {new_model.model_name}")
     print(f"   是否为升级: {new_model > current_model}")
-    print(f"   能力提升:")
-    print(f"      - 视频大小限制: {current_model.capabilities.max_video_size_mb}MB → {new_model.capabilities.max_video_size_mb}MB")
-    print(f"      - 视频时长限制: {current_model.capabilities.max_video_duration_seconds}秒 → {new_model.capabilities.max_video_duration_seconds}")
+    print("   能力提升:")
+    print(
+        f"      - 视频大小限制: {current_model.capabilities.max_video_size_mb}MB → {new_model.capabilities.max_video_size_mb}MB"
+    )
+    print(
+        f"      - 视频时长限制: {current_model.capabilities.max_video_duration_seconds}秒 → {new_model.capabilities.max_video_duration_seconds}"
+    )
 
 
 if __name__ == "__main__":

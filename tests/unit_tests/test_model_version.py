@@ -147,13 +147,13 @@ class TestModelVersion(unittest.TestCase):
         assert glm4v.family != glm4.family
 
     def test_provider_prefix_syntax(self) -> None:
-        """测试 {{Provider::ModelName}} 语法 / Test {{Provider::ModelName}} syntax"""
-        # 测试带大括号的语法
-        model1 = ModelVersion("{{openai::gpt-4}}")
+        """测试 Provider::ModelName 语法 / Test Provider::ModelName syntax"""
+        # 测试 Provider::ModelName 语法
+        model1 = ModelVersion("openai::gpt-4")
         assert model1.provider == Provider.OPENAI
         assert model1.family == ModelFamily.GPT_4
 
-        # 测试不带大括号的语法
+        # 测试不同的Provider
         model2 = ModelVersion("openai::gpt-4")
         assert model2.provider == Provider.OPENAI
         assert model2.family == ModelFamily.GPT_4

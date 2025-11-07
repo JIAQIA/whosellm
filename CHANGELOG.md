@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
   - GLM-4 系列: `glm-4-flash < glm-4 < glm-4-plus`
   - GLM-4V 系列: `glm-4v-flash < glm-4v < glm-4v-plus < glm-4v-plus-0111`
   - O1 系列: `o1-mini < o1-preview < o1`
-- **Provider指定语法** - 支持 `{{Provider::ModelName}}` 和 `Provider::ModelName` 语法来显式指定Provider
+- **Provider指定语法** - 支持 `Provider::ModelName` 语法来显式指定Provider
 - **variant_priority字段** - 在 `ModelInfo` 中添加型号优先级元组，用于同版本不同型号的比较
 - **发布日期支持** - 支持从模型名称中自动解析发布日期
   - 支持 `YYYY-MM-DD` 格式（如 `gpt-4-turbo-2024-04-09`）

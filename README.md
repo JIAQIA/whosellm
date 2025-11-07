@@ -21,7 +21,7 @@
 1. **简单初始化** - 仅需要一个字符串即可完成模型配置的初始化
 2. **模型家族管理** - 区分模型家族（ModelFamily）和提供商（Provider），同一模型家族可能由多个Provider提供
 3. **型号优先级比较** - 支持同一家族下不同型号的智能比较（如 gpt-4o-mini < gpt-4 < gpt-4-turbo < gpt-4o）
-4. **Provider指定** - 支持 `{{Provider::ModelName}}` 语法来指定特定的Provider
+4. **Provider指定** - 支持 `Provider::ModelName` 语法来指定特定的Provider
 5. **能力范围说明** - 提供模型能力范围说明：
    - 是否支持 thinking（reasoning）模式
    - 是否支持图片
@@ -96,14 +96,14 @@ gpt4_turbo = ModelVersion("gpt-4-turbo")
 print(gpt4.family == gpt4_turbo.family)  # True (都是 GPT_4 家族)
 print(gpt4.family)  # ModelFamily.GPT_4
 
-# 使用 {{Provider::ModelName}} 语法指定Provider
+# 使用 Provider::ModelName 语法指定Provider
 model1 = ModelVersion("gpt-4")                    # 使用默认Provider
-model2 = ModelVersion("{{openai::gpt-4}}")        # 显式指定Provider（带大括号）
-model3 = ModelVersion("openai::gpt-4")            # 显式指定Provider（不带大括号）
+model2 = ModelVersion("openai::gpt-4")            # 显式指定Provider
+model3 = ModelVersion("Tencent::deepseek-chat")   # 指定不同的Provider
 
 print(model1.provider)  # Provider.OPENAI
 print(model2.provider)  # Provider.OPENAI
-print(model3.provider)  # Provider.OPENAI
+print(model3.provider)  # Provider.TENCENT
 ```
 
 ### 实际应用场景 / Practical Usage

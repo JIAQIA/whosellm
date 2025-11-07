@@ -71,13 +71,15 @@ class ModelInfo:
     variant: str
     capabilities: ModelCapabilities
     version_tuple: tuple[int, ...]
-    variant_priority: tuple[int, ...] = (0,)  # 型号优先级元组，用于同版本不同型号的比较 / Variant priority tuple for comparing different variants of the same version
-    release_date: date | None = None  # 发布日期，用于同版本同型号的比较 / Release date for comparing same version and variant
+    # 型号优先级元组，用于同版本不同型号的比较 / Variant priority tuple for comparing different variants of the same version
+    variant_priority: tuple[int, ...] = 0
+    # 发布日期，用于同版本同型号的比较 / Release date for comparing same version and variant
+    release_date: date | None = None
 
 
 # 全局模型注册表 / Global model registry
-# 格式: {"model_name": ModelInfo} 或 {"provider::model_name": ModelInfo}
-# Format: {"model_name": ModelInfo} or {"provider::model_name": ModelInfo}
+# 格式: {"model_name": ModelInfo} 或 {"Provider::ModelName": ModelInfo}
+# Format: {"model_name": ModelInfo} or {"Provider::ModelName": ModelInfo}
 MODEL_REGISTRY: dict[str, ModelInfo] = {}
 
 # 模型家族到默认Provider的映射 / Model family to default provider mapping
@@ -192,7 +194,7 @@ def parse_date_from_model_name(model_name: str) -> date | None:
 
 def parse_model_name(model_name: str) -> tuple[Provider | None, str]:
     """
-    解析模型名称，支持 {{Provider::ModelName}} 语法 / Parse model name, supporting {{Provider::ModelName}} syntax
+    解析模型名称，支持 Provider::ModelName 语法 / Parse model name, supporting Provider::ModelName syntax
 
     Args:
         model_name: 模型名称，可能包含provider前缀 / Model name, may include provider prefix
@@ -201,9 +203,9 @@ def parse_model_name(model_name: str) -> tuple[Provider | None, str]:
         tuple: (指定的Provider或None, 实际模型名称) / (specified Provider or None, actual model name)
     """
     if "::" in model_name:
-        # 解析 {{Provider::ModelName}} 格式 / Parse {{Provider::ModelName}} format
+        # 解析 Provider::ModelName 格式 / Parse Provider::ModelName format
         parts = model_name.split("::", 1)
-        provider_str = parts[0].strip().strip("{}")
+        provider_str = parts[0].strip()
         actual_name = parts[1].strip()
 
         # 尝试匹配Provider / Try to match Provider
@@ -219,12 +221,12 @@ def parse_model_name(model_name: str) -> tuple[Provider | None, str]:
 
 def get_model_info(model_name: str) -> ModelInfo:
     """
-    获取模型信息 / Get model information
+    根据模型名称查找模型信息 / Find model information by model name
 
     支持以下格式: / Supports the following formats:
     1. "gpt-4" - 使用默认Provider / Use default Provider
-    2. "{{openai::gpt-4}}" - 指定Provider / Specify Provider
-    3. "openai::gpt-4" - 指定Provider（无大括号） / Specify Provider (without braces)
+    2. "openai::gpt-4" - 指定Provider / Specify Provider
+    3. "Tencent::deepseek-chat" - 指定Provider / Specify Provider
 
     Args:
         model_name: 模型名称 / Model name
@@ -236,8 +238,8 @@ def get_model_info(model_name: str) -> ModelInfo:
     specified_provider, actual_name = parse_model_name(model_name)
     model_lower = actual_name.lower()
 
-    # 如果指定了Provider，优先查找 "provider::model_name" 格式的注册
-    # If Provider is specified, prioritize "provider::model_name" format registration
+    # 如果指定了Provider，优先查找 "Provider::ModelName" 格式的注册
+    # If Provider is specified, prioritize "Provider::ModelName" format registration
     if specified_provider:
         provider_key = f"{specified_provider.value}::{model_lower}"
         if provider_key in MODEL_REGISTRY:
@@ -248,7 +250,7 @@ def get_model_info(model_name: str) -> ModelInfo:
         info = MODEL_REGISTRY[model_lower]
         # 尝试从模型名称解析日期 / Try to parse date from model name
         parsed_date = parse_date_from_model_name(actual_name)
-        
+
         # 如果指定了Provider且与注册的不同，或解析到了日期，创建新的ModelInfo
         # If Provider is specified and different from registered, or date is parsed, create new ModelInfo
         if (specified_provider and specified_provider != info.provider) or parsed_date:
@@ -272,7 +274,7 @@ def get_model_info(model_name: str) -> ModelInfo:
         if registered_name in model_lower or model_lower in registered_name:
             # 尝试从模型名称解析日期 / Try to parse date from model name
             parsed_date = parse_date_from_model_name(actual_name)
-            
+
             # 如果指定了Provider且与注册的不同，或解析到了日期，创建新的ModelInfo
             # If Provider is specified and different from registered, or date is parsed, create new ModelInfo
             if (specified_provider and specified_provider != info.provider) or parsed_date:
