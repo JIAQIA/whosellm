@@ -387,6 +387,7 @@ def auto_register_model(
         version = str(matched.get("version", ""))
         variant = normalize_variant(matched.get("variant"))
         release_date = parse_date_from_match(matched)
+        capabilities = matched.get("capabilities")
 
     # 获取或继承能力 / Get or inherit capabilities
     if capabilities:

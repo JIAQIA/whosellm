@@ -36,12 +36,12 @@ class TestAutoRegister(unittest.TestCase):
         # 未知模型 / Unknown model
         assert infer_model_family("unknown-model-xyz") == ModelFamily.UNKNOWN
 
-    def test_auto_register_gpt4_variant(self) -> None:
+    def test_auto_register_gpt4o_variant(self) -> None:
         """测试自动注册 GPT-4 新型号 / Test auto-register GPT-4 new variant"""
         # 注册一个新的 GPT-4 型号 / Register a new GPT-4 variant
-        model = LLMeta("gpt-4-super")
+        model = LLMeta("gpt-4o-super")
 
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT_4O
         assert model.provider == Provider.OPENAI
         assert model.version == "4.0"  # 默认版本是 4.0 / Default version is 4.0
         assert model.variant == "super"  # "super" 会被提取为型号名
@@ -52,9 +52,9 @@ class TestAutoRegister(unittest.TestCase):
     def test_auto_register_with_known_variant(self) -> None:
         """测试自动注册带已知型号关键词的模型 / Test auto-register with known variant keywords"""
         # 测试 turbo 型号 / Test turbo variant
-        model = LLMeta("gpt-4-turbo-custom")
+        model = LLMeta("gpt-4o-turbo-custom")
 
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT_4O
         assert model.variant == "turbo"
         assert model._variant_priority == (2,)  # turbo 的优先级
 
@@ -149,7 +149,7 @@ class TestAutoRegister(unittest.TestCase):
     def test_auto_register_preserves_capabilities(self) -> None:
         """测试自动注册保留家族的默认能力 / Test auto-register preserves family default capabilities"""
         # O1 系列支持 thinking 模式 / O1 series supports thinking mode
-        model = LLMeta("o1-custom")
+        model = LLMeta("o1-pro")
 
         assert model.family == ModelFamily.O1
         assert model.capabilities.supports_thinking is True

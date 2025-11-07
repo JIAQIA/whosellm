@@ -111,6 +111,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
     import parse  # type: ignore[import-untyped]
 
     model_lower = model_name.lower()
+    matched: dict[str, Any]
 
     # 【最高优先级】遍历所有家族配置的 specific_models 的子 patterns
     # [Highest Priority] Iterate all specific_models sub-patterns in family configs
@@ -129,6 +130,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                     matched["family"] = config.family
                     matched["provider"] = config.provider
                     matched["variant"] = spec_config.variant
+                    matched["capabilities"] = spec_config.capabilities
                     # 标记这是从 specific_model 匹配的 / Mark this as matched from specific_model
                     matched["_from_specific_model"] = _spec_model_name
                     return matched
@@ -147,6 +149,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                     matched["variant"] = config.variant_default
                 matched["family"] = config.family
                 matched["provider"] = config.provider
+                matched["capabilities"] = config.capabilities
                 return matched
 
     return None

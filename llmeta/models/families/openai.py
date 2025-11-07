@@ -111,6 +111,8 @@ GPT_4O = ModelFamilyConfig(
         supports_fine_tuning=True,
         supports_distillation=True,
         supports_predicted_outputs=True,
+        max_tokens=16384,
+        context_window=128000,
     ),
     specific_models={
         "gpt-4o-audio-preview": SpecificModelConfig(
@@ -123,6 +125,8 @@ GPT_4O = ModelFamilyConfig(
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,
+                max_tokens=16384,
+                context_window=128000,
             ),
             patterns=[
                 "gpt-4o-audio-preview-{year:4d}-{month:2d}-{day:2d}",
@@ -138,6 +142,8 @@ GPT_4O = ModelFamilyConfig(
                 supports_structured_outputs=True,
                 supports_fine_tuning=True,
                 supports_predicted_outputs=True,
+                max_tokens=16384,
+                context_window=128000,
             ),
             patterns=[
                 "gpt-4o-mini-{year:4d}-{month:2d}-{day:2d}",
@@ -154,6 +160,8 @@ GPT_4O = ModelFamilyConfig(
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,
+                max_tokens=16384,
+                context_window=128000,
             ),
             patterns=[
                 "gpt-4o-mini-audio-preview-{year:4d}-{month:2d}-{day:2d}",
@@ -170,6 +178,8 @@ GPT_4O = ModelFamilyConfig(
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,
+                max_tokens=4096,
+                context_window=16000,
             ),
             patterns=[
                 "gpt-4o-mini-realtime-preview-{year:4d}-{month:2d}-{day:2d}",
@@ -238,6 +248,7 @@ GPT_4_1 = ModelFamilyConfig(
     provider=Provider.OPENAI,
     version_default="4.1",
     patterns=[
+        "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
         "gpt-4.1-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "gpt-4.1-{variant}",
         "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
@@ -333,9 +344,9 @@ O1 = ModelFamilyConfig(
     provider=Provider.OPENAI,
     version_default="1.0",
     patterns=[
+        "o1-{year:4d}-{month:2d}-{day:2d}",
         "o1-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "o1-{variant}",
-        "o1-{year:4d}-{month:2d}-{day:2d}",
         "o1",
     ],
     capabilities=ModelCapabilities(
@@ -347,20 +358,6 @@ O1 = ModelFamilyConfig(
         context_window=200000,
     ),
     specific_models={
-        "o1": SpecificModelConfig(
-            version="1.0",
-            variant="base",
-            capabilities=ModelCapabilities(
-                supports_thinking=True,
-                supports_function_calling=True,
-                supports_streaming=True,
-                supports_structured_outputs=True,
-            ),
-            patterns=[
-                "o1-{year:4d}-{month:2d}-{day:2d}",
-                "o1",
-            ],
-        ),
         "o1-pro": SpecificModelConfig(
             version="1.0",
             variant="pro",
@@ -369,6 +366,8 @@ O1 = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_streaming=False,
                 supports_structured_outputs=True,
+                max_tokens=100000,
+                context_window=200000,
             ),
             patterns=[
                 "o1-pro-{year:4d}-{month:2d}-{day:2d}",
