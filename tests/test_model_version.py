@@ -75,9 +75,9 @@ class TestModelVersion(unittest.TestCase):
     def test_capabilities(self) -> None:
         """测试能力检测 / Test capability detection"""
         # GPT-4 Turbo 支持视觉
-        gpt4_turbo = LLMeta("gpt-4-turbo")
-        assert gpt4_turbo.capabilities.supports_vision is True
-        assert gpt4_turbo.supports_multimodal is True
+        gpt4o_turbo = LLMeta("gpt-4o-turbo")
+        assert gpt4o_turbo.capabilities.supports_vision is True
+        assert gpt4o_turbo.supports_multimodal is True
 
         # GPT-3.5 不支持视觉
         gpt35 = LLMeta("gpt-3.5-turbo")
@@ -234,7 +234,7 @@ class TestModelVersion(unittest.TestCase):
         """测试复杂的版本、型号和日期比较 / Test complex version, variant and date comparison"""
 
         # 创建不同版本、型号和日期的模型
-        gpt4_base_with_date = LLMeta("gpt-4-0125-preview")  # base, 2024-01-25
+        gpt4_base_with_date = LLMeta("gpt-4-0125")  # base, 2024-01-25
         gpt4_base_no_date = LLMeta("gpt-4")  # base, no date
         gpt4_turbo_with_date = LLMeta("gpt-4-turbo-2024-04-09")  # turbo, 2024-04-09
         gpt4_turbo_no_date = LLMeta("gpt-4-turbo")  # turbo, no date
