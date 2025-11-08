@@ -236,7 +236,7 @@ def test_variant_priority_alignment(family: ModelFamily, variant: str, sample_na
     model = LLMeta(sample_name)
 
     assert model.family == family, f"'{sample_name}' 应该解析为家族 '{family.value}'，实际为 '{model.family.value}'"
-    assert model.variant == variant, f"'{sample_name}' 解析出的型号应为 '{variant}'，实际为 '{model.variant}'"
+    assert model.variant == variant, f"'{sample_name}' 解析出的型号应为 '{variant:variant}'，实际为 '{model.variant}'"
 
     family_config = get_family_config(family)
     assert family_config is not None, f"家族 '{family.value}' 没有注册配置"

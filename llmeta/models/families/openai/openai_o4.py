@@ -18,8 +18,8 @@ O4 = ModelFamilyConfig(
     version_default="4.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "o4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o4-{variant}",
+        "o4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o4-{variant:variant}",
     ],
     capabilities=ModelCapabilities(
         supports_streaming=True,

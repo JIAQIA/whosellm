@@ -22,9 +22,9 @@ QWEN = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "qwen{version:d}-{variant}",
-        "qwen-{version:d}-{variant}",
-        "qwen-{variant}",
+        "qwen{version:d}-{variant:variant}",
+        "qwen-{version:d}-{variant:variant}",
+        "qwen-{variant:variant}",
         "qwen",
         "tongyi",  # 别名 / Alias
     ],

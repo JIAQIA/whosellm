@@ -276,7 +276,7 @@ def register_family(config: "ModelFamilyConfig") -> None:
         >>> gemini_config = ModelFamilyConfig(
         ...     family=ModelFamily.GEMINI,
         ...     provider=Provider.GOOGLE,
-        ...     patterns=["gemini-{variant}"],
+        ...     patterns=["gemini-{variant:variant}"],
         ...     capabilities=ModelCapabilities(supports_vision=True),
         ... )
         >>>

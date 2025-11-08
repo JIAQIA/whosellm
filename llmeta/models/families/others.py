@@ -25,8 +25,8 @@ ERNIE = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "ernie-{version:d}-{variant}",
-        "ernie-{variant}",
+        "ernie-{version:d}-{variant:variant}",
+        "ernie-{variant:variant}",
         "ernie",
         "wenxin",  # 别名 / Alias
     ],
@@ -48,7 +48,7 @@ HUNYUAN = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "hunyuan-{variant}",
+        "hunyuan-{variant:variant}",
         "hunyuan",
     ],
     capabilities=ModelCapabilities(
@@ -69,8 +69,8 @@ MOONSHOT = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "moonshot-{version:d}-{variant}",
-        "moonshot-{variant}",
+        "moonshot-{version:d}-{variant:variant}",
+        "moonshot-{variant:variant}",
         "moonshot",
     ],
     capabilities=ModelCapabilities(
@@ -91,8 +91,8 @@ DEEPSEEK = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "deepseek-{variant}-v{version:d}",  # deepseek-chat-v2
-        "deepseek-{variant}",
+        "deepseek-{variant:variant}-v{version:d}",  # deepseek-chat-v2
+        "deepseek-{variant:variant}",
         "deepseek",
     ],
     capabilities=ModelCapabilities(
@@ -113,8 +113,8 @@ ABAB = ModelFamilyConfig(
     version_default="1.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "abab-{version:d}-{variant}",
-        "abab-{variant}",
+        "abab-{version:d}-{variant:variant}",
+        "abab-{variant:variant}",
         "abab",
     ],
     capabilities=ModelCapabilities(

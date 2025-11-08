@@ -19,8 +19,8 @@ O3 = ModelFamilyConfig(
     version_default="3.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "o3-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o3-{variant}",
+        "o3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o3-{variant:variant}",
         "o3-{year:4d}-{month:2d}-{day:2d}",
         "o3",
     ],

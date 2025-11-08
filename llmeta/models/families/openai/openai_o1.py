@@ -19,8 +19,8 @@ O1 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "o1-{year:4d}-{month:2d}-{day:2d}",
-        "o1-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o1-{variant}",
+        "o1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o1-{variant:variant}",
         "o1",
     ],
     capabilities=ModelCapabilities(

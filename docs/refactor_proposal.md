@@ -261,11 +261,11 @@ GPT_4 = ModelFamilyConfig(
     version_default="4.0",
     
     patterns=[
-        "gpt-4o-{variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-4o-mini-2024-07-18
-        "gpt-4o-{variant}",                                 # gpt-4o-mini
-        "gpt-4-{variant}-{year:4d}-{month:2d}-{day:2d}",   # gpt-4-turbo-2024-04-09
-        "gpt-4-{variant}-{mmdd:4d}",                        # gpt-4-0125-preview
-        "gpt-4-{variant}",                                  # gpt-4-turbo, gpt-4-plus
+        "gpt-4o-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-4o-mini-2024-07-18
+        "gpt-4o-{variant:variant}",                                 # gpt-4o-mini
+        "gpt-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",   # gpt-4-turbo-2024-04-09
+        "gpt-4-{variant:variant}-{mmdd:4d}",                        # gpt-4-0125-preview
+        "gpt-4-{variant:variant}",                                  # gpt-4-turbo, gpt-4-plus
         "gpt-4o",                                           # gpt-4o (base)
         "gpt-4",                                            # gpt-4 (base)
     ],
@@ -299,8 +299,8 @@ GPT_3_5 = ModelFamilyConfig(
     version_default="3.5",
     
     patterns=[
-        "gpt-3.5-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-3.5-{variant}",
+        "gpt-3.5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "gpt-3.5-{variant:variant}",
         "gpt-3.5",
     ],
     
@@ -322,8 +322,8 @@ O1 = ModelFamilyConfig(
     version_default="1.0",
     
     patterns=[
-        "o1-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o1-{variant}",
+        "o1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o1-{variant:variant}",
         "o1",
     ],
     
@@ -346,8 +346,8 @@ O3 = ModelFamilyConfig(
     version_default="3.0",
     
     patterns=[
-        "o3-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o3-{variant}",
+        "o3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o3-{variant:variant}",
         "o3",
     ],
     
@@ -389,8 +389,8 @@ GLM_4V = ModelFamilyConfig(
     version_default="4.0",
     
     patterns=[
-        "glm-4v-{variant}-{mmdd:4d}",  # glm-4v-plus-0111
-        "glm-4v-{variant}",             # glm-4v-plus, glm-4v-flash
+        "glm-4v-{variant:variant}-{mmdd:4d}",  # glm-4v-plus-0111
+        "glm-4v-{variant:variant}",             # glm-4v-plus, glm-4v-flash
         "glm-4v",                       # glm-4v (base)
     ],
     
@@ -415,8 +415,8 @@ GLM_4 = ModelFamilyConfig(
     version_default="4.0",
     
     patterns=[
-        "glm-4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4-{variant}",
+        "glm-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-4-{variant:variant}",
         "glm-4",
     ],
     
@@ -438,7 +438,7 @@ GLM_3 = ModelFamilyConfig(
     version_default="3.0",
     
     patterns=[
-        "glm-3-{variant}",
+        "glm-3-{variant:variant}",
         "glm-3",
     ],
     
@@ -505,7 +505,7 @@ __all__ = [
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
     provider=Provider.GOOGLE,
-    patterns=["gemini-{variant}"],
+    patterns=["gemini-{variant:variant}"],
     capabilities=ModelCapabilities(...),
 )
 ```
@@ -524,7 +524,7 @@ def test_gpt4_config():
     from llmeta.models.families.openai.openai_gpt_4 import GPT_4
     assert GPT_4.family == llmeta.models.families.openai.openai_gpt_4.GPT_4
     assert GPT_4.provider == Provider.OPENAI
-    assert "gpt-4-{variant}" in GPT_4.patterns
+    assert "gpt-4-{variant:variant}" in GPT_4.patterns
 ```
 
 ## 🔄 迁移步骤 / Migration Steps
@@ -565,7 +565,7 @@ MODEL_PATTERNS = [..., ModelPattern(...)]
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
     provider=Provider.GOOGLE,
-    patterns=["gemini-{variant}"],
+    patterns=["gemini-{variant:variant}"],
     capabilities=ModelCapabilities(...),
 )
 ```

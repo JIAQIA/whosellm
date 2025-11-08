@@ -22,8 +22,8 @@ GLM_4V = ModelFamilyConfig(
     version_default="4.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "glm-4v-{variant}-{mmdd:4d}",  # glm-4v-plus-0111
-        "glm-4v-{variant}",  # glm-4v-plus, glm-4v-flash
+        "glm-4v-{variant:variant}-{mmdd:4d}",  # glm-4v-plus-0111
+        "glm-4v-{variant:variant}",  # glm-4v-plus, glm-4v-flash
         "glm-4v",  # glm-4v (base)
     ],
     capabilities=ModelCapabilities(
@@ -105,8 +105,8 @@ GLM_4 = ModelFamilyConfig(
     version_default="4.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "glm-4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4-{variant}",
+        "glm-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-4-{variant:variant}",
         "glm-4",
         "chatglm",  # 别名 / Alias
         "cogview",  # 别名 / Alias
@@ -129,7 +129,7 @@ GLM_3 = ModelFamilyConfig(
     version_default="3.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "glm-3-{variant}",
+        "glm-3-{variant:variant}",
         "glm-3",
     ],
     capabilities=ModelCapabilities(

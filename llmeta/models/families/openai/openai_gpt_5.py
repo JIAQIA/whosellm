@@ -19,8 +19,8 @@ GPT_5 = ModelFamilyConfig(
     version_default="5.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "gpt-5-{variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-5-mini-2025-08-07
-        "gpt-5-{variant}",  # gpt-5-mini
+        "gpt-5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-5-mini-2025-08-07
+        "gpt-5-{variant:variant}",  # gpt-5-mini
         "gpt-5",  # gpt-5 (base)
     ],
     capabilities=ModelCapabilities(

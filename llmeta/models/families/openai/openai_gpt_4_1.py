@@ -19,8 +19,8 @@ GPT_4_1 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-4.1-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-4.1-{variant}",
+        "gpt-4.1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "gpt-4.1-{variant:variant}",
         "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
         "gpt-4.1",
     ],

@@ -105,9 +105,9 @@ GEMINI = ModelFamilyConfig(
     provider=Provider.GOOGLE,
     version_default="1.0",
     patterns=[
-        "gemini-{version:d}-{variant}-{year:4d}-{month:2d}-{day:2d}",  # gemini-1-pro-2024-01-15
-        "gemini-{version:d}-{variant}",  # gemini-1-pro, gemini-1-ultra
-        "gemini-{variant}",              # gemini-pro
+        "gemini-{version:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gemini-1-pro-2024-01-15
+        "gemini-{version:d}-{variant:variant}",  # gemini-1-pro, gemini-1-ultra
+        "gemini-{variant:variant}",              # gemini-pro
         "gemini",                        # gemini (base)
     ],
     capabilities=ModelCapabilities(
@@ -150,7 +150,7 @@ __all__ = [
 
 | 语法 / Syntax | 说明 / Description | 示例 / Example |
 |--------------|-------------------|----------------|
-| `{variant}` | 匹配任意字符作为型号 / Match any characters as variant | `pro`, `ultra`, `mini` |
+| `{variant:variant}` | 匹配任意字符作为型号 / Match any characters as variant | `pro`, `ultra`, `mini` |
 | `{version:d}` | 匹配整数作为版本号 / Match integer as version | `1`, `2`, `3` |
 | `{year:4d}` | 匹配4位数字作为年份 / Match 4-digit year | `2024`, `2025` |
 | `{month:2d}` | 匹配2位数字作为月份 / Match 2-digit month | `01`, `12` |
@@ -226,8 +226,8 @@ gemini_config = ModelFamilyConfig(
     provider=Provider.GOOGLE,    # 使用动态添加的枚举成员
     version_default="1.0",
     patterns=[
-        "gemini-{version:d}-{variant}",
-        "gemini-{variant}",
+        "gemini-{version:d}-{variant:variant}",
+        "gemini-{variant:variant}",
         "gemini",
     ],
     capabilities=ModelCapabilities(
@@ -325,8 +325,8 @@ GEMINI = ModelFamilyConfig(
     provider=Provider.GOOGLE,
     version_default="1.0",
     patterns=[
-        "gemini-{version:d}-{variant}",
-        "gemini-{variant}",
+        "gemini-{version:d}-{variant:variant}",
+        "gemini-{variant:variant}",
         "gemini",
     ],
     capabilities=ModelCapabilities(
@@ -407,9 +407,9 @@ GEMINI = ModelFamilyConfig(
     provider=Provider.GOOGLE,
     version_default="1.0",
     patterns=[
-        "gemini-{version:d}-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gemini-{version:d}-{variant}",
-        "gemini-{variant}",
+        "gemini-{version:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "gemini-{version:d}-{variant:variant}",
+        "gemini-{variant:variant}",
         "gemini",
     ],
     capabilities=ModelCapabilities(
@@ -581,7 +581,7 @@ class TestGemini(unittest.TestCase):
 A: 在模式中使用 `{version:d}` 捕获版本号，例如：
 ```python
 patterns=[
-    "model-{version:d}-{variant}",  # model-1-pro, model-2-pro
+    "model-{version:d}-{variant:variant}",  # model-1-pro, model-2-pro
 ]
 ```
 
@@ -590,8 +590,8 @@ patterns=[
 A: 添加更具体的模式，并放在列表前面：
 ```python
 patterns=[
-    "special-format-{variant}",     # 特殊格式优先
-    "model-{variant}",              # 通用格式
+    "special-format-{variant:variant}",     # 特殊格式优先
+    "model-{variant:variant}",              # 通用格式
 ]
 ```
 

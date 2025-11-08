@@ -31,8 +31,8 @@ def test_basic_functionality():
         provider=Provider.MOCK_PROVIDER_1,
         version_default="4.0",
         patterns=[
-            "test-{variant}-{version}",
-            "test-{variant}",
+            "test-{variant:variant}-{version}",
+            "test-{variant:variant}",
             "test",
         ],
         capabilities=ModelCapabilities(
@@ -87,7 +87,7 @@ def test_basic_functionality():
     assert config is not None, "应该找到配置"
     version, variant, capabilities = config
     assert version == "4.5", f"version 应该是 '4.5'，实际是 {version}"
-    assert variant == "special", f"variant 应该是 'special'，实际是 {variant}"
+    assert variant == "special", f"variant 应该是 'special'，实际是 {variant:variant}"
     assert capabilities.supports_vision is True, "应该支持 vision"
     print("   ✓ 通过")
 
@@ -112,14 +112,14 @@ def test_validation():
             provider=Provider.MOCK_PROVIDER_2,
             version_default="4.0",
             patterns=[
-                "test-{variant}",
+                "test-{variant:variant}",
             ],
             specific_models={
                 "invalid": SpecificModelConfig(
                     version="1.0",
                     variant="invalid",
                     patterns=[
-                        "completely-different-{variant}",  # 这个不匹配父 pattern
+                        "completely-different-{variant:variant}",  # 这个不匹配父 pattern
                     ],
                 ),
             },
@@ -148,7 +148,7 @@ def test_priority():
         provider=Provider.MOCK_PROVIDER_3,
         version_default="4.0",
         patterns=[
-            "priority-{variant}",
+            "priority-{variant:variant}",
         ],
         capabilities=ModelCapabilities(
             max_tokens=8192,
@@ -162,7 +162,7 @@ def test_priority():
                     max_tokens=16384,
                 ),
                 patterns=[
-                    "priority-{variant}",  # 和父 pattern 一样
+                    "priority-{variant:variant}",  # 和父 pattern 一样
                 ],
             ),
         },
@@ -196,7 +196,7 @@ def test_existing_models():
     print(f"   配置: {config}")
     assert config is not None, "应该找到配置"
     version, variant, capabilities = config
-    assert variant == "mini", f"variant 应该是 'mini'，实际是 {variant}"
+    assert variant == "mini", f"variant 应该是 'mini'，实际是 {variant:variant}"
     assert capabilities.supports_vision is True, "应该支持 vision"
     print("   ✓ 通过")
 
@@ -212,7 +212,7 @@ def test_existing_models():
     assert config is not None, "应该找到配置"
     version, variant, capabilities = config
     assert version == "4.0", "版本匹配为4.0"
-    assert variant == "vision-plus", f"variant 应该是 'vision-plus'，实际是 {variant}"
+    assert variant == "vision-plus", f"variant 应该是 'vision-plus'，实际是 {variant:variant}"
     assert capabilities.supports_video is True, "应该支持 video"
     print("   ✓ 通过")
 
