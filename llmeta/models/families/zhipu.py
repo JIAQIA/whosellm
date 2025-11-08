@@ -20,6 +20,7 @@ GLM_4V = ModelFamilyConfig(
     family=ModelFamily.GLM_4V,
     provider=Provider.ZHIPU,
     version_default="4.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "glm-4v-{variant}-{mmdd:4d}",  # glm-4v-plus-0111
         "glm-4v-{variant}",  # glm-4v-plus, glm-4v-flash
@@ -39,6 +40,7 @@ GLM_4V = ModelFamilyConfig(
         "glm-4v-plus-0111": SpecificModelConfig(
             version="4.0",
             variant="vision-plus",
+            variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,
@@ -58,6 +60,7 @@ GLM_4V = ModelFamilyConfig(
         "glm-4v-plus": SpecificModelConfig(
             version="4.0",
             variant="vision-plus",
+            variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,  # plus 支持视频
@@ -78,6 +81,7 @@ GLM_4V = ModelFamilyConfig(
         "glm-4v-flash": SpecificModelConfig(
             version="4.0",
             variant="vision-flash",
+            variant_priority=(0,),  # flash 的优先级 / flash priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_streaming=True,
@@ -99,6 +103,7 @@ GLM_4 = ModelFamilyConfig(
     family=ModelFamily.GLM_4,
     provider=Provider.ZHIPU,
     version_default="4.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "glm-4-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "glm-4-{variant}",
@@ -122,6 +127,7 @@ GLM_3 = ModelFamilyConfig(
     family=ModelFamily.GLM_3,
     provider=Provider.ZHIPU,
     version_default="3.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "glm-3-{variant}",
         "glm-3",

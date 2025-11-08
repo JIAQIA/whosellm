@@ -380,6 +380,7 @@ def auto_register_model(
         version = ""
         variant = "base"
         release_date = None
+        variant_priority = None
     else:
         # 从匹配结果中提取信息 / Extract information from match result
         family = matched.get("family", ModelFamily.UNKNOWN)
@@ -388,6 +389,7 @@ def auto_register_model(
         variant = normalize_variant(matched.get("variant"))
         release_date = parse_date_from_match(matched)
         capabilities = matched.get("capabilities")
+        variant_priority = matched.get("variant_priority")
 
     # 获取或继承能力 / Get or inherit capabilities
     if capabilities:
@@ -397,8 +399,13 @@ def auto_register_model(
 
         model_capabilities = get_default_capabilities(family)
 
-    # 推断型号优先级 / Infer variant priority
-    variant_priority = infer_variant_priority(variant)
+    # 获取或推断型号优先级 / Get or infer variant priority
+    # 优先使用配置中的 variant_priority，如果没有则推断
+    # Prefer variant_priority from config, infer if not available
+    if variant_priority is None:
+        # 如果配置中没有指定，则根据 variant 推断
+        # If not specified in config, infer from variant
+        variant_priority = infer_variant_priority(variant)
 
     # 创建模型信息 / Create model info
     model_info = ModelInfo(

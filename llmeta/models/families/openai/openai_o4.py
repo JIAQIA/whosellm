@@ -16,6 +16,7 @@ O4 = ModelFamilyConfig(
     family=ModelFamily.O4,
     provider=Provider.OPENAI,
     version_default="4.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "o4-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "o4-{variant}",
@@ -30,6 +31,7 @@ O4 = ModelFamilyConfig(
         "o4-mini": SpecificModelConfig(
             version="4.0",
             variant="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_streaming=True,
                 supports_function_calling=True,
@@ -44,6 +46,7 @@ O4 = ModelFamilyConfig(
         "o4-mini-deep-research": SpecificModelConfig(
             version="4.0",
             variant="mini-deep-research",
+            variant_priority=(0,),  # mini-deep-research 的优先级 / mini-deep-research priority
             capabilities=ModelCapabilities(
                 supports_streaming=True,
                 supports_function_calling=False,

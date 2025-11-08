@@ -16,6 +16,7 @@ O1 = ModelFamilyConfig(
     family=ModelFamily.O1,
     provider=Provider.OPENAI,
     version_default="1.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "o1-{year:4d}-{month:2d}-{day:2d}",
         "o1-{variant}-{year:4d}-{month:2d}-{day:2d}",
@@ -34,6 +35,7 @@ O1 = ModelFamilyConfig(
         "o1-pro": SpecificModelConfig(
             version="1.0",
             variant="pro",
+            variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,

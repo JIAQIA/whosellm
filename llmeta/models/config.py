@@ -41,6 +41,11 @@ class SpecificModelConfig:
     # 必须是父 patterns 的子集 / Must be a subset of parent patterns
     patterns: list[str] = field(default_factory=list)
 
+    # 型号优先级（可选） / Variant priority (optional)
+    # 如果未指定，将使用 infer_variant_priority 推断
+    # If not specified, will be inferred using infer_variant_priority
+    variant_priority: tuple[int, ...] | None = None
+
 
 @dataclass
 class ModelFamilyConfig:
@@ -62,6 +67,10 @@ class ModelFamilyConfig:
     # 默认值 / Defaults
     version_default: str = "1.0"
     variant_default: str = field(default="base")
+    # 默认型号优先级（可选） / Default variant priority (optional)
+    # 如果未指定，将使用 infer_variant_priority 推断
+    # If not specified, will be inferred using infer_variant_priority
+    variant_priority_default: tuple[int, ...] | None = None
 
     # 默认能力 / Default capabilities
     capabilities: ModelCapabilities = field(default_factory=ModelCapabilities)

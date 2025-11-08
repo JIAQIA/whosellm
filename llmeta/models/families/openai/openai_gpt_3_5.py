@@ -16,6 +16,7 @@ GPT_3_5 = ModelFamilyConfig(
     family=ModelFamily.GPT_3_5,
     provider=Provider.OPENAI,
     version_default="3.5",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "gpt-3.5-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "gpt-3.5-{variant}",

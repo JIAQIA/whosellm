@@ -16,6 +16,7 @@ GPT_4_1 = ModelFamilyConfig(
     family=ModelFamily.GPT_4_1,
     provider=Provider.OPENAI,
     version_default="4.1",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
         "gpt-4.1-{variant}-{year:4d}-{month:2d}-{day:2d}",
@@ -34,6 +35,7 @@ GPT_4_1 = ModelFamilyConfig(
         "gpt-4.1-mini": SpecificModelConfig(
             version="4.1",
             variant="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -49,6 +51,7 @@ GPT_4_1 = ModelFamilyConfig(
         "gpt-4.1-nano": SpecificModelConfig(
             version="4.1",
             variant="nano",
+            variant_priority=(0,),  # nano 的优先级 (< mini) / nano priority (< mini)
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,

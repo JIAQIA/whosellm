@@ -16,6 +16,7 @@ GPT_4 = ModelFamilyConfig(
     family=ModelFamily.GPT_4,
     provider=Provider.OPENAI,
     version_default="4.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "gpt-4-{mmdd:4d}",  # gpt-4-0613
         "gpt-4",  # gpt-4 (base)

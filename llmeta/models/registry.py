@@ -127,6 +127,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                 "family": config.family,
                 "provider": config.provider,
                 "capabilities": spec_config.capabilities,
+                "variant_priority": spec_config.variant_priority,
                 "_from_specific_model": model_lower,
             }
 
@@ -148,6 +149,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                     matched["provider"] = config.provider
                     matched["variant"] = spec_config.variant
                     matched["capabilities"] = spec_config.capabilities
+                    matched["variant_priority"] = spec_config.variant_priority
                     # 标记这是从 specific_model 匹配的 / Mark this as matched from specific_model
                     matched["_from_specific_model"] = _spec_model_name
                     return matched
@@ -164,6 +166,15 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                     matched["version"] = config.version_default
                 if not matched.get("variant"):
                     matched["variant"] = config.variant_default
+                    # 只有当使用默认 variant 时，才使用 variant_priority_default
+                    # Only use variant_priority_default when using default variant
+                    matched["variant_priority"] = config.variant_priority_default
+                else:
+                    # 如果从 pattern 提取到了 variant，不设置 variant_priority
+                    # 让后续逻辑根据 variant 推断
+                    # If variant is extracted from pattern, don't set variant_priority
+                    # Let subsequent logic infer from variant
+                    matched["variant_priority"] = None
                 matched["family"] = config.family
                 matched["provider"] = config.provider
                 matched["capabilities"] = config.capabilities

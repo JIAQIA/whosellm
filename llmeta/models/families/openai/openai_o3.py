@@ -17,6 +17,7 @@ O3 = ModelFamilyConfig(
     family=ModelFamily.O3,
     provider=Provider.OPENAI,
     version_default="3.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "o3-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "o3-{variant}",
@@ -32,6 +33,7 @@ O3 = ModelFamilyConfig(
         "o3": SpecificModelConfig(
             version="3.0",
             variant="base",
+            variant_priority=(1,),  # base 的优先级 / base priority
             capabilities=ModelCapabilities(
                 supports_streaming=True,
                 supports_function_calling=True,
@@ -45,6 +47,7 @@ O3 = ModelFamilyConfig(
         "o3-mini": SpecificModelConfig(
             version="3.0",
             variant="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_streaming=True,
                 supports_function_calling=True,
@@ -58,6 +61,7 @@ O3 = ModelFamilyConfig(
         "o3-pro": SpecificModelConfig(
             version="3.0",
             variant="pro",
+            variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
                 supports_streaming=False,
                 supports_function_calling=True,
@@ -71,6 +75,7 @@ O3 = ModelFamilyConfig(
         "o3-deep-research": SpecificModelConfig(
             version="3.0",
             variant="deep-research",
+            variant_priority=(1,),  # deep-research 的优先级 / deep-research priority
             capabilities=ModelCapabilities(
                 supports_streaming=True,
                 supports_function_calling=False,

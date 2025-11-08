@@ -20,6 +20,7 @@ CLAUDE = ModelFamilyConfig(
     family=ModelFamily.CLAUDE,
     provider=Provider.ANTHROPIC,
     version_default="3.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "claude-{version:d}-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "claude-{version:d}-{variant}",

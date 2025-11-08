@@ -17,6 +17,7 @@ GPT_5 = ModelFamilyConfig(
     family=ModelFamily.GPT_5,
     provider=Provider.OPENAI,
     version_default="5.0",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
         "gpt-5-{variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-5-mini-2025-08-07
         "gpt-5-{variant}",  # gpt-5-mini
@@ -35,6 +36,7 @@ GPT_5 = ModelFamilyConfig(
         "gpt-5-mini": SpecificModelConfig(
             version="5.0",
             variant="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -52,6 +54,7 @@ GPT_5 = ModelFamilyConfig(
         "gpt-5-nano": SpecificModelConfig(
             version="5.0",
             variant="nano",
+            variant_priority=(0,),  # nano 的优先级 / nano priority
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -69,6 +72,7 @@ GPT_5 = ModelFamilyConfig(
         "gpt-5-pro": SpecificModelConfig(
             version="5.0",
             variant="pro",
+            variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,

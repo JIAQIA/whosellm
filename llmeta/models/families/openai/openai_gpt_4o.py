@@ -17,6 +17,7 @@ GPT_4O = ModelFamilyConfig(
     provider=Provider.OPENAI,
     version_default="4.0",
     variant_default="omni",
+    variant_priority_default=(6,),  # omni 的优先级 / omni priority
     patterns=[
         "gpt-4o-{variant}-{year:4d}-{month:2d}-{day:2d}",
         "gpt-4o-{year:4d}-{month:2d}-{day:2d}",  # 日期模式优先
@@ -38,6 +39,7 @@ GPT_4O = ModelFamilyConfig(
         "gpt-4o-audio-preview": SpecificModelConfig(
             version="4.0",
             variant="audio-preview",
+            variant_priority=(0,),  # preview 的优先级 / preview priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_streaming=True,
@@ -57,6 +59,7 @@ GPT_4O = ModelFamilyConfig(
         "gpt-4o-mini": SpecificModelConfig(
             version="4.0",
             variant="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_streaming=True,
@@ -75,6 +78,7 @@ GPT_4O = ModelFamilyConfig(
         "gpt-4o-mini-audio-preview": SpecificModelConfig(
             version="4.0",
             variant="mini-audio-preview",
+            variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_streaming=True,
@@ -94,6 +98,7 @@ GPT_4O = ModelFamilyConfig(
         "gpt-4o-mini-realtime-preview": SpecificModelConfig(
             version="4.0",
             variant="mini-realtime-preview",
+            variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_streaming=False,
