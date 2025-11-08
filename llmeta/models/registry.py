@@ -233,7 +233,7 @@ def get_specific_model_config(model_name: str) -> tuple[str, str, ModelCapabilit
     Returns:
         tuple | None: (version, variant, capabilities) 或 None
     """
-    import parse
+    import parse  # type: ignore[import-untyped]
 
     model_lower = model_name.lower()
 

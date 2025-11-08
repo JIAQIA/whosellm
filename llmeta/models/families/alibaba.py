@@ -31,10 +31,72 @@ QWEN = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
+        supports_vision=True,
         max_tokens=8192,
         context_window=32000,
     ),
     specific_models={
+        "qwen3-max": SpecificModelConfig(
+            version="3",
+            variant="max",
+            capabilities=ModelCapabilities(
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                max_tokens=32000,
+                context_window=256000,
+            ),
+            patterns=[
+                "qwen3-max-{year:4d}-{month:2d}-{day:2d}",
+                "qwen3-max",
+            ],
+        ),
+        "qwen3-max-preview": SpecificModelConfig(
+            version="3",
+            variant="max-preview",
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                max_tokens=64000,
+                context_window=256000,
+            ),
+            patterns=[
+                "qwen3-max-preview-{year:4d}-{month:2d}-{day:2d}",
+                "qwen3-max-preview",
+            ],
+        ),
+        "qwen-image-plus": SpecificModelConfig(
+            version="1.0",
+            variant="image-plus",
+            capabilities=ModelCapabilities(
+                supports_streaming=False,
+                supports_structured_outputs=False,
+                supports_function_calling=False,
+                supports_vision=True,
+                max_tokens=None,
+                context_window=None,
+            ),
+            patterns=[
+                "qwen-image-plus",
+            ],
+        ),
+        "qwen-image": SpecificModelConfig(
+            version="1.0",
+            variant="image",
+            capabilities=ModelCapabilities(
+                supports_streaming=False,
+                supports_structured_outputs=False,
+                supports_function_calling=False,
+                supports_vision=True,
+                max_tokens=None,
+                context_window=None,
+            ),
+            patterns=[
+                "qwen-image",
+            ],
+        ),
         "qwen3-vl-plus": SpecificModelConfig(
             version="3",
             variant="vl-plus",
