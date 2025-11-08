@@ -444,6 +444,83 @@ def test_qwen3_max_preview_auto_register() -> None:
     assert meta.capabilities.max_tokens == 64000
 
 
+def test_qwen3_coder_plus_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-coder-plus")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "coder-plus"
+
+
+def test_qwen3_coder_plus_specific_config() -> None:
+    config = get_specific_model_config("qwen3-coder-plus")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "coder-plus"
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.supports_fine_tuning is True
+    assert capabilities.max_tokens == 64000
+    assert capabilities.context_window == 1_000_000
+
+
+def test_qwen3_coder_plus_auto_register() -> None:
+    meta = LLMeta("qwen3-coder-plus")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "coder-plus"
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.supports_structured_outputs is True
+    assert meta.capabilities.supports_streaming is True
+    assert meta.capabilities.supports_fine_tuning is True
+    assert meta.capabilities.context_window == 1_000_000
+
+
+def test_qwen3_coder_plus_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-coder-plus-2025-09-23")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "coder-plus"
+    assert meta.release_date == date(2025, 9, 23)
+    assert meta.capabilities.supports_fine_tuning is True
+    assert meta.capabilities.max_tokens == 64000
+    assert meta.capabilities.context_window == 1_000_000
+
+
+def test_qwen3_coder_plus_snapshot_specific_config() -> None:
+    config = get_specific_model_config("qwen3-coder-plus-2025-09-23")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "coder-plus"
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.supports_fine_tuning is True
+    assert capabilities.max_tokens == 64000
+    assert capabilities.context_window == 1_000_000
+
+
+def test_qwen3_coder_plus_snapshot_auto_register() -> None:
+    meta = LLMeta("qwen3-coder-plus-2025-09-23")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "coder-plus"
+    assert meta.capabilities.supports_structured_outputs is True
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.supports_streaming is True
+    assert meta.capabilities.supports_fine_tuning is True
+    assert meta.capabilities.context_window == 1_000_000
+
+
 def test_qwen3_max_preview_general_pattern_isolated() -> None:
     meta = LLMeta("qwen3-preview")
 

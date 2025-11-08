@@ -66,6 +66,22 @@ QWEN = ModelFamilyConfig(
                 "qwen3-max-preview",
             ],
         ),
+        "qwen3-coder-plus": SpecificModelConfig(
+            version="3",
+            variant="coder-plus",
+            capabilities=ModelCapabilities(
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_fine_tuning=True,
+                max_tokens=64000,
+                context_window=1_000_000,
+            ),
+            patterns=[
+                "qwen3-coder-plus-{year:4d}-{month:2d}-{day:2d}",
+                "qwen3-coder-plus",
+            ],
+        ),
         "qwen-image-plus": SpecificModelConfig(
             version="1.0",
             variant="image-plus",
