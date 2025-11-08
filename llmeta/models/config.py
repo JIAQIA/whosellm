@@ -145,8 +145,23 @@ class ModelFamilyConfig:
         Returns:
             str: 示例字符串 / Example string
         """
-        # 简单实现：将 {name} 替换为 "test"
-        # Simple implementation: replace {name} with "test"
+        # 根据占位符类型返回更贴合的示例值，确保 parse 校验通过
+        # Return example values respecting placeholder type hints to keep parse validation working
         import re
 
-        return re.sub(r"\{[^}]+\}", "test", pattern)
+        def _placeholder_replacer(match: re.Match[str]) -> str:
+            placeholder = match.group(0)[1:-1]
+            if ":" in placeholder:
+                _, type_spec = placeholder.split(":", 1)
+                type_spec = type_spec.strip()
+            else:
+                type_spec = ""
+
+            if type_spec.endswith("d"):
+                width_str = type_spec[:-1].strip()
+                width = int(width_str) if width_str.isdigit() else 1
+                return "1".rjust(max(width, 1), "0")
+
+            return "test"
+
+        return re.sub(r"\{[^}]+\}", _placeholder_replacer, pattern)

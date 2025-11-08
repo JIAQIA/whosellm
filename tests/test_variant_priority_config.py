@@ -121,15 +121,22 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "omni": ["qwen-omni"],
     },
     ModelFamily.CLAUDE: {
-        "mini": ["claude-3-mini"],
-        "flash": ["claude-3-flash"],
-        "preview": ["claude-3-preview"],
-        "base": ["claude"],
-        "turbo": ["claude-3-turbo"],
-        "plus": ["claude-3-plus"],
-        "pro": ["claude-3-pro"],
-        "opus": ["claude-3-opus"],
-        "ultra": ["claude-3-ultra"],
+        "sonnet": [
+            "claude-sonnet-4-5",
+            "claude-sonnet-4-5-20250929",
+            "claude-sonnet-4-5@20250929",
+            "claude-3-7-sonnet-latest",
+        ],
+        "opus": [
+            "claude-opus-4-1",
+            "claude-opus-4-1-20250805",
+            "claude-opus-4-1@20250805",
+        ],
+        "haiku": [
+            "claude-haiku-4-5",
+            "claude-haiku-4-5-20251001",
+            "claude-haiku-4-5@20251001",
+        ],
     },
     ModelFamily.ERNIE: {
         "mini": ["ernie-mini"],
@@ -205,6 +212,18 @@ def _resolve_expected_priority(
     spec_config = family_config.specific_models.get(sample_lower)
     if spec_config and spec_config.variant_priority is not None:
         return spec_config.variant_priority
+
+    # 尝试使用 specific_models 的子模式匹配样例名称，以获取显式 variant_priority
+    import parse  # type: ignore[import-untyped]
+
+    for config in family_config.specific_models.values():
+        if not config.patterns or config.variant_priority is None:
+            continue
+
+        for sub_pattern in config.patterns:
+            result = parse.parse(sub_pattern, sample_lower)
+            if result is not None:
+                return config.variant_priority
 
     if model_variant == family_config.variant_default and family_config.variant_priority_default is not None:
         return family_config.variant_priority_default

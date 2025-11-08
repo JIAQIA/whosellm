@@ -159,11 +159,12 @@ class TestAutoRegister(unittest.TestCase):
 
     def test_auto_register_claude_variant(self) -> None:
         """测试自动注册 Claude 新型号 / Test auto-register Claude new variant"""
-        model = LLMeta("claude-3-opus-custom")
+        model = LLMeta("claude-opus-4-1-20250805")
 
         assert model.family == ModelFamily.CLAUDE
         assert model.provider == Provider.ANTHROPIC
         assert model.capabilities.supports_function_calling is True
+        assert model.capabilities.supports_vision is True
         assert model.capabilities.context_window == 200000
 
     def test_manual_auto_register(self) -> None:

@@ -9,7 +9,7 @@ Anthropic 模型家族配置 / Anthropic model family configurations
 
 from llmeta.capabilities import ModelCapabilities
 from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
+from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
 from llmeta.provider import Provider
 
 # ============================================================================
@@ -19,18 +19,170 @@ from llmeta.provider import Provider
 CLAUDE = ModelFamilyConfig(
     family=ModelFamily.CLAUDE,
     provider=Provider.ANTHROPIC,
-    version_default="3.0",
-    variant_priority_default=(1,),  # base 的优先级 / base priority
+    version_default="4.5",
+    variant_default="sonnet",
+    variant_priority_default=(3,),  # sonnet 的默认优先级 / default priority for sonnet
     patterns=[
-        "claude-{version:d}-{variant}-{year:4d}-{month:2d}-{day:2d}",
-        "claude-{version:d}-{variant}",
+        "claude-{variant}-{major:d}-{minor:d}@{snapshot:8d}",
+        "claude-{variant}-{major:d}-{minor:d}-{snapshot:8d}",
+        "claude-{variant}-{major:d}-{minor:d}",
+        "claude-{variant}-{major:d}-{snapshot:8d}",
+        "claude-{variant}-{major:d}",
+        "claude-{major:d}-{minor:d}-{variant}-{snapshot:8d}",
+        "claude-{major:d}-{minor:d}-{variant}",
         "claude-{variant}",
         "claude",
     ],
     capabilities=ModelCapabilities(
+        supports_vision=True,
+        supports_thinking=True,
         supports_function_calling=True,
         supports_streaming=True,
-        max_tokens=4096,
+        max_tokens=64000,
         context_window=200000,
     ),
+    specific_models={
+        "claude-sonnet-4-5": SpecificModelConfig(
+            version="4.5",
+            variant="sonnet",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-sonnet-4-5-{snapshot:8d}",
+                "claude-sonnet-4-5",
+                "claude-sonnet-4-5@{snapshot:8d}",
+            ],
+        ),
+        "claude-haiku-4-5": SpecificModelConfig(
+            version="4.5",
+            variant="haiku",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-haiku-4-5-{snapshot:8d}",
+                "claude-haiku-4-5",
+                "claude-haiku-4-5@{snapshot:8d}",
+            ],
+        ),
+        "claude-opus-4-1": SpecificModelConfig(
+            version="4.1",
+            variant="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=32000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-opus-4-1-{snapshot:8d}",
+                "claude-opus-4-1",
+                "claude-opus-4-1@{snapshot:8d}",
+            ],
+        ),
+        "claude-sonnet-4-0": SpecificModelConfig(
+            version="4.0",
+            variant="sonnet",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-sonnet-4-{snapshot:8d}",
+                "claude-sonnet-4-0",
+                "claude-sonnet-4-0@{snapshot:8d}",
+            ],
+        ),
+        "claude-3-7-sonnet": SpecificModelConfig(
+            version="3.7",
+            variant="sonnet",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-3-7-sonnet-{snapshot:8d}",
+                "claude-3-7-sonnet-latest",
+                "claude-3-7-sonnet",
+            ],
+        ),
+        "claude-opus-4-0": SpecificModelConfig(
+            version="4.0",
+            variant="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=32000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-opus-4-{snapshot:8d}",
+                "claude-opus-4-0",
+                "claude-opus-4-0@{snapshot:8d}",
+            ],
+        ),
+        "claude-3-5-haiku": SpecificModelConfig(
+            version="3.5",
+            variant="haiku",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=False,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=8000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-3-5-haiku-{snapshot:8d}",
+                "claude-3-5-haiku-latest",
+                "claude-3-5-haiku",
+            ],
+        ),
+        "claude-3-haiku": SpecificModelConfig(
+            version="3.0",
+            variant="haiku",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=False,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=4000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-3-haiku-{snapshot:8d}",
+            ],
+        ),
+    },
 )
