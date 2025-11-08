@@ -12,10 +12,9 @@ Centrally manage all configuration for model families, including naming patterns
 
 from dataclasses import dataclass, field
 
-import parse  # type: ignore[import-untyped]
-
 from llmeta.capabilities import ModelCapabilities
 from llmeta.models.base import ModelFamily
+from llmeta.models.patterns import parse_pattern
 from llmeta.provider import Provider
 
 
@@ -131,7 +130,7 @@ class ModelFamilyConfig:
 
         # 检查这个示例是否能被父 pattern 匹配
         # Check if this example can be matched by parent pattern
-        result = parse.parse(parent_pattern, example)
+        result = parse_pattern(parent_pattern, example)
         return result is not None
 
     def _generate_pattern_example(self, pattern: str) -> str:

@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Any
 
 from llmeta.capabilities import ModelCapabilities
 from llmeta.models.base import MODEL_REGISTRY, ModelFamily, ModelInfo, register_model
+from llmeta.models.patterns import parse_pattern
 from llmeta.provider import Provider
 
 if TYPE_CHECKING:
@@ -110,8 +111,6 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
     Returns:
         dict | None: 匹配结果或None / Match result or None
     """
-    import parse  # type: ignore[import-untyped]
-
     model_lower = model_name.lower()
     matched: dict[str, Any]
 
@@ -138,7 +137,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                 continue
 
             for pattern in spec_config.patterns:
-                result = parse.parse(pattern, model_lower)
+                result = parse_pattern(pattern, model_lower)
                 if result:
                     # 转换为字典并添加默认值 / Convert to dict and add defaults
                     matched = dict(result.named)
@@ -157,7 +156,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
     # [Lowest Priority] Iterate all parent patterns in family configs
     for config in _FAMILY_CONFIGS.values():
         for pattern in config.patterns:
-            result = parse.parse(pattern, model_lower)
+            result = parse_pattern(pattern, model_lower)
             if result:
                 # 转换为字典并添加默认值 / Convert to dict and add defaults
                 matched = dict(result.named)

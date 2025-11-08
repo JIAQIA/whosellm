@@ -20,6 +20,49 @@ from llmeta.models.base import ModelFamily
 from llmeta.provider import Provider
 
 
+def _convert_variant(text: str) -> str:
+    if not text:
+        msg = "variant must be non-empty"
+        raise ValueError(msg)
+
+    first = text[0]
+    if not first.isalpha():
+        msg = "variant must start with a letter"
+        raise ValueError(msg)
+
+    for ch in text:
+        if ch.isalnum() or ch == "-":
+            continue
+        msg = "variant may only contain letters, digits, or '-'"
+        raise ValueError(msg)
+
+    return text
+
+
+DEFAULT_EXTRA_TYPES: dict[str, Any] = {"variant": _convert_variant}
+
+
+def _merge_extra_types(extra_types: dict[str, Any] | None) -> dict[str, Any]:
+    if not extra_types:
+        return dict(DEFAULT_EXTRA_TYPES)
+
+    merged = dict(DEFAULT_EXTRA_TYPES)
+    merged.update(extra_types)
+    return merged
+
+
+def parse_pattern(
+    pattern: str,
+    text: str,
+    *,
+    extra_types: dict[str, Any] | None = None,
+) -> parse.Result | None:
+    try:
+        return parse.parse(pattern, text, extra_types=_merge_extra_types(extra_types))
+    except ValueError:
+        return None
+
+
 @dataclass
 class ModelPattern:
     """
@@ -38,7 +81,7 @@ class ModelPattern:
         model_lower = model_name.lower()
 
         for pattern in self.patterns:
-            result = parse.parse(pattern, model_lower)
+            result = parse_pattern(pattern, model_lower)
             if result:
                 matched = dict(result.named)
                 if not matched.get("version"):
@@ -56,9 +99,9 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="4.0",
         patterns=[
-            "gpt-4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "gpt-4-{variant}-{mmdd:4d}",
-            "gpt-4-{variant}",
+            "gpt-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "gpt-4-{variant:variant}-{mmdd:4d}",
+            "gpt-4-{variant:variant}",
             "gpt-4",
         ],
     ),
@@ -67,8 +110,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="4.0",
         patterns=[
-            "gpt-4o-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "gpt-4o-{variant}",
+            "gpt-4o-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "gpt-4o-{variant:variant}",
             "gpt-4o-{year:4d}-{month:2d}-{day:2d}",
             "gpt-4o",
         ],
@@ -78,8 +121,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="3.5",
         patterns=[
-            "gpt-3.5-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "gpt-3.5-{variant}",
+            "gpt-3.5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "gpt-3.5-{variant:variant}",
             "gpt-3.5",
         ],
     ),
@@ -88,8 +131,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="1.0",
         patterns=[
-            "o1-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "o1-{variant}",
+            "o1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "o1-{variant:variant}",
             "o1-{year:4d}-{month:2d}-{day:2d}",
             "o1",
         ],
@@ -99,8 +142,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="3.0",
         patterns=[
-            "o3-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "o3-{variant}",
+            "o3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "o3-{variant:variant}",
             "o3",
         ],
     ),
@@ -109,8 +152,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.OPENAI,
         version_default="4.0",
         patterns=[
-            "o4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "o4-{variant}",
+            "o4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "o4-{variant:variant}",
         ],
     ),
     ModelPattern(
@@ -118,9 +161,9 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.ANTHROPIC,
         version_default="3.0",
         patterns=[
-            "claude-{version:d}-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "claude-{version:d}-{variant}",
-            "claude-{variant}",
+            "claude-{version:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "claude-{version:d}-{variant:variant}",
+            "claude-{variant:variant}",
             "claude",
         ],
     ),
@@ -129,8 +172,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.ZHIPU,
         version_default="4.0",
         patterns=[
-            "glm-4v-{variant}-{mmdd:4d}",
-            "glm-4v-{variant}",
+            "glm-4v-{variant:variant}-{mmdd:4d}",
+            "glm-4v-{variant:variant}",
             "glm-4v",
         ],
     ),
@@ -139,8 +182,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.ZHIPU,
         version_default="4.0",
         patterns=[
-            "glm-4-{variant}-{year:4d}-{month:2d}-{day:2d}",
-            "glm-4-{variant}",
+            "glm-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+            "glm-4-{variant:variant}",
             "glm-4",
         ],
     ),
@@ -149,7 +192,7 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.ZHIPU,
         version_default="3.0",
         patterns=[
-            "glm-3-{variant}",
+            "glm-3-{variant:variant}",
             "glm-3",
         ],
     ),
@@ -158,8 +201,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.ALIBABA,
         version_default="1.0",
         patterns=[
-            "qwen-{version:d}-{variant}",
-            "qwen-{variant}",
+            "qwen-{version:d}-{variant:variant}",
+            "qwen-{variant:variant}",
             "qwen",
         ],
     ),
@@ -168,8 +211,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.BAIDU,
         version_default="1.0",
         patterns=[
-            "ernie-{version:d}-{variant}",
-            "ernie-{variant}",
+            "ernie-{version:d}-{variant:variant}",
+            "ernie-{variant:variant}",
             "ernie",
         ],
     ),
@@ -178,7 +221,7 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.TENCENT,
         version_default="1.0",
         patterns=[
-            "hunyuan-{variant}",
+            "hunyuan-{variant:variant}",
             "hunyuan",
         ],
     ),
@@ -187,8 +230,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.MOONSHOT,
         version_default="1.0",
         patterns=[
-            "moonshot-{version:d}-{variant}",
-            "moonshot-{variant}",
+            "moonshot-{version:d}-{variant:variant}",
+            "moonshot-{variant:variant}",
             "moonshot",
         ],
     ),
@@ -197,8 +240,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.DEEPSEEK,
         version_default="1.0",
         patterns=[
-            "deepseek-{variant}-v{version:d}",
-            "deepseek-{variant}",
+            "deepseek-{variant:variant}-v{version:d}",
+            "deepseek-{variant:variant}",
             "deepseek",
         ],
     ),
@@ -207,8 +250,8 @@ MODEL_PATTERNS: list[ModelPattern] = [
         provider=Provider.MINIMAX,
         version_default="1.0",
         patterns=[
-            "abab-{version:d}-{variant}",
-            "abab-{variant}",
+            "abab-{version:d}-{variant:variant}",
+            "abab-{variant:variant}",
             "abab",
         ],
     ),
