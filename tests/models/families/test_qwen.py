@@ -61,6 +61,280 @@ def test_qwen3_vl_plus_with_date_suffix() -> None:
     assert meta.capabilities.supports_function_calling is True
 
 
+def test_qwen3_vl_32b_thinking_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-32b-thinking")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-32b-thinking"
+
+
+def test_qwen3_vl_32b_thinking_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-32b-thinking")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-32b-thinking"
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_32b_thinking_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-32b-thinking")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-32b-thinking"
+    assert meta.capabilities.supports_thinking is True
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_32b_thinking_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-32b-thinking-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-32b-thinking"
+    assert meta.release_date == date(2025, 10, 1)
+    assert meta.capabilities.supports_thinking is True
+    assert meta.capabilities.supports_function_calling is True
+
+
+def test_qwen3_vl_235b_a22b_thinking_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-235b-a22b-thinking")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-235b-a22b-thinking"
+
+
+def test_qwen3_vl_235b_a22b_thinking_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-235b-a22b-thinking")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-235b-a22b-thinking"
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_235b_a22b_thinking_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-235b-a22b-thinking")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-235b-a22b-thinking"
+    assert meta.capabilities.supports_thinking is True
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_235b_a22b_thinking_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-235b-a22b-thinking-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-235b-a22b-thinking"
+    assert meta.release_date == date(2025, 10, 1)
+    assert meta.capabilities.supports_thinking is True
+
+
+def test_qwen3_vl_32b_instruct_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-32b-instruct")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-32b-instruct"
+
+
+def test_qwen3_vl_32b_instruct_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-32b-instruct")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-32b-instruct"
+    assert capabilities.supports_thinking is False
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_32b_instruct_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-32b-instruct")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-32b-instruct"
+    assert meta.capabilities.supports_thinking is False
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_32b_instruct_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-32b-instruct-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-32b-instruct"
+    assert meta.release_date == date(2025, 10, 1)
+    assert meta.capabilities.supports_thinking is False
+    assert meta.capabilities.supports_function_calling is True
+
+
+def test_qwen3_vl_30b_a3b_instruct_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-30b-a3b-instruct")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-30b-a3b-instruct"
+
+
+def test_qwen3_vl_30b_a3b_instruct_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-30b-a3b-instruct")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-30b-a3b-instruct"
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_30b_a3b_instruct_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-30b-a3b-instruct")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-30b-a3b-instruct"
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.supports_structured_outputs is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_30b_a3b_instruct_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-30b-a3b-instruct-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-30b-a3b-instruct"
+    assert meta.release_date == date(2025, 10, 1)
+
+
+def test_qwen3_vl_8b_thinking_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-8b-thinking")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-8b-thinking"
+
+
+def test_qwen3_vl_8b_thinking_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-8b-thinking")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-8b-thinking"
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_8b_thinking_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-8b-thinking")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-8b-thinking"
+    assert meta.capabilities.supports_thinking is True
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_8b_thinking_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-8b-thinking-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-8b-thinking"
+    assert meta.release_date == date(2025, 10, 1)
+    assert meta.capabilities.supports_thinking is True
+
+
+def test_qwen3_vl_8b_instruct_pattern_match() -> None:
+    matched = match_model_pattern("qwen3-vl-8b-instruct")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.QWEN
+    assert matched["version"] == "3"
+    assert matched["variant"] == "vl-8b-instruct"
+
+
+def test_qwen3_vl_8b_instruct_specific_config() -> None:
+    config = get_specific_model_config("qwen3-vl-8b-instruct")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3"
+    assert variant == "vl-8b-instruct"
+    assert capabilities.supports_thinking is False
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.context_window == 128000
+    assert capabilities.max_tokens == 32000
+
+
+def test_qwen3_vl_8b_instruct_auto_register() -> None:
+    meta = LLMeta("qwen3-vl-8b-instruct")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-8b-instruct"
+    assert meta.capabilities.supports_function_calling is True
+    assert meta.capabilities.context_window == 128000
+
+
+def test_qwen3_vl_8b_instruct_with_date_suffix() -> None:
+    meta = LLMeta("qwen3-vl-8b-instruct-2025-10-01")
+
+    assert meta.family == ModelFamily.QWEN
+    assert meta.version == "3"
+    assert meta.variant == "vl-8b-instruct"
+    assert meta.release_date == date(2025, 10, 1)
+
+
 def test_qwen3_vl_flash_specific_config() -> None:
     config = get_specific_model_config("qwen3-vl-flash")
 
