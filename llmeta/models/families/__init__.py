@@ -17,6 +17,7 @@ from llmeta.models.families import (
     anthropic,
     openai,
     others,
+    vidu,
     zhipu,
 )
 
@@ -25,5 +26,6 @@ __all__ = [
     "anthropic",
     "openai",
     "others",
+    "vidu",
     "zhipu",
 ]

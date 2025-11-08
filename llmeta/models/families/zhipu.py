@@ -165,7 +165,6 @@ GLM_4 = ModelFamilyConfig(
         "glm-4-{mmdd:4d}",
         "glm-4",
         "chatglm",  # 别名 / Alias
-        "cogview",  # 别名 / Alias
     ],
     capabilities=ModelCapabilities(
         supports_function_calling=True,
@@ -193,5 +192,69 @@ GLM_3 = ModelFamilyConfig(
         supports_streaming=True,
         max_tokens=8192,
         context_window=32000,
+    ),
+)
+
+# ============================================================================
+# CogView-4 系列 / CogView-4 Series
+# ============================================================================
+
+COGVIEW_4 = ModelFamilyConfig(
+    family=ModelFamily.COGVIEW_4,
+    provider=Provider.ZHIPU,
+    version_default="4.0",
+    variant_priority_default=(1,),
+    patterns=[
+        "cogview-4-{yymmdd:6d}",
+        "cogview-4-{mmdd:4d}",
+        "cogview-4",
+        "cogview",
+    ],
+    capabilities=ModelCapabilities(
+        supports_streaming=False,
+        supports_structured_outputs=False,
+    ),
+)
+
+# ============================================================================
+# CogVideoX-3 系列 / CogVideoX-3 Series
+# ============================================================================
+
+COGVIDEOX_3 = ModelFamilyConfig(
+    family=ModelFamily.COGVIDEOX_3,
+    provider=Provider.ZHIPU,
+    version_default="3.0",
+    variant_priority_default=(1,),
+    patterns=[
+        "cogvideox-3-{variant:variant}",
+        "cogvideox-3",
+    ],
+    capabilities=ModelCapabilities(
+        supports_vision=True,
+        supports_video=True,
+        supports_streaming=False,
+        supports_structured_outputs=False,
+        max_video_duration_seconds=10,
+    ),
+)
+
+# ============================================================================
+# CogVideoX-2 系列 / CogVideoX-2 Series
+# ============================================================================
+
+COGVIDEOX_2 = ModelFamilyConfig(
+    family=ModelFamily.COGVIDEOX_2,
+    provider=Provider.ZHIPU,
+    version_default="2.0",
+    variant_priority_default=(1,),
+    patterns=[
+        "cogvideox-2-{variant:variant}",
+        "cogvideox-2",
+    ],
+    capabilities=ModelCapabilities(
+        supports_vision=True,
+        supports_video=True,
+        supports_streaming=False,
+        supports_structured_outputs=False,
     ),
 )

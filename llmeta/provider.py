@@ -33,6 +33,7 @@ class Provider(str, Enum, metaclass=DynamicEnumMeta):
     BAIDU = "baidu"  # 百度
     TENCENT = "tencent"  # 腾讯
     MOONSHOT = "moonshot"  # 月之暗面
+    VIDU = "vidu"  # Vidu
     DEEPSEEK = "deepseek"  # DeepSeek
     MINIMAX = "minimax"  # MiniMax
     UNKNOWN = "unknown"

@@ -52,6 +52,13 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     GLM_45V = "glm-4.5v"
     GLM_46 = "glm-4.6"
     GLM_3 = "glm-3"
+    COGVIEW_4 = "cogview-4"
+    COGVIDEOX_3 = "cogvideox-3"
+    COGVIDEOX_2 = "cogvideox-2"
+
+    # Vidu 家族 / Vidu family
+    VIDU_Q1 = "viduq1"
+    VIDU_2 = "vidu2"
 
     # 阿里云 家族 / Alibaba family
     QWEN = "qwen"
