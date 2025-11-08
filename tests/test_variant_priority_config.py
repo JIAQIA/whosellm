@@ -85,17 +85,20 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "omni": ["o4-omni"],
         "deep-research": ["o4-deep-research"],
     },
-    ModelFamily.GLM_4V: {
+    ModelFamily.GLM_VISION: {
         "vision-flash": ["glm-4v-flash"],
         "preview": ["glm-4v-preview"],
-        "base": ["glm-4v"],
+        "base": ["glm-4v", "glm-4.5v"],
         "vision-plus": ["glm-4v-plus", "glm-4v-plus-0111"],
     },
-    ModelFamily.GLM_4: {
+    ModelFamily.GLM_TEXT: {
         "mini": ["glm-4-mini"],
-        "flash": ["glm-4-flash"],
+        "flash": ["glm-4-flash", "glm-4.5-flash"],
         "preview": ["glm-4-preview"],
-        "base": ["glm-4"],
+        "air": ["glm-4.5-air"],
+        "airx": ["glm-4.5-airx"],
+        "base": ["glm-4", "glm-4.5", "glm-4.6"],
+        "x": ["glm-4.5-x"],
         "turbo": ["glm-4-turbo"],
         "plus": ["glm-4-plus"],
         "pro": ["glm-4-pro"],

@@ -13,7 +13,7 @@ from llmeta.models.registry import get_default_capabilities, match_model_pattern
 
 def test_glm46_default_capabilities() -> None:
     """验证 GLM-4.6 家族默认能力 / Validate GLM-4.6 family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.GLM_46)
+    capabilities = get_default_capabilities(ModelFamily.GLM_TEXT)
 
     assert capabilities.supports_thinking is True
     assert capabilities.supports_function_calling is True
@@ -28,7 +28,7 @@ def test_glm46_base_model_pattern() -> None:
     matched = match_model_pattern("glm-4.6")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_46
+    assert matched["family"] == ModelFamily.GLM_TEXT
     assert matched["provider"].value == "zhipu"
     assert matched["variant"] == "base"
     assert matched["version"] == "4.6"
@@ -41,7 +41,7 @@ def test_glm46_with_mmdd_suffix() -> None:
     matched = match_model_pattern(model_name)
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_46
+    assert matched["family"] == ModelFamily.GLM_TEXT
     assert matched["variant"] == "base"
     assert matched["version"] == "4.6"
 
@@ -57,7 +57,7 @@ def test_glm46_variant_with_mmdd_suffix() -> None:
     matched = match_model_pattern(model_name)
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_46
+    assert matched["family"] == ModelFamily.GLM_TEXT
     assert matched["variant"] == "plus"
     assert matched["version"] == "4.6"
     assert matched.get("_from_specific_model") is None
@@ -70,7 +70,7 @@ def test_glm46_variant_with_full_date() -> None:
     matched = match_model_pattern(model_name)
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_46
+    assert matched["family"] == ModelFamily.GLM_TEXT
     assert matched["variant"] == "pro"
     assert matched["version"] == "4.6"
 

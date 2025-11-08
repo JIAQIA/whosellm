@@ -43,19 +43,22 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     O3 = "o3"
     O4 = "o4"
 
-    # Anthropic 家族 / Anthropic family
     CLAUDE = "claude"
 
     # 智谱 AI 家族 / Zhipu AI family
-    GLM_4 = "glm-4"
-    GLM_4V = "glm-4v"
-    GLM_45 = "glm-4.5"
-    GLM_45V = "glm-4.5v"
-    GLM_46 = "glm-4.6"
+    GLM_TEXT = "glm-text"  # 统一的GLM文本模型家族 / Unified GLM text model family
+    GLM_VISION = "glm-vision"  # 统一的GLM视觉模型家族 / Unified GLM vision model family
     GLM_3 = "glm-3"
     COGVIEW_4 = "cogview-4"
     COGVIDEOX_3 = "cogvideox-3"
     COGVIDEOX_2 = "cogvideox-2"
+
+    # 保留旧枚举作为别名，用于向后兼容 / Keep old enums as aliases for backward compatibility
+    GLM_4 = "glm-text"  # 别名 -> GLM_TEXT
+    GLM_45 = "glm-text"  # 别名 -> GLM_TEXT
+    GLM_46 = "glm-text"  # 别名 -> GLM_TEXT
+    GLM_4V = "glm-vision"  # 别名 -> GLM_VISION
+    GLM_45V = "glm-vision"  # 别名 -> GLM_VISION
 
     # Vidu 家族 / Vidu family
     VIDU_Q1 = "viduq1"
@@ -147,10 +150,10 @@ def parse_version(version_str: str) -> tuple[int, ...]:
         version_str: 版本字符串，如 "4.0", "3.5" / Version string like "4.0", "3.5"
 
     Returns:
-        tuple: 版本元组 / Version tuple
+        tuple: 版本元组，至少包含两个部分 / Version tuple with at least two parts
     """
     if not version_str:
-        return (0,)
+        return 0, 0
 
     parts = []
     for part in version_str.split("."):
@@ -164,6 +167,11 @@ def parse_version(version_str: str) -> tuple[int, ...]:
                 parts.append(int(numeric))
             else:
                 parts.append(0)
+
+    # 确保至少有两个部分，避免 (4,) 和 (4, 0) 比较时的歧义
+    # Ensure at least two parts to avoid ambiguity when comparing (4,) and (4, 0)
+    while len(parts) < 2:
+        parts.append(0)
 
     return tuple(parts)
 

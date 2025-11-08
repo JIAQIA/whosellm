@@ -152,16 +152,22 @@ class TestModelVersion(unittest.TestCase):
         assert gpt4o_turbo.family == ModelFamily.GPT_4O
         assert gpt4o.family == ModelFamily.GPT_4O
 
-        # GLM-4 家族
+        # GLM-TEXT 家族
         glm4 = LLMeta("glm-4")
         glm4_plus = LLMeta("glm-4-plus")
+        glm45 = LLMeta("glm-4.5")
+        glm46 = LLMeta("glm-4.6")
 
-        assert glm4.family == ModelFamily.GLM_4
-        assert glm4_plus.family == ModelFamily.GLM_4
+        assert glm4.family == ModelFamily.GLM_TEXT
+        assert glm4_plus.family == ModelFamily.GLM_TEXT
+        assert glm45.family == ModelFamily.GLM_TEXT
+        assert glm46.family == ModelFamily.GLM_TEXT
 
-        # GLM-4V 家族（与 GLM-4 不同）
+        # GLM-VISION 家族（与 GLM-TEXT 不同）
         glm4v = LLMeta("glm-4v")
-        assert glm4v.family == ModelFamily.GLM_4V
+        glm45v = LLMeta("glm-4.5v")
+        assert glm4v.family == ModelFamily.GLM_VISION
+        assert glm45v.family == ModelFamily.GLM_VISION
         assert glm4v.family != glm4.family
 
     def test_provider_prefix_syntax(self) -> None:

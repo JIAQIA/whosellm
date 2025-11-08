@@ -13,30 +13,60 @@ from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
 from llmeta.provider import Provider
 
 # ============================================================================
-# GLM-4V 系列（视觉模型） / GLM-4V Series (Vision Model)
+# GLM-3 系列 / GLM-3 Series
+# 注意：必须在 GLM_TEXT 之前定义，避免被 glm-{version} 通配符匹配
+# Note: Must be defined before GLM_TEXT to avoid being matched by glm-{version} wildcard
 # ============================================================================
 
-GLM_4V = ModelFamilyConfig(
-    family=ModelFamily.GLM_4V,
+GLM_3 = ModelFamilyConfig(
+    family=ModelFamily.GLM_3,
     provider=Provider.ZHIPU,
-    version_default="4.0",
+    version_default="3.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "glm-4v-{variant:variant}-{mmdd:4d}",  # glm-4v-plus-0111
-        "glm-4v-{variant:variant}",  # glm-4v-plus, glm-4v-flash
-        "glm-4v",  # glm-4v (base)
+        "glm-3-{variant:variant}",
+        "glm-3",
     ],
     capabilities=ModelCapabilities(
-        supports_vision=True,
         supports_function_calling=True,
         supports_streaming=True,
         max_tokens=8192,
-        context_window=128000,
-        max_image_size_mb=10.0,
-        max_image_pixels=(4096, 4096),
+        context_window=32000,
+    ),
+)
+
+# ============================================================================
+# GLM-Vision 系列（统一的视觉模型家族） / GLM-Vision Series (Unified Vision Model Family)
+# 包含 GLM-4V, GLM-4.5V 等所有视觉模型 / Includes GLM-4V, GLM-4.5V and all vision models
+# ============================================================================
+
+GLM_VISION = ModelFamilyConfig(
+    family=ModelFamily.GLM_VISION,
+    provider=Provider.ZHIPU,
+    version_default="4.5",
+    variant_priority_default=(1,),  # base 的优先级 / base priority
+    patterns=[
+        # 通用 GLM-{version}V patterns，支持 4v, 4.5v 等
+        # Generic GLM-{version}V patterns, supports 4v, 4.5v, etc.
+        "glm-{version}v-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{version}v-{variant:variant}-{mmdd:4d}",
+        "glm-{version}v-{variant:variant}",
+        "glm-{version}v-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{version}v-{mmdd:4d}",
+        "glm-{version}v",
+    ],
+    capabilities=ModelCapabilities(
+        supports_thinking=True,
+        supports_vision=True,
+        supports_video=True,
+        supports_pdf=True,
+        supports_streaming=True,
+        max_tokens=8192,
+        context_window=64000,
     ),
     # 特定模型的精确配置 / Precise configuration for specific models
     specific_models={
+        # GLM-4V 系列特定模型
         "glm-4v-plus-0111": SpecificModelConfig(
             version="4.0",
             variant="vision-plus",
@@ -92,35 +122,81 @@ GLM_4V = ModelFamilyConfig(
                 supports_image_base64=False,  # flash 不支持 base64
             ),
         ),
+        "glm-4v": SpecificModelConfig(
+            version="4.0",
+            variant="base",
+            variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=8192,
+                context_window=128000,
+                max_image_size_mb=10.0,
+                max_image_pixels=(4096, 4096),
+            ),
+        ),
     },
 )
 
 # ============================================================================
-# GLM-4.5 系列（文本模型） / GLM-4.5 Series (Text Models)
+# GLM-Text 系列（统一的文本模型家族） / GLM-Text Series (Unified Text Model Family)
+# 包含 GLM-4, GLM-4.5, GLM-4.6 等所有文本模型 / Includes GLM-4, GLM-4.5, GLM-4.6 and all text models
 # ============================================================================
 
-GLM_45 = ModelFamilyConfig(
-    family=ModelFamily.GLM_45,
+GLM_TEXT = ModelFamilyConfig(
+    family=ModelFamily.GLM_TEXT,
     provider=Provider.ZHIPU,
-    version_default="4.5",
+    version_default="4.6",
     variant_priority_default=(3,),
     patterns=[
-        "glm-4.5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.5-{variant:variant}-{mmdd:4d}",
-        "glm-4.5-{variant:variant}",
-        "glm-4.5-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.5-{mmdd:4d}",
-        "glm-4.5",
+        # 通用 GLM-{version} patterns，支持 4, 4.5, 4.6 等
+        # Generic GLM-{version} patterns, supports 4, 4.5, 4.6, etc.
+        "glm-{version}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{version}-{variant:variant}-{mmdd:4d}",
+        "glm-{version}-{variant:variant}",
+        "glm-{version}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{version}-{mmdd:4d}",
+        "glm-{version}",
+        "chatglm",  # 别名 / Alias
     ],
     capabilities=ModelCapabilities(
         supports_thinking=True,
         supports_function_calling=True,
         supports_structured_outputs=True,
         supports_streaming=True,
-        max_tokens=96000,
-        context_window=128000,
+        max_tokens=128000,
+        context_window=200000,
     ),
     specific_models={
+        # GLM-4.6 系列特定模型
+        "glm-4.6": SpecificModelConfig(
+            version="4.6",
+            variant="base",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+        ),
+        # GLM-4.5 系列特定模型
+        "glm-4.5": SpecificModelConfig(
+            version="4.5",
+            variant="base",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
+        ),
         "glm-4.5-air": SpecificModelConfig(
             version="4.5",
             variant="air",
@@ -161,109 +237,20 @@ GLM_45 = ModelFamilyConfig(
                 "glm-4.5-flash",
             ],
         ),
+        # GLM-4 系列特定模型（需要特殊能力配置的）
+        "glm-4": SpecificModelConfig(
+            version="4.0",
+            variant="base",
+            variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=8192,
+                context_window=128000,
+            ),
+        ),
     },
 )
-
-# ============================================================================
-# GLM-4.5V 系列 / GLM-4.5V Series
-# ============================================================================
-
-GLM_45V = ModelFamilyConfig(
-    family=ModelFamily.GLM_45V,
-    provider=Provider.ZHIPU,
-    version_default="4.5",
-    variant_priority_default=(1,),
-    patterns=[
-        "glm-4.5v-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.5v-{variant:variant}-{mmdd:4d}",
-        "glm-4.5v-{variant:variant}",
-        "glm-4.5v-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.5v-{mmdd:4d}",
-        "glm-4.5v",
-    ],
-    capabilities=ModelCapabilities(
-        supports_thinking=True,
-        supports_vision=True,
-        supports_video=True,
-        supports_pdf=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=64000,
-    ),
-)
-
-# ============================================================================
-# GLM-4.6 系列 / GLM-4.6 Series
-# ============================================================================
-
-GLM_46 = ModelFamilyConfig(
-    family=ModelFamily.GLM_46,
-    provider=Provider.ZHIPU,
-    version_default="4.6",
-    variant_priority_default=(1,),
-    patterns=[
-        "glm-4.6-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.6-{variant:variant}-{mmdd:4d}",
-        "glm-4.6-{variant:variant}",
-        "glm-4.6-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4.6-{mmdd:4d}",
-        "glm-4.6",
-    ],
-    capabilities=ModelCapabilities(
-        supports_thinking=True,
-        supports_function_calling=True,
-        supports_streaming=True,
-        supports_structured_outputs=True,
-        max_tokens=128000,
-        context_window=200000,
-    ),
-)
-
-# ============================================================================
-# GLM-4 系列 / GLM-4 Series
-# ============================================================================
-
-GLM_4 = ModelFamilyConfig(
-    family=ModelFamily.GLM_4,
-    provider=Provider.ZHIPU,
-    version_default="4.0",
-    variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "glm-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-4-{variant:variant}",
-        "glm-4-{mmdd:4d}",
-        "glm-4",
-        "chatglm",  # 别名 / Alias
-    ],
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=128000,
-    ),
-)
-
-# ============================================================================
-# GLM-3 系列 / GLM-3 Series
-# ============================================================================
-
-GLM_3 = ModelFamilyConfig(
-    family=ModelFamily.GLM_3,
-    provider=Provider.ZHIPU,
-    version_default="3.0",
-    variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "glm-3-{variant:variant}",
-        "glm-3",
-    ],
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=32000,
-    ),
-)
-
 # ============================================================================
 # CogView-4 系列 / CogView-4 Series
 # ============================================================================

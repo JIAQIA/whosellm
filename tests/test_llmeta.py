@@ -10,7 +10,7 @@ def test_glm45_base_capabilities() -> None:
     model = LLMeta("glm-4.5")
 
     assert model.provider == Provider.ZHIPU
-    assert model.family == ModelFamily.GLM_45
+    assert model.family == ModelFamily.GLM_TEXT
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -45,7 +45,7 @@ def test_glm45_release_date_parsing() -> None:
     """确保带日期后缀的模型能够正确解析发布日期。"""
     model = LLMeta("glm-4.5-air-2025-11-08")
 
-    assert model.family == ModelFamily.GLM_45
+    assert model.family == ModelFamily.GLM_TEXT
     assert model.variant == "air"
     assert model.release_date == date(2025, 11, 8)
 
@@ -55,7 +55,7 @@ def test_glm46_capabilities() -> None:
     model = LLMeta("glm-4.6")
 
     assert model.provider == Provider.ZHIPU
-    assert model.family == ModelFamily.GLM_46
+    assert model.family == ModelFamily.GLM_TEXT
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -81,6 +81,6 @@ def test_glm46_release_date_parsing() -> None:
     """确保 GLM-4.6 带日期后缀能解析发布日期。"""
     model = LLMeta("glm-4.6-2025-11-08")
 
-    assert model.family == ModelFamily.GLM_46
+    assert model.family == ModelFamily.GLM_TEXT
     assert model.variant == "base"
     assert model.release_date == date(2025, 11, 8)

@@ -8,7 +8,7 @@ from llmeta.models.registry import get_default_capabilities, match_model_pattern
 
 def test_glm45v_default_capabilities() -> None:
     """验证 GLM-4.5V 家族默认能力 / Validate GLM-4.5V family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.GLM_45V)
+    capabilities = get_default_capabilities(ModelFamily.GLM_VISION)
 
     assert capabilities.supports_thinking is True
     assert capabilities.supports_vision is True
@@ -24,7 +24,7 @@ def test_glm45v_base_pattern() -> None:
     matched = match_model_pattern("glm-4.5v")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_45V
+    assert matched["family"] == ModelFamily.GLM_VISION
     assert matched["variant"] == "base"
     assert matched["version"] == "4.5"
     assert matched["capabilities"].supports_vision is True
@@ -36,7 +36,7 @@ def test_glm45v_mmdd_pattern() -> None:
     matched = match_model_pattern(model_name)
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_45V
+    assert matched["family"] == ModelFamily.GLM_VISION
     assert matched["variant"] == "base"
 
     parsed = parse_date_from_model_name(model_name)
@@ -51,7 +51,7 @@ def test_glm45v_variant_full_date_pattern() -> None:
     matched = match_model_pattern(model_name)
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.GLM_45V
+    assert matched["family"] == ModelFamily.GLM_VISION
     assert matched["variant"] == "plus"
     assert matched["version"] == "4.5"
 
