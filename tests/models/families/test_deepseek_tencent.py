@@ -166,11 +166,12 @@ def test_tencent_deepseek_invalid_model_names() -> None:
     """验证腾讯云不支持的 DeepSeek 模型名称会被识别为 UNKNOWN / Validate unsupported Tencent model names are recognized as UNKNOWN"""
     from whosellm import LLMeta
 
-    # 腾讯云不支持 deepseek-turbo 这样的命名方式
-    # 腾讯云使用 deepseek-v3, deepseek-r1 等版本号命名，不使用 turbo/mini/chat 等 variant
-    model = LLMeta("tencent::deepseek-turbo")
+    # 腾讯云不支持 deepseek-chat 命名方式
+    # 腾讯云使用 deepseek-v3, deepseek-r1 等版本号命名，不使用 chat/reasoner 等官方 variant
+    model = LLMeta("tencent::deepseek-chat")
 
     # 当使用 Provider 前缀时，Provider 会被保留，但 family 会是 UNKNOWN
+    # 即使 deepseek-chat 已经被注册到全局注册表，也不会影响 tencent:: 前缀的匹配
     assert model.family == ModelFamily.UNKNOWN
     assert model.provider == Provider.TENCENT
     assert model.variant == ""  # 无法匹配到任何 variant
