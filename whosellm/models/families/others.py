@@ -10,10 +10,10 @@
 Including: Baidu, Tencent, Moonshot, DeepSeek, MiniMax, etc.
 """
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
 
 # ============================================================================
 # 百度 ERNIE 系列 / Baidu ERNIE Series

@@ -7,10 +7,10 @@
 """
 
 # 导入家族配置以触发自动注册 / Import family configs to trigger auto-registration
-from llmeta.models import families
+from whosellm.models import families
 
 # 导入核心函数 / Import core functions
-from llmeta.models.base import (
+from whosellm.models.base import (
     ModelInfo,
     auto_register_model,
     get_model_info,

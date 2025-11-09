@@ -7,8 +7,8 @@
 
 from datetime import date
 
-from llmeta.models.base import ModelFamily, parse_date_from_model_name
-from llmeta.models.registry import get_default_capabilities, match_model_pattern
+from whosellm.models.base import ModelFamily, parse_date_from_model_name
+from whosellm.models.registry import get_default_capabilities, match_model_pattern
 
 
 def test_glm46_default_capabilities() -> None:

@@ -8,12 +8,12 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from llmeta import LLMeta
-from llmeta.models.base import ModelFamily, infer_variant_priority
-from llmeta.models.registry import get_family_config
+from whosellm import LLMeta
+from whosellm.models.base import ModelFamily, infer_variant_priority
+from whosellm.models.registry import get_family_config
 
 if TYPE_CHECKING:
-    from llmeta.models.config import ModelFamilyConfig
+    from whosellm.models.config import ModelFamilyConfig
 
 MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
     ModelFamily.GPT_4O: {

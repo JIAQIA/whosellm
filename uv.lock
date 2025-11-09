@@ -277,50 +277,6 @@ wheels = [
 ]
 
 [[package]]
-name = "llmeta"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "parse" },
-    { name = "vrl-python" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "bump-my-version" },
-    { name = "mypy" },
-    { name = "poethepoet" },
-    { name = "pytest" },
-    { name = "ruff" },
-]
-test = [
-    { name = "inline-snapshot" },
-    { name = "polyfactory" },
-    { name = "pytest-asyncio" },
-    { name = "pytest-cov" },
-    { name = "pytest-dotenv" },
-    { name = "pytest-mock" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "bump-my-version", marker = "extra == 'dev'", specifier = ">=0.30.0" },
-    { name = "inline-snapshot", marker = "extra == 'test'", specifier = ">=0.27.2,<0.28.0" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.17.1,<2.0.0" },
-    { name = "parse", specifier = ">=1.20.2" },
-    { name = "poethepoet", marker = "extra == 'dev'", specifier = ">=0.37.0,<0.38.0" },
-    { name = "polyfactory", marker = "extra == 'test'", specifier = ">=2.22.2,<3.0.0" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.1,<9.0.0" },
-    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=1.1.0,<2.0.0" },
-    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=6.2.1,<7.0.0" },
-    { name = "pytest-dotenv", marker = "extra == 'test'", specifier = ">=0.5.2,<0.6.0" },
-    { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.14.1,<4.0.0" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.12.9,<0.13.0" },
-    { name = "vrl-python", specifier = ">=0.1.0,<0.2.0" },
-]
-provides-extras = ["dev", "test"]
-
-[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -932,3 +888,47 @@ sdist = { url = "https://files.pythonhosted.org/packages/24/30/6b0809f4510673dc7
 wheels = [
     { url = "https://files.pythonhosted.org/packages/af/b5/123f13c975e9f27ab9c0770f514345bd406d0e8d3b7a0723af9d43f710af/wcwidth-0.2.14-py2.py3-none-any.whl", hash = "sha256:a7bb560c8aee30f9957e5f9895805edd20602f2d7f720186dfd906e82b4982e1", size = 37286, upload-time = "2025-09-22T16:29:51.641Z" },
 ]
+
+[[package]]
+name = "whosellm"
+version = "0.1.1.dev0"
+source = { editable = "." }
+dependencies = [
+    { name = "parse" },
+    { name = "vrl-python" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "bump-my-version" },
+    { name = "mypy" },
+    { name = "poethepoet" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
+test = [
+    { name = "inline-snapshot" },
+    { name = "polyfactory" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "pytest-dotenv" },
+    { name = "pytest-mock" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "bump-my-version", marker = "extra == 'dev'", specifier = ">=0.30.0" },
+    { name = "inline-snapshot", marker = "extra == 'test'", specifier = ">=0.27.2,<0.28.0" },
+    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.17.1,<2.0.0" },
+    { name = "parse", specifier = ">=1.20.2" },
+    { name = "poethepoet", marker = "extra == 'dev'", specifier = ">=0.37.0,<0.38.0" },
+    { name = "polyfactory", marker = "extra == 'test'", specifier = ">=2.22.2,<3.0.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.4.1,<9.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=1.1.0,<2.0.0" },
+    { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=6.2.1,<7.0.0" },
+    { name = "pytest-dotenv", marker = "extra == 'test'", specifier = ">=0.5.2,<0.6.0" },
+    { name = "pytest-mock", marker = "extra == 'test'", specifier = ">=3.14.1,<4.0.0" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.12.9,<0.13.0" },
+    { name = "vrl-python", specifier = ">=0.1.0,<0.2.0" },
+]
+provides-extras = ["dev", "test"]

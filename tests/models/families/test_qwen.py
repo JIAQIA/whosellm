@@ -7,9 +7,9 @@ Qwen 模型家族测试 / Qwen model family tests
 
 from datetime import date
 
-from llmeta import LLMeta
-from llmeta.models.base import ModelFamily
-from llmeta.models.registry import get_specific_model_config, match_model_pattern
+from whosellm import LLMeta
+from whosellm.models.base import ModelFamily
+from whosellm.models.registry import get_specific_model_config, match_model_pattern
 
 
 def test_qwen3_vl_plus_pattern_match() -> None:

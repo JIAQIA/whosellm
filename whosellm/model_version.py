@@ -11,9 +11,9 @@ from dataclasses import dataclass, field
 from datetime import date
 from typing import Any
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily, get_model_info
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily, get_model_info
+from whosellm.provider import Provider
 
 
 @functools.total_ordering

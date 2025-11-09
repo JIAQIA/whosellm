@@ -7,8 +7,8 @@
 GPT-4.1 模型家族测试 / GPT-4.1 model family tests
 """
 
-from llmeta.models.base import ModelFamily
-from llmeta.models.registry import (
+from whosellm.models.base import ModelFamily
+from whosellm.models.registry import (
     get_default_capabilities,
     get_specific_model_config,
     match_model_pattern,

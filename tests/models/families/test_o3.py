@@ -7,8 +7,8 @@
 O3 模型家族测试 / O3 model family tests
 """
 
-from llmeta.models.base import ModelFamily
-from llmeta.models.registry import get_default_capabilities, get_specific_model_config, match_model_pattern
+from whosellm.models.base import ModelFamily
+from whosellm.models.registry import get_default_capabilities, get_specific_model_config, match_model_pattern
 
 
 def test_o3_base_defaults():

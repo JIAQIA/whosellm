@@ -41,9 +41,9 @@ llmeta/models/
 """
 
 from dataclasses import dataclass, field
-from llmeta.models.base import ModelFamily
-from llmeta.provider import Provider
-from llmeta.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.provider import Provider
+from whosellm.capabilities import ModelCapabilities
 
 
 @dataclass
@@ -54,28 +54,28 @@ class ModelFamilyConfig:
     集中管理一个模型家族的所有配置信息
     Centrally manage all configuration for a model family
     """
-    
+
     # 基本信息 / Basic information
     family: ModelFamily
     provider: Provider
-    
+
     # 命名模式 / Naming patterns
     # 按优先级排序，更具体的在前 / Ordered by priority, more specific first
     patterns: list[str]
-    
+
     # 默认值 / Defaults
     version_default: str = "1.0"
-    
+
     # 默认能力 / Default capabilities
-    capabilities: ModelCapabilities = field(default_factory=ModelCapabilities)
-    
+    capabilities: ModelCapabilities = field(default_factory = ModelCapabilities)
+
     # 预注册的特定模型（可选） / Pre-registered specific models (optional)
     # 格式: {model_name: (version, variant, custom_capabilities)}
-    specific_models: dict[str, tuple[str, str, ModelCapabilities | None]] = field(default_factory=dict)
-    
+    specific_models: dict[str, tuple[str, str, ModelCapabilities | None]] = field(default_factory = dict)
+
     def __post_init__(self):
         """注册到全局注册表 / Register to global registry"""
-        from llmeta.models.registry import register_family_config
+        from whosellm.models.registry import register_family_config
         register_family_config(self)
 ```
 
@@ -93,10 +93,10 @@ class ModelFamilyConfig:
 """
 
 from typing import Any
-from llmeta.models.base import ModelFamily, ModelInfo
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
-from llmeta.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily, ModelInfo
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
+from whosellm.capabilities import ModelCapabilities
 
 # 核心注册表：所有模型家族配置 / Core registry: all model family configs
 _FAMILY_CONFIGS: dict[ModelFamily, ModelFamilyConfig] = {}
@@ -180,9 +180,9 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
         dict | None: 匹配结果或None / Match result or None
     """
     import parse
-    
+
     model_lower = model_name.lower()
-    
+
     # 遍历所有家族配置 / Iterate all family configs
     for config in _FAMILY_CONFIGS.values():
         for pattern in config.patterns:
@@ -195,7 +195,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                 matched["family"] = config.family
                 matched["provider"] = config.provider
                 return matched
-    
+
     return None
 
 
@@ -222,7 +222,7 @@ def get_family_info(family: ModelFamily) -> dict[str, Any]:
     config = _FAMILY_CONFIGS.get(family)
     if not config:
         return {}
-    
+
     return {
         "family": config.family,
         "provider": config.provider,
@@ -246,45 +246,45 @@ def get_family_info(family: ModelFamily) -> dict[str, Any]:
 OpenAI 模型家族配置 / OpenAI model family configurations
 """
 
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
-from llmeta.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
+from whosellm.capabilities import ModelCapabilities
 
 # ============================================================================
 # GPT-4 系列 / GPT-4 Series
 # ============================================================================
 
 GPT_4 = ModelFamilyConfig(
-    family=ModelFamily.GPT_4,
-    provider=Provider.OPENAI,
-    version_default="4.0",
-    
-    patterns=[
+    family = ModelFamily.GPT_4,
+    provider = Provider.OPENAI,
+    version_default = "4.0",
+
+    patterns = [
         "gpt-4o-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-4o-mini-2024-07-18
-        "gpt-4o-{variant:variant}",                                 # gpt-4o-mini
-        "gpt-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",   # gpt-4-turbo-2024-04-09
-        "gpt-4-{variant:variant}-{mmdd:4d}",                        # gpt-4-0125-preview
-        "gpt-4-{variant:variant}",                                  # gpt-4-turbo, gpt-4-plus
-        "gpt-4o",                                           # gpt-4o (base)
-        "gpt-4",                                            # gpt-4 (base)
+        "gpt-4o-{variant:variant}",  # gpt-4o-mini
+        "gpt-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-4-turbo-2024-04-09
+        "gpt-4-{variant:variant}-{mmdd:4d}",  # gpt-4-0125-preview
+        "gpt-4-{variant:variant}",  # gpt-4-turbo, gpt-4-plus
+        "gpt-4o",  # gpt-4o (base)
+        "gpt-4",  # gpt-4 (base)
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=128000,
+
+    capabilities = ModelCapabilities(
+        supports_function_calling = True,
+        supports_streaming = True,
+        max_tokens = 8192,
+        context_window = 128000,
     ),
-    
+
     # 可选：预注册特定模型 / Optional: pre-register specific models
-    specific_models={
+    specific_models = {
         "gpt-4o": ("4.0", "base", None),  # 使用默认能力
         "gpt-4o-mini": ("4.0", "mini", ModelCapabilities(
-            supports_function_calling=True,
-            supports_streaming=True,
-            max_tokens=16384,
-            context_window=128000,
+            supports_function_calling = True,
+            supports_streaming = True,
+            max_tokens = 16384,
+            context_window = 128000,
         )),
     },
 )
@@ -294,21 +294,21 @@ GPT_4 = ModelFamilyConfig(
 # ============================================================================
 
 GPT_3_5 = ModelFamilyConfig(
-    family=ModelFamily.GPT_3_5,
-    provider=Provider.OPENAI,
-    version_default="3.5",
-    
-    patterns=[
+    family = ModelFamily.GPT_3_5,
+    provider = Provider.OPENAI,
+    version_default = "3.5",
+
+    patterns = [
         "gpt-3.5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "gpt-3.5-{variant:variant}",
         "gpt-3.5",
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=4096,
-        context_window=16385,
+
+    capabilities = ModelCapabilities(
+        supports_function_calling = True,
+        supports_streaming = True,
+        max_tokens = 4096,
+        context_window = 16385,
     ),
 )
 
@@ -317,22 +317,22 @@ GPT_3_5 = ModelFamilyConfig(
 # ============================================================================
 
 O1 = ModelFamilyConfig(
-    family=ModelFamily.O1,
-    provider=Provider.OPENAI,
-    version_default="1.0",
-    
-    patterns=[
+    family = ModelFamily.O1,
+    provider = Provider.OPENAI,
+    version_default = "1.0",
+
+    patterns = [
         "o1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "o1-{variant:variant}",
         "o1",
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_thinking=True,  # O1 支持推理
-        supports_function_calling=False,
-        supports_streaming=False,
-        max_tokens=100000,
-        context_window=200000,
+
+    capabilities = ModelCapabilities(
+        supports_thinking = True,  # O1 支持推理
+        supports_function_calling = False,
+        supports_streaming = False,
+        max_tokens = 100000,
+        context_window = 200000,
     ),
 )
 
@@ -341,22 +341,22 @@ O1 = ModelFamilyConfig(
 # ============================================================================
 
 O3 = ModelFamilyConfig(
-    family=ModelFamily.O3,
-    provider=Provider.OPENAI,
-    version_default="3.0",
-    
-    patterns=[
+    family = ModelFamily.O3,
+    provider = Provider.OPENAI,
+    version_default = "3.0",
+
+    patterns = [
         "o3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "o3-{variant:variant}",
         "o3",
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_thinking=True,
-        supports_function_calling=False,
-        supports_streaming=False,
-        max_tokens=100000,
-        context_window=200000,
+
+    capabilities = ModelCapabilities(
+        supports_thinking = True,
+        supports_function_calling = False,
+        supports_streaming = False,
+        max_tokens = 100000,
+        context_window = 200000,
     ),
 )
 ```
@@ -374,34 +374,34 @@ O3 = ModelFamilyConfig(
 智谱 AI 模型家族配置 / Zhipu AI model family configurations
 """
 
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
-from llmeta.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
+from whosellm.capabilities import ModelCapabilities
 
 # ============================================================================
 # GLM-4V 系列（视觉模型） / GLM-4V Series (Vision Model)
 # ============================================================================
 
 GLM_4V = ModelFamilyConfig(
-    family=ModelFamily.GLM_4V,
-    provider=Provider.ZHIPU,
-    version_default="4.0",
-    
-    patterns=[
+    family = ModelFamily.GLM_4V,
+    provider = Provider.ZHIPU,
+    version_default = "4.0",
+
+    patterns = [
         "glm-4v-{variant:variant}-{mmdd:4d}",  # glm-4v-plus-0111
-        "glm-4v-{variant:variant}",             # glm-4v-plus, glm-4v-flash
-        "glm-4v",                       # glm-4v (base)
+        "glm-4v-{variant:variant}",  # glm-4v-plus, glm-4v-flash
+        "glm-4v",  # glm-4v (base)
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_vision=True,
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=128000,
-        max_image_size_mb=10.0,
-        max_image_pixels=(4096, 4096),
+
+    capabilities = ModelCapabilities(
+        supports_vision = True,
+        supports_function_calling = True,
+        supports_streaming = True,
+        max_tokens = 8192,
+        context_window = 128000,
+        max_image_size_mb = 10.0,
+        max_image_pixels = (4096, 4096),
     ),
 )
 
@@ -410,21 +410,21 @@ GLM_4V = ModelFamilyConfig(
 # ============================================================================
 
 GLM_4 = ModelFamilyConfig(
-    family=ModelFamily.GLM_4,
-    provider=Provider.ZHIPU,
-    version_default="4.0",
-    
-    patterns=[
+    family = ModelFamily.GLM_4,
+    provider = Provider.ZHIPU,
+    version_default = "4.0",
+
+    patterns = [
         "glm-4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "glm-4-{variant:variant}",
         "glm-4",
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=128000,
+
+    capabilities = ModelCapabilities(
+        supports_function_calling = True,
+        supports_streaming = True,
+        max_tokens = 8192,
+        context_window = 128000,
     ),
 )
 
@@ -433,20 +433,20 @@ GLM_4 = ModelFamilyConfig(
 # ============================================================================
 
 GLM_3 = ModelFamilyConfig(
-    family=ModelFamily.GLM_3,
-    provider=Provider.ZHIPU,
-    version_default="3.0",
-    
-    patterns=[
+    family = ModelFamily.GLM_3,
+    provider = Provider.ZHIPU,
+    version_default = "3.0",
+
+    patterns = [
         "glm-3-{variant:variant}",
         "glm-3",
     ],
-    
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=32000,
+
+    capabilities = ModelCapabilities(
+        supports_function_calling = True,
+        supports_streaming = True,
+        max_tokens = 8192,
+        context_window = 32000,
     ),
 )
 ```
@@ -466,7 +466,7 @@ GLM_3 = ModelFamilyConfig(
 
 # 导入所有提供商的配置，触发自动注册
 # Import all provider configurations to trigger auto-registration
-from llmeta.models.families import (
+from whosellm.models.families import (
     openai,
     anthropic,
     zhipu,
@@ -517,12 +517,12 @@ GEMINI = ModelFamilyConfig(
 ### 6. **可测试性** / Testability
 
 ```python
-import llmeta.models.families.openai.openai_gpt_4
+import whosellm.models.families.openai.openai_gpt_4
 
 
 def test_gpt4_config():
-    from llmeta.models.families.openai.openai_gpt_4 import GPT_4
-    assert GPT_4.family == llmeta.models.families.openai.openai_gpt_4.GPT_4
+    from whosellm.models.families.openai.openai_gpt_4 import GPT_4
+    assert GPT_4.family == whosellm.models.families.openai.openai_gpt_4.GPT_4
     assert GPT_4.provider == Provider.OPENAI
     assert "gpt-4-{variant:variant}" in GPT_4.patterns
 ```

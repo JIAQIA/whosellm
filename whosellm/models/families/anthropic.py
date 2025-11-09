@@ -7,10 +7,10 @@
 Anthropic 模型家族配置 / Anthropic model family configurations
 """
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.provider import Provider
 
 # ==========================================================================
 # Claude 系列 / Claude Series

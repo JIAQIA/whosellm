@@ -11,8 +11,8 @@ from datetime import date
 
 import pytest
 
-from llmeta.models.base import ModelFamily
-from llmeta.models.registry import get_specific_model_config, match_model_pattern
+from whosellm.models.base import ModelFamily
+from whosellm.models.registry import get_specific_model_config, match_model_pattern
 
 
 def test_gpt5_base_model():
@@ -65,7 +65,7 @@ def test_gpt5_with_date_suffix():
     assert matched["variant"] == "mini"
 
     # 检查日期解析
-    from llmeta.models.base import parse_date_from_model_name
+    from whosellm.models.base import parse_date_from_model_name
 
     parsed_date = parse_date_from_model_name("gpt-5-mini-2025-08-07")
     assert parsed_date == date(2025, 8, 7)
@@ -89,7 +89,7 @@ def test_gpt5_pro_with_date_suffix():
     assert matched["variant"] == "pro"
 
     # 检查日期解析
-    from llmeta.models.base import parse_date_from_model_name
+    from whosellm.models.base import parse_date_from_model_name
 
     parsed_date = parse_date_from_model_name("gpt-5-pro-2025-10-06")
     assert parsed_date == date(2025, 10, 6)

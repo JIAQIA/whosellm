@@ -2,7 +2,7 @@
 
 from datetime import date
 
-from llmeta import LLMeta, ModelFamily, Provider
+from whosellm import LLMeta, ModelFamily, Provider
 
 
 def test_glm45_base_capabilities() -> None:

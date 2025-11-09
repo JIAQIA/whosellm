@@ -7,7 +7,7 @@
 基础使用示例 / Basic usage examples
 """
 
-from llmeta import LLMeta
+from whosellm import LLMeta
 
 
 def main() -> None:

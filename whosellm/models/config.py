@@ -12,10 +12,10 @@ Centrally manage all configuration for model families, including naming patterns
 
 from dataclasses import dataclass, field
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.patterns import parse_pattern
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.patterns import parse_pattern
+from whosellm.provider import Provider
 
 
 @dataclass
@@ -83,7 +83,7 @@ class ModelFamilyConfig:
         """注册到全局注册表并验证配置 / Register to global registry and validate configuration"""
         self._validate_specific_models()
 
-        from llmeta.models.registry import register_family_config
+        from whosellm.models.registry import register_family_config
 
         register_family_config(self)
 

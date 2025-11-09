@@ -10,7 +10,7 @@
 Demonstrates variant priority comparison and Provider specification features
 """
 
-from llmeta import LLMeta
+from whosellm import LLMeta
 
 
 def demo_variant_priority():

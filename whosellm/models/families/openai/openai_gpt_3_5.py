@@ -3,10 +3,10 @@
 # @Author  : JQQ
 # @Email   : jiaqia@qknode.com
 # @Software: PyCharm
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.provider import Provider
 
 # ======================================================== ====================
 # GPT-3.5 系列 / GPT-3.5 Series

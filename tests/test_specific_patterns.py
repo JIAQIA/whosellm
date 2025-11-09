@@ -8,11 +8,11 @@ Test specific_models sub-patterns functionality
 # Import all model family configurations to trigger registration
 import pytest
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
-from llmeta.models.registry import get_specific_model_config, match_model_pattern
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.registry import get_specific_model_config, match_model_pattern
+from whosellm.provider import Provider
 
 
 def test_basic_functionality():

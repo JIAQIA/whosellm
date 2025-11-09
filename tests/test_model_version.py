@@ -12,7 +12,7 @@ from datetime import datetime
 
 import pytest
 
-from llmeta import LLMeta, ModelFamily, Provider
+from whosellm import LLMeta, ModelFamily, Provider
 
 
 class TestModelVersion(unittest.TestCase):

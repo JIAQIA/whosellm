@@ -1,8 +1,8 @@
 # 如何添加新的模型家族 / How to Add a New Model Family
 
-本文档介绍如何在 LLMeta 中添加新的模型家族支持。
+本文档介绍如何在 whosellm 中添加新的模型家族支持。
 
-This document explains how to add support for a new model family in LLMeta.
+This document explains how to add support for a new model family in whosellm.
 
 ---
 
@@ -32,9 +32,9 @@ That's it! ✨
 
 ### 步骤 1: 定义模型家族枚举 / Step 1: Define Model Family Enum
 
-在 `llmeta/models/base.py` 的 `ModelFamily` 枚举中添加新的家族：
+在 `whosellm/models/base.py` 的 `ModelFamily` 枚举中添加新的家族：
 
-Add a new family to the `ModelFamily` enum in `llmeta/models/base.py`:
+Add a new family to the `ModelFamily` enum in `whosellm/models/base.py`:
 
 ```python
 class ModelFamily(str, Enum):
@@ -63,9 +63,9 @@ class ModelFamily(str, Enum):
 
 ### 步骤 2: 创建家族配置 / Step 2: Create Family Configuration
 
-在 `llmeta/models/families/` 目录中创建或编辑提供商配置文件：
+在 `whosellm/models/families/` 目录中创建或编辑提供商配置文件：
 
-Create or edit a provider configuration file in `llmeta/models/families/`:
+Create or edit a provider configuration file in `whosellm/models/families/`:
 
 **选项 A：添加到现有提供商文件** / Option A: Add to existing provider file
 
@@ -80,7 +80,7 @@ If it's a new family from an existing provider, edit the corresponding file (e.g
 If it's a new provider, create a new file (e.g., `google.py`)
 
 ```python
-# llmeta/models/families/google.py
+# whosellm/models/families/google.py
 # -*- coding: utf-8 -*-
 # filename: google.py
 # @Time    : 2025/11/7 17:45
@@ -91,10 +91,10 @@ If it's a new provider, create a new file (e.g., `google.py`)
 Google 模型家族配置 / Google model family configurations
 """
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
 
 # ============================================================================
 # Gemini 系列 / Gemini Series
@@ -127,7 +127,7 @@ GEMINI = ModelFamilyConfig(
 Then import it in `families/__init__.py`:
 
 ```python
-from llmeta.models.families import (
+from whosellm.models.families import (
     alibaba,
     anthropic,
     google,  # 添加新的 / Add new
@@ -207,12 +207,12 @@ __all__ = [
 **No source code modification needed!** Third-party users can dynamically extend enums and register model families at runtime.
 
 ```python
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.models.registry import register_family
-from llmeta.provider import Provider
-from llmeta.capabilities import ModelCapabilities
-from llmeta import LLMeta
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.models.registry import register_family
+from whosellm.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm import whosellm
 
 # 1. 动态添加 Provider 枚举成员 / Dynamically add Provider enum member
 Provider.add_member('GOOGLE', 'google')
@@ -244,7 +244,7 @@ gemini_config = ModelFamilyConfig(
 register_family(gemini_config)
 
 # 5. 现在可以使用了！/ Now you can use it!
-model = LLMeta("gemini-pro")
+model = whosellm("gemini-pro")
 print(f"Family: {model.family}")  # ModelFamily.GEMINI
 print(f"Provider: {model.provider}")  # Provider.GOOGLE
 print(f"Supports vision: {model.capabilities.supports_vision}")  # True
@@ -268,9 +268,9 @@ print(f"Context window: {model.capabilities.context_window:,}")  # 1,000,000
 
 ## 步骤 3 (可选): 添加 Provider / Step 3 (Optional): Add Provider
 
-如果新模型家族来自新的提供商，需要在 `llmeta/provider.py` 中添加：
+如果新模型家族来自新的提供商，需要在 `whosellm/provider.py` 中添加：
 
-If the new model family is from a new provider, add it to `llmeta/provider.py`:
+If the new model family is from a new provider, add it to `whosellm/provider.py`:
 
 ```python
 class Provider(str, Enum):
@@ -397,10 +397,10 @@ class Provider(str, Enum):
 Google 模型家族配置 / Google model family configurations
 """
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig
+from whosellm.provider import Provider
 
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
@@ -427,7 +427,7 @@ GEMINI = ModelFamilyConfig(
 ### 4. 在 `families/__init__.py` 中导入
 
 ```python
-from llmeta.models.families import (
+from whosellm.models.families import (
     alibaba,
     anthropic,
     google,  # 新增
@@ -449,10 +449,10 @@ __all__ = [
 ### 4. 测试
 
 ```python
-from llmeta import LLMeta
+from whosellm import whosellm
 
 # 测试自动注册
-model = LLMeta("gemini-1-pro")
+model = whosellm("gemini-1-pro")
 print(f"Family: {model.family}")        # GEMINI
 print(f"Provider: {model.provider}")    # GOOGLE
 print(f"Version: {model.version}")      # 1.0
@@ -460,7 +460,7 @@ print(f"Variant: {model.variant}")      # pro
 print(f"Supports vision: {model.capabilities.supports_vision}")  # True
 
 # 测试新变体自动注册
-model2 = LLMeta("gemini-2-flash")
+model2 = whosellm("gemini-2-flash")
 print(f"Variant: {model2.variant}")     # flash
 # 自动继承 GEMINI 家族的默认能力
 ```
@@ -493,12 +493,12 @@ It's recommended to add test cases for the new model family:
 ```python
 # tests/test_gemini.py
 import unittest
-from llmeta import LLMeta, ModelFamily, Provider
+from whosellm import whosellm, ModelFamily, Provider
 
 class TestGemini(unittest.TestCase):
     def test_gemini_auto_register(self):
         """测试 Gemini 自动注册"""
-        model = LLMeta("gemini-1-pro")
+        model = whosellm("gemini-1-pro")
         
         assert model.family == ModelFamily.GEMINI
         assert model.provider == Provider.GOOGLE
@@ -509,9 +509,9 @@ class TestGemini(unittest.TestCase):
     
     def test_gemini_variant_comparison(self):
         """测试 Gemini 型号比较"""
-        flash = LLMeta("gemini-flash")
-        pro = LLMeta("gemini-pro")
-        ultra = LLMeta("gemini-ultra")
+        flash = whosellm("gemini-flash")
+        pro = whosellm("gemini-pro")
+        ultra = whosellm("gemini-ultra")
         
         assert flash < pro < ultra
 ```
@@ -564,12 +564,12 @@ class TestGemini(unittest.TestCase):
 
 ## 🔗 相关文件 / Related Files
 
-- `llmeta/models/base.py` - 模型家族枚举定义
-- `llmeta/models/config.py` - ModelFamilyConfig 配置类
-- `llmeta/models/registry.py` - 统一注册表和查询接口
-- `llmeta/models/families/` - 各提供商的家族配置
-- `llmeta/provider.py` - 提供商定义
-- `llmeta/capabilities.py` - 能力字段定义
+- `whosellm/models/base.py` - 模型家族枚举定义
+- `whosellm/models/config.py` - ModelFamilyConfig 配置类
+- `whosellm/models/registry.py` - 统一注册表和查询接口
+- `whosellm/models/families/` - 各提供商的家族配置
+- `whosellm/provider.py` - 提供商定义
+- `whosellm/capabilities.py` - 能力字段定义
 - `tests/test_auto_register.py` - 自动注册测试
 
 ---

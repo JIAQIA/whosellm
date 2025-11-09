@@ -13,13 +13,13 @@ Provides registration and query interfaces for model family configurations
 
 from typing import TYPE_CHECKING, Any
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import MODEL_REGISTRY, ModelFamily, ModelInfo, register_model
-from llmeta.models.patterns import parse_pattern
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import MODEL_REGISTRY, ModelFamily, ModelInfo, register_model
+from whosellm.models.patterns import parse_pattern
+from whosellm.provider import Provider
 
 if TYPE_CHECKING:
-    from llmeta.models.config import ModelFamilyConfig
+    from whosellm.models.config import ModelFamilyConfig
 
 # 核心注册表：所有模型家族配置 / Core registry: all model family configs
 _FAMILY_CONFIGS: dict[ModelFamily, "ModelFamilyConfig"] = {}
@@ -268,9 +268,9 @@ def register_family(config: "ModelFamilyConfig") -> None:
         config: 模型家族配置 / Model family configuration
 
     Example:
-        >>> from llmeta.models.config import ModelFamilyConfig
-        >>> from llmeta.models.registry import register_family
-        >>> from llmeta.capabilities import ModelCapabilities
+        >>> from whosellm.models.config import ModelFamilyConfig
+        >>> from whosellm.models.registry import register_family
+        >>> from whosellm.capabilities import ModelCapabilities
         >>>
         >>> # 创建新的模型家族配置 / Create new model family configuration
         >>> gemini_config = ModelFamilyConfig(

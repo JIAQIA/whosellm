@@ -10,7 +10,7 @@
 from enum import Enum
 from typing import cast
 
-from llmeta.models.dynamic_enum import DynamicEnumMeta
+from whosellm.models.dynamic_enum import DynamicEnumMeta
 
 
 class Provider(str, Enum, metaclass=DynamicEnumMeta):
@@ -52,7 +52,7 @@ class Provider(str, Enum, metaclass=DynamicEnumMeta):
         Returns:
             Provider: 提供商枚举 / Provider enum
         """
-        from llmeta.models.registry import match_model_pattern
+        from whosellm.models.registry import match_model_pattern
 
         # 使用模式匹配找到对应的配置 / Use pattern matching to find the configuration
         matched = match_model_pattern(model_name)

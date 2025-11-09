@@ -10,8 +10,8 @@
 import datetime
 import unittest
 
-from llmeta import LLMeta, ModelFamily, Provider
-from llmeta.models.base import auto_register_model, infer_model_family
+from whosellm import LLMeta, ModelFamily, Provider
+from whosellm.models.base import auto_register_model, infer_model_family
 
 
 class TestAutoRegister(unittest.TestCase):

@@ -1,5 +1,5 @@
 [project]
-name = "llmeta"
+name = "whosellm"
 version = "0.1.1-dev0"
 description = "A unified LLM model version and capability management library"
 authors = [
@@ -47,12 +47,12 @@ lint = "ruff check --fix ."
 check = "ruff check ."
 
 # 类型检查 / Type checking
-typecheck = "mypy llmeta"
-mypy = "mypy llmeta"
+typecheck = "mypy whosellm"
+mypy = "mypy whosellm"
 
 # 测试 / Testing
 test = "pytest tests/"
-test-cov = "pytest tests -m 'not e2e' --cov llmeta --cov-report=term-missing --cov-fail-under=0 --cov-config=.coveragerc"
+test-cov = "pytest tests -m 'not e2e' --cov whosellm --cov-report=term-missing --cov-fail-under=0 --cov-config=.coveragerc"
 test-e2e = "pytest tests -m e2e"
 test-all = "pytest tests -v"
 

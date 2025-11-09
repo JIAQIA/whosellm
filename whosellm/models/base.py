@@ -12,9 +12,9 @@ from dataclasses import dataclass
 from datetime import date
 from enum import Enum
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.dynamic_enum import DynamicEnumMeta
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.dynamic_enum import DynamicEnumMeta
+from whosellm.provider import Provider
 
 
 class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
@@ -120,7 +120,7 @@ def get_family_default_provider(family: ModelFamily) -> Provider | None:
     Returns:
         Provider | None: 默认Provider或None / Default provider or None
     """
-    from llmeta.models.registry import get_default_provider
+    from whosellm.models.registry import get_default_provider
 
     return get_default_provider(family)
 
@@ -193,8 +193,8 @@ def parse_date_from_model_name(model_name: str) -> date | None:
     Returns:
         date | None: 解析的日期或None / Parsed date or None
     """
-    from llmeta.models.patterns import parse_date_from_match
-    from llmeta.models.registry import match_model_pattern
+    from whosellm.models.patterns import parse_date_from_match
+    from whosellm.models.registry import match_model_pattern
 
     # 优先使用模式匹配 / Prioritize pattern matching
     matched = match_model_pattern(model_name)
@@ -245,7 +245,7 @@ def infer_model_family(model_name: str) -> ModelFamily:
     Returns:
         ModelFamily: 模型家族 / Model family
     """
-    from llmeta.models.registry import match_model_pattern
+    from whosellm.models.registry import match_model_pattern
 
     matched = match_model_pattern(model_name)
     if matched and "family" in matched:
@@ -375,8 +375,8 @@ def auto_register_model(
     Raises:
         ValueError: 如果无法推断模型家族且未提供能力 / If cannot infer model family and no capabilities provided
     """
-    from llmeta.models.patterns import normalize_variant, parse_date_from_match
-    from llmeta.models.registry import match_model_pattern
+    from whosellm.models.patterns import normalize_variant, parse_date_from_match
+    from whosellm.models.registry import match_model_pattern
 
     # 使用模式匹配解析模型名称 / Use pattern matching to parse model name
     matched = match_model_pattern(model_name)
@@ -413,7 +413,7 @@ def auto_register_model(
     if capabilities:
         model_capabilities = capabilities
     else:
-        from llmeta.models.registry import get_default_capabilities
+        from whosellm.models.registry import get_default_capabilities
 
         model_capabilities = get_default_capabilities(family)
 

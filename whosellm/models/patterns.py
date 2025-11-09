@@ -16,8 +16,8 @@ from typing import Any
 
 import parse  # type: ignore[import-untyped]
 
-from llmeta.models.base import ModelFamily
-from llmeta.provider import Provider
+from whosellm.models.base import ModelFamily
+from whosellm.provider import Provider
 
 
 def _convert_variant(text: str) -> str:

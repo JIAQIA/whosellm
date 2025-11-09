@@ -5,10 +5,10 @@
 Vidu Q1 模型家族配置 / Vidu Q1 model family configuration
 """
 
-from llmeta.capabilities import ModelCapabilities
-from llmeta.models.base import ModelFamily
-from llmeta.models.config import ModelFamilyConfig, SpecificModelConfig
-from llmeta.provider import Provider
+from whosellm.capabilities import ModelCapabilities
+from whosellm.models.base import ModelFamily
+from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.provider import Provider
 
 VIDU_Q1 = ModelFamilyConfig(
     family=ModelFamily.VIDU_Q1,
