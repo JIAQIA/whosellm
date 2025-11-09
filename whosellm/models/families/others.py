@@ -6,8 +6,8 @@
 """
 其他提供商模型家族配置 / Other providers' model family configurations
 
-包含：百度、腾讯、月之暗面、DeepSeek、MiniMax 等
-Including: Baidu, Tencent, Moonshot, DeepSeek, MiniMax, etc.
+包含：百度、腾讯、月之暗面、MiniMax 等
+Including: Baidu, Tencent, Moonshot, MiniMax, etc.
 """
 
 from whosellm.capabilities import ModelCapabilities
@@ -82,30 +82,8 @@ MOONSHOT = ModelFamilyConfig(
 )
 
 # ============================================================================
-# DeepSeek 系列 / DeepSeek Series
-# ============================================================================
-
-DEEPSEEK = ModelFamilyConfig(
-    family=ModelFamily.DEEPSEEK,
-    provider=Provider.DEEPSEEK,
-    version_default="1.0",
-    variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "deepseek-{variant:variant}-v{version:d}",  # deepseek-chat-v2
-        "deepseek-{variant:variant}",
-        "deepseek",
-    ],
-    capabilities=ModelCapabilities(
-        supports_function_calling=True,
-        supports_streaming=True,
-        max_tokens=8192,
-        context_window=64000,
-    ),
-)
-
-# ============================================================================
 # MiniMax ABAB 系列 / MiniMax ABAB Series
-# ============================================================================
+# =========================================================================
 
 ABAB = ModelFamilyConfig(
     family=ModelFamily.ABAB,

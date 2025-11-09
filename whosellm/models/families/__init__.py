@@ -15,6 +15,7 @@ Import all provider configuration files to trigger auto-registration
 from whosellm.models.families import (
     alibaba,
     anthropic,
+    deepseek,
     openai,
     others,
     vidu,
@@ -24,6 +25,7 @@ from whosellm.models.families import (
 __all__ = [
     "alibaba",
     "anthropic",
+    "deepseek",
     "openai",
     "others",
     "vidu",

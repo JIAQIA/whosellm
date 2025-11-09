@@ -101,7 +101,7 @@ class TestAutoRegister(unittest.TestCase):
         assert model.family == ModelFamily.DEEPSEEK
         assert model.provider == Provider.DEEPSEEK
         assert model.capabilities.supports_function_calling is True
-        assert model.capabilities.context_window == 64000
+        assert model.capabilities.context_window == 128000
 
     def test_auto_register_qwen_variant(self) -> None:
         """测试自动注册 Qwen 新型号 / Test auto-register Qwen new variant"""

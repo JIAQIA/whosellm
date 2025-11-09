@@ -2,7 +2,7 @@
 # @Time    : 2025/11/8 23:53
 # @Author  : Cascade
 """
-Vidu Q1 模型家族配置 / Vidu Q1 model family configuration
+GLM Vidu Q1 模型家族配置 / Vidu Q1 model family configuration
 """
 
 from whosellm.capabilities import ModelCapabilities

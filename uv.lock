@@ -891,7 +891,7 @@ wheels = [
 
 [[package]]
 name = "whosellm"
-version = "0.1.1.dev1"
+version = "0.1.1.dev2"
 source = { editable = "." }
 dependencies = [
     { name = "parse" },
