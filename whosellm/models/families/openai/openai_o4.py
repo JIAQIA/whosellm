@@ -25,6 +25,7 @@ O4 = ModelFamilyConfig(
         supports_streaming=True,
         supports_function_calling=True,
         supports_structured_outputs=True,
+        supports_json_outputs=True,
         supports_fine_tuning=True,
     ),
     specific_models={
@@ -36,6 +37,7 @@ O4 = ModelFamilyConfig(
                 supports_streaming=True,
                 supports_function_calling=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=True,
             ),
             patterns=[
@@ -51,6 +53,7 @@ O4 = ModelFamilyConfig(
                 supports_streaming=True,
                 supports_function_calling=False,
                 supports_structured_outputs=False,
+                supports_json_outputs=False,
                 supports_fine_tuning=False,
             ),
             patterns=[
