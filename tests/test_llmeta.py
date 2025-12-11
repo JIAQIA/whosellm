@@ -1,4 +1,4 @@
-"""GLM-4.5 文本模型元数据测试 / Metadata tests for GLM-4.5 series."""
+"""模型元数据测试 / Model metadata tests."""
 
 from datetime import date
 
@@ -84,3 +84,42 @@ def test_glm46_release_date_parsing() -> None:
     assert model.family == ModelFamily.GLM_TEXT
     assert model.variant == "base"
     assert model.release_date == date(2025, 11, 8)
+
+
+def test_gpt51_base_capabilities() -> None:
+    """验证 GPT-5.1 默认型号的能力配置。"""
+    model = LLMeta("gpt-5.1")
+
+    assert model.provider == Provider.OPENAI
+    assert model.family == ModelFamily.GPT_5_1
+    assert model.variant == "base"
+
+    capabilities = model.capabilities
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_audio is False
+    assert capabilities.supports_video is False
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_json_outputs is True
+    assert capabilities.supports_thinking is True
+    assert capabilities.max_tokens == 128000
+    assert capabilities.context_window == 400000
+
+
+def test_gpt51_release_date_parsing() -> None:
+    """确保 GPT-5.1 带日期后缀能解析发布日期。"""
+    model = LLMeta("gpt-5.1-2025-11-13")
+
+    assert model.provider == Provider.OPENAI
+    assert model.family == ModelFamily.GPT_5_1
+    assert model.variant == "base"
+    assert model.release_date == date(2025, 11, 13)
+
+
+def test_gpt51_different_dates_comparison() -> None:
+    """确认 GPT-5.1 不同日期版本可以正确比较。"""
+    gpt51_old = LLMeta("gpt-5.1-2025-11-13")
+    gpt51_new = LLMeta("gpt-5.1-2025-12-01")
+
+    assert gpt51_old < gpt51_new

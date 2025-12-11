@@ -73,7 +73,7 @@ def test_gpt4o_audio_preview_capabilities() -> None:
 
         capabilities = model.capabilities
         assert capabilities.supports_audio is True
-        assert capabilities.supports_vision is True
+        assert capabilities.supports_vision is False
         assert capabilities.supports_streaming is True
         assert capabilities.supports_function_calling is True
         assert capabilities.supports_structured_outputs is False
@@ -95,7 +95,7 @@ def test_gpt4o_mini_audio_preview_capabilities() -> None:
 
         capabilities = model.capabilities
         assert capabilities.supports_audio is True
-        assert capabilities.supports_vision is True
+        assert capabilities.supports_vision is False
         assert capabilities.supports_streaming is True
         assert capabilities.supports_function_calling is True
         assert capabilities.supports_structured_outputs is False

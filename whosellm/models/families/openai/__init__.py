@@ -8,6 +8,7 @@ from whosellm.models.families.openai.openai_gpt_4 import GPT_4
 from whosellm.models.families.openai.openai_gpt_4_1 import GPT_4_1
 from whosellm.models.families.openai.openai_gpt_4o import GPT_4O
 from whosellm.models.families.openai.openai_gpt_5 import GPT_5
+from whosellm.models.families.openai.openai_gpt_5_1 import GPT_5_1
 from whosellm.models.families.openai.openai_o1 import O1
 from whosellm.models.families.openai.openai_o3 import O3
 from whosellm.models.families.openai.openai_o4 import O4
@@ -18,6 +19,7 @@ __all__ = [
     "GPT_4O",
     "GPT_4_1",
     "GPT_5",
+    "GPT_5_1",
     "O1",
     "O3",
     "O4",
