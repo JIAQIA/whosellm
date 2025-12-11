@@ -136,6 +136,55 @@ GLM_VISION = ModelFamilyConfig(
                 max_image_pixels=(4096, 4096),
             ),
         ),
+        "glm-4.5v": SpecificModelConfig(
+            version_default="4.5",
+            variant_default="base",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=8192,
+                context_window=64000,
+            ),
+        ),
+        "glm-4.6v": SpecificModelConfig(
+            version_default="4.6",
+            variant_default="base",
+            variant_priority=(4,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=128000,
+            ),
+        ),
+        "glm-4.6v-flash": SpecificModelConfig(
+            version_default="4.6",
+            variant_default="flash",
+            variant_priority=(0,),  # flash 的优先级 / flash priority
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=128000,
+            ),
+            patterns=[
+                "glm-4.6v-flash-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.6v-flash-{mmdd:4d}",
+                "glm-4.6v-flash",
+            ],
+        ),
     },
 )
 
@@ -201,6 +250,14 @@ GLM_TEXT = ModelFamilyConfig(
             version_default="4.5",
             variant_default="air",
             variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-air-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-air-{mmdd:4d}",
@@ -211,6 +268,14 @@ GLM_TEXT = ModelFamilyConfig(
             version_default="4.5",
             variant_default="airx",
             variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-airx-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-airx-{mmdd:4d}",
@@ -221,6 +286,14 @@ GLM_TEXT = ModelFamilyConfig(
             version_default="4.5",
             variant_default="x",
             variant_priority=(4,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-x-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-x-{mmdd:4d}",
@@ -231,6 +304,14 @@ GLM_TEXT = ModelFamilyConfig(
             version_default="4.5",
             variant_default="flash",
             variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-flash-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-flash-{mmdd:4d}",

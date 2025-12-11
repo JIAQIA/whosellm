@@ -40,7 +40,7 @@ class ModelCapabilities:
     supports_mcp: bool = False  # 是否支持 MCP / Whether MCP integration is supported
 
     # 通用限制 / General limitations
-    max_tokens: int | None = None  # 最大token数 / Maximum number of tokens
+    max_tokens: int | None = None  # 最大输出token数 / Maximum number of tokens
     context_window: int | None = None  # 上下文窗口大小 / Context window size
 
     # 图片相关限制 / Image-related limitations
