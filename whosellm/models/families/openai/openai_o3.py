@@ -40,6 +40,8 @@ O3 = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o3-{year:4d}-{month:2d}-{day:2d}",
@@ -55,6 +57,8 @@ O3 = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o3-mini-{year:4d}-{month:2d}-{day:2d}",
@@ -70,6 +74,8 @@ O3 = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o3-pro-{year:4d}-{month:2d}-{day:2d}",
@@ -85,6 +91,8 @@ O3 = ModelFamilyConfig(
                 supports_function_calling=False,
                 supports_structured_outputs=False,
                 supports_json_outputs=False,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o3-deep-research-{year:4d}-{month:2d}-{day:2d}",

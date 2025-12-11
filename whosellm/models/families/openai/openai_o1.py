@@ -29,8 +29,8 @@ O1 = ModelFamilyConfig(
         supports_streaming=True,
         supports_structured_outputs=True,
         supports_json_outputs=True,
-        max_tokens=100000,
-        context_window=200000,
+        max_tokens=100_000,
+        context_window=200_000,
     ),
     specific_models={
         "o1-pro": SpecificModelConfig(
@@ -43,12 +43,30 @@ O1 = ModelFamilyConfig(
                 supports_streaming=False,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
-                max_tokens=100000,
-                context_window=200000,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o1-pro-{year:4d}-{month:2d}-{day:2d}",
                 "o1-pro",
+            ],
+        ),
+        "o1-mini": SpecificModelConfig(
+            version_default="1.0",
+            variant_default="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_json_outputs=True,
+                max_tokens=65_536,
+                context_window=128_000,
+            ),
+            patterns=[
+                "o1-mini-{year:4d}-{month:2d}-{day:2d}",
+                "o1-mini",
             ],
         ),
     },

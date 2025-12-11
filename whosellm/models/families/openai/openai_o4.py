@@ -22,6 +22,7 @@ O4 = ModelFamilyConfig(
         "o4-{variant:variant}",
     ],
     capabilities=ModelCapabilities(
+        supports_vision=True,
         supports_streaming=True,
         supports_function_calling=True,
         supports_structured_outputs=True,
@@ -34,11 +35,14 @@ O4 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                supports_vision=True,
                 supports_streaming=True,
                 supports_function_calling=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
                 supports_fine_tuning=True,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o4-mini-{year:4d}-{month:2d}-{day:2d}",
@@ -50,11 +54,14 @@ O4 = ModelFamilyConfig(
             variant_default="mini-deep-research",
             variant_priority=(0,),  # mini-deep-research 的优先级 / mini-deep-research priority
             capabilities=ModelCapabilities(
+                supports_vision=True,
                 supports_streaming=True,
                 supports_function_calling=False,
                 supports_structured_outputs=False,
                 supports_json_outputs=False,
                 supports_fine_tuning=False,
+                max_tokens=100_000,
+                context_window=200_000,
             ),
             patterns=[
                 "o4-mini-deep-research-{year:4d}-{month:2d}-{day:2d}",
