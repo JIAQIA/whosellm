@@ -25,6 +25,7 @@ GPT_4_1 = ModelFamilyConfig(
         "gpt-4.1",
     ],
     capabilities=ModelCapabilities(
+        supports_vision=True,
         supports_function_calling=True,
         supports_streaming=True,
         supports_structured_outputs=True,
@@ -45,6 +46,7 @@ GPT_4_1 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supports_vision=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
@@ -65,6 +67,7 @@ GPT_4_1 = ModelFamilyConfig(
             variant_default="nano",
             variant_priority=(0,),  # nano 的优先级 (< mini) / nano priority
             capabilities=ModelCapabilities(
+                supports_vision=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,

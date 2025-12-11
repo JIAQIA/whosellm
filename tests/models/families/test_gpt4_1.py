@@ -26,6 +26,7 @@ def test_gpt4_1_base_model():
 
     # 默认能力验证
     capabilities = get_default_capabilities(ModelFamily.GPT_4_1)
+    assert capabilities.supports_vision is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_structured_outputs is True
     assert capabilities.supports_fine_tuning is True
@@ -41,6 +42,7 @@ def test_gpt4_1_mini_model_specific_config():
     assert version == "4.1"
     assert variant == "mini"
     assert capabilities is not None
+    assert capabilities.supports_vision is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_structured_outputs is True
     assert capabilities.supports_fine_tuning is True
@@ -57,6 +59,7 @@ def test_gpt4_1_nano_model_specific_config():
     assert version == "4.1"
     assert variant == "nano"
     assert capabilities is not None
+    assert capabilities.supports_vision is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_structured_outputs is True
     assert capabilities.supports_fine_tuning is True
@@ -78,6 +81,7 @@ def test_gpt4_1_mini_date_pattern():
     assert config is not None
     _, variant, capabilities = config
     assert variant == "mini"
+    assert capabilities.supports_vision is True
     assert capabilities.supports_predicted_outputs is True
 
 
@@ -94,4 +98,5 @@ def test_gpt4_1_nano_date_pattern():
     assert config is not None
     _, variant, capabilities = config
     assert variant == "nano"
+    assert capabilities.supports_vision is True
     assert capabilities.supports_predicted_outputs is True

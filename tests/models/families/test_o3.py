@@ -15,6 +15,7 @@ def test_o3_base_defaults():
     """验证 O3 家族默认能力 / Validate O3 family default capabilities"""
     capabilities = get_default_capabilities(ModelFamily.O3)
 
+    assert capabilities.supports_vision is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_function_calling is True
     assert capabilities.supports_structured_outputs is True
@@ -27,6 +28,7 @@ def _assert_specific_config(
     name: str,
     variant: str,
     *,
+    supports_vision: bool | None = None,
     streaming: bool,
     function_calling: bool,
     structured_outputs: bool,
@@ -38,6 +40,8 @@ def _assert_specific_config(
     assert version == "3.0"
     assert cfg_variant == variant
     assert capabilities is not None
+    if supports_vision is not None:
+        assert capabilities.supports_vision is supports_vision
     assert capabilities.supports_streaming is streaming
     assert capabilities.supports_function_calling is function_calling
     assert capabilities.supports_structured_outputs is structured_outputs
@@ -51,6 +55,7 @@ def test_o3_base_specific_model():
     _assert_specific_config(
         "o3",
         "base",
+        supports_vision=True,
         streaming=True,
         function_calling=True,
         structured_outputs=True,
@@ -66,15 +71,23 @@ def test_o3_base_with_date_pattern():
     assert matched["_from_specific_model"] == "o3"
     assert matched["variant"] == "base"
 
+    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
+    config = get_specific_model_config(matched["_from_specific_model"])
+    assert config is not None
+    _, _, capabilities = config
+    assert capabilities.supports_vision is True
+
 
 def test_o3_mini_specific_model():
     """验证 o3-mini 模型能力 / Validate o3-mini model capabilities"""
     _assert_specific_config(
         "o3-mini",
         "mini",
+        # mini 不验证 vision / do not assert vision for mini
         streaming=True,
         function_calling=True,
         structured_outputs=True,
+        supports_vision=False,
     )
 
 
@@ -93,6 +106,7 @@ def test_o3_pro_specific_model():
     _assert_specific_config(
         "o3-pro",
         "pro",
+        supports_vision=True,
         streaming=False,
         function_calling=True,
         structured_outputs=True,
@@ -108,12 +122,19 @@ def test_o3_pro_with_date_pattern():
     assert matched["_from_specific_model"] == "o3-pro"
     assert matched["variant"] == "pro"
 
+    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
+    config = get_specific_model_config(matched["_from_specific_model"])
+    assert config is not None
+    _, _, capabilities = config
+    assert capabilities.supports_vision is True
+
 
 def test_o3_deep_research_specific_model():
     """验证 o3-deep-research 模型能力 / Validate o3-deep-research model capabilities"""
     _assert_specific_config(
         "o3-deep-research",
         "deep-research",
+        supports_vision=True,
         streaming=True,
         function_calling=False,
         structured_outputs=False,
@@ -128,3 +149,9 @@ def test_o3_deep_research_with_date_pattern():
     assert matched["family"] == ModelFamily.O3
     assert matched["_from_specific_model"] == "o3-deep-research"
     assert matched["variant"] == "deep-research"
+
+    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
+    config = get_specific_model_config(matched["_from_specific_model"])
+    assert config is not None
+    _, _, capabilities = config
+    assert capabilities.supports_vision is True

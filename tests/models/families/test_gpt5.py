@@ -32,6 +32,7 @@ def test_gpt5_base_model():
     assert version == "5.0"
     assert variant == "mini"
     assert capabilities is not None
+    assert capabilities.supports_vision is True
     assert capabilities.max_tokens == 8192
     assert capabilities.context_window == 128000
 
@@ -43,6 +44,7 @@ def test_gpt5_mini_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "mini"
+    assert capabilities.supports_vision is True
     assert capabilities.max_tokens == 8192
     assert capabilities.context_window == 128000
 
@@ -54,6 +56,7 @@ def test_gpt5_nano_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "nano"
+    assert capabilities.supports_vision is True
     assert capabilities.max_tokens == 4096
     assert capabilities.context_window == 64000
 
@@ -63,6 +66,12 @@ def test_gpt5_with_date_suffix():
     matched = match_model_pattern("gpt-5-mini-2025-08-07")
     assert matched is not None
     assert matched["variant"] == "mini"
+
+    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
+    config = get_specific_model_config(matched["_from_specific_model"])
+    assert config is not None
+    _, _, capabilities = config
+    assert capabilities.supports_vision is True
 
     # 检查日期解析
     from whosellm.models.base import parse_date_from_model_name
@@ -78,6 +87,7 @@ def test_gpt5_pro_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "pro"
+    assert capabilities.supports_vision is True
     assert capabilities.max_tokens == 24576
     assert capabilities.context_window == 256000
 
@@ -87,6 +97,12 @@ def test_gpt5_pro_with_date_suffix():
     matched = match_model_pattern("gpt-5-pro-2025-10-06")
     assert matched is not None
     assert matched["variant"] == "pro"
+
+    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
+    config = get_specific_model_config(matched["_from_specific_model"])
+    assert config is not None
+    _, _, capabilities = config
+    assert capabilities.supports_vision is True
 
     # 检查日期解析
     from whosellm.models.base import parse_date_from_model_name

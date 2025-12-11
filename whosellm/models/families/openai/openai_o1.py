@@ -24,6 +24,7 @@ O1 = ModelFamilyConfig(
         "o1",
     ],
     capabilities=ModelCapabilities(
+        supports_vision=True,
         supports_thinking=True,
         supports_function_calling=True,
         supports_streaming=True,
@@ -33,11 +34,31 @@ O1 = ModelFamilyConfig(
         context_window=200_000,
     ),
     specific_models={
+        "o1": SpecificModelConfig(
+            version_default="1.0",
+            variant_default="base",
+            variant_priority=(1,),  # 与 family 默认一致 / Same as family default
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_json_outputs=True,
+                max_tokens=100_000,
+                context_window=200_000,
+            ),
+            patterns=[
+                "o1-{year:4d}-{month:2d}-{day:2d}",
+                "o1",
+            ],
+        ),
         "o1-pro": SpecificModelConfig(
             version_default="1.0",
             variant_default="pro",
             variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
+                supports_vision=True,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=False,
@@ -56,6 +77,7 @@ O1 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                supports_vision=False,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
