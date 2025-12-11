@@ -1,6 +1,6 @@
 [project]
 name = "whosellm"
-version = "0.1.1a2.dev1"
+version = "0.1.1a2.dev2"
 description = "A unified LLM model version and capability management library"
 authors = [
     {name = "JQQ", email = "jqq1716@gmail.com"}
