@@ -251,3 +251,13 @@ def test_claude_version_upgrade_comparison() -> None:
 
     # 版本升级顺序（基于版本号）
     assert claude_3_haiku < claude_3_5_haiku < claude_4_0_sonnet < claude_4_1_opus < claude_4_5_sonnet
+
+
+def test_gemini_3_pro_default_version() -> None:
+    """验证 Gemini 3 Pro 默认模型版本解析为 3.0 而不是 2.5。 / Verify Gemini 3 Pro default model resolves to version 3.0 instead of 2.5."""
+    model = LLMeta("gemini-3-pro")
+
+    assert model.provider == Provider.GOOGLE
+    assert model.family == ModelFamily.GEMINI
+    assert model.version == "3.0"
+    assert model.variant == "pro"

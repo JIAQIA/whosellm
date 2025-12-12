@@ -14,12 +14,14 @@ from whosellm.provider import Provider
 
 # ==========================================================================
 # Gemini 系列 / Gemini Series
+# 注意Image系列模型。当前虽然标记为不支持thinking，在实际调试中发现 image 系列也会有思考内容产生，但需要注意接口并不支持配置thinking行为，
+# 因此权当不支持处理
 # ==========================================================================
 
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
     provider=Provider.GOOGLE,
-    version_default="2.5",
+    version_default="3.0",
     variant_default="flash",
     variant_priority_default=(1,),  # flash 的默认优先级 / default priority for flash
     patterns=[
@@ -57,6 +59,28 @@ GEMINI = ModelFamilyConfig(
     ),
     specific_models={
         # Gemini 3 Pro 系列 - 最智能的多模态模型
+        "gemini-3-pro": SpecificModelConfig(
+            version_default="3.0",
+            variant_default="pro",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_audio=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_json_outputs=True,
+                supports_web_search=True,
+                supports_file_search=True,
+                supports_code_interpreter=True,
+                max_tokens=65536,
+                context_window=1048576,
+            ),
+            patterns=["gemini-3-pro"],
+        ),
         "gemini-3-pro-preview": SpecificModelConfig(
             version_default="3.0",
             variant_default="pro",
@@ -86,7 +110,8 @@ GEMINI = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_image_generation=True,
-                supports_thinking=True,
+                supports_thinking=False,
+                supports_audio=False,
                 supports_streaming=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
@@ -105,6 +130,7 @@ GEMINI = ModelFamilyConfig(
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
+                supports_pdf=False,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -126,6 +152,7 @@ GEMINI = ModelFamilyConfig(
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
+                supports_pdf=False,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -146,6 +173,9 @@ GEMINI = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_image_generation=True,
+                supports_thinking=False,
+                supports_audio=False,
+                supports_pdf=False,
                 supports_streaming=True,
                 supports_structured_outputs=True,
                 supports_json_outputs=True,
@@ -161,6 +191,7 @@ GEMINI = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_audio=True,
                 supports_video=True,
+                supports_pdf=False,
                 supports_audio_generation=True,
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -177,6 +208,7 @@ GEMINI = ModelFamilyConfig(
             variant_priority=(0,),
             capabilities=ModelCapabilities(
                 supports_audio_generation=True,
+                supports_pdf=False,
                 supports_streaming=True,
                 max_tokens=16384,
                 context_window=8192,
@@ -290,8 +322,8 @@ GEMINI = ModelFamilyConfig(
             variant_priority=(2,),
             capabilities=ModelCapabilities(
                 supports_vision=True,
-                supports_audio=True,
-                supports_video=True,
+                supports_thinking=False,
+                supports_audio=False,
                 supports_image_generation=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
