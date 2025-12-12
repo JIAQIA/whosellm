@@ -83,6 +83,9 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     # MiniMax 家族 / MiniMax family
     ABAB = "abab"
 
+    # Google Gemini 家族 / Google Gemini family
+    GEMINI = "gemini"
+
     UNKNOWN = "unknown"
 
 

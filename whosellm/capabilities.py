@@ -35,6 +35,7 @@ class ModelCapabilities:
     supports_web_search: bool = False  # 是否支持联网搜索工具 / Whether web search tool is supported
     supports_file_search: bool = False  # 是否支持文件检索 / Whether file search tool is supported
     supports_image_generation: bool = False  # 是否支持图像生成工具 / Whether image generation tool is supported
+    supports_audio_generation: bool = False  # 是否支持音频生成工具 / Whether audio generation tool is supported
     supports_code_interpreter: bool = False  # 是否支持代码解释器 / Whether code interpreter tool is supported
     supports_computer_use: bool = False  # 是否支持电脑远程操作 / Whether computer use tool is supported
     supports_mcp: bool = False  # 是否支持 MCP / Whether MCP integration is supported
