@@ -16,7 +16,7 @@ def test_glm45_base_capabilities() -> None:
     capabilities = model.capabilities
     assert capabilities.supports_thinking is True
     assert capabilities.supports_function_calling is True
-    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_structured_outputs is False
     assert capabilities.supports_streaming is True
     assert capabilities.supports_vision is False
     assert capabilities.supports_video is False
@@ -61,7 +61,7 @@ def test_glm46_capabilities() -> None:
     capabilities = model.capabilities
     assert capabilities.supports_thinking is True
     assert capabilities.supports_function_calling is True
-    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_structured_outputs is False
     assert capabilities.supports_streaming is True
     assert capabilities.supports_vision is False
     assert capabilities.supports_video is False
