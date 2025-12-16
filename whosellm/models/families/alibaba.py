@@ -30,7 +30,7 @@ QWEN = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
-        supports_vision=True,
+        supports_vision=False,  # 默认关闭多模态能力 / Default multimodal capabilities disabled
         max_tokens=8192,
         context_window=32000,
     ),
@@ -265,6 +265,38 @@ QWEN = ModelFamilyConfig(
             patterns=[
                 "qwen3-vl-8b-instruct-{year:4d}-{month:2d}-{day:2d}",
                 "qwen3-vl-8b-instruct",
+            ],
+        ),
+        "qwen-plus": SpecificModelConfig(
+            version_default="1.0",
+            variant_default="plus",
+            capabilities=ModelCapabilities(
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_vision=False,  # 仅支持文本输入输出 / Text input/output only
+                max_tokens=8192,
+                context_window=32000,
+            ),
+            patterns=[
+                "qwen-plus-{year:4d}-{month:2d}-{day:2d}",
+                "qwen-plus",
+            ],
+        ),
+        "qwen-flash": SpecificModelConfig(
+            version_default="1.0",
+            variant_default="flash",
+            capabilities=ModelCapabilities(
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_vision=False,  # 仅支持文本输入输出 / Text input/output only
+                max_tokens=8192,
+                context_window=32000,
+            ),
+            patterns=[
+                "qwen-flash-{year:4d}-{month:2d}-{day:2d}",
+                "qwen-flash",
             ],
         ),
     },
