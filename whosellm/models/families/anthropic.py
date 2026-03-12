@@ -19,7 +19,7 @@ from whosellm.provider import Provider
 CLAUDE = ModelFamilyConfig(
     family=ModelFamily.CLAUDE,
     provider=Provider.ANTHROPIC,
-    version_default="4.5",
+    version_default="4.6",
     variant_default="sonnet",
     variant_priority_default=(3,),  # sonnet 的默认优先级 / default priority for sonnet
     patterns=[
@@ -42,6 +42,42 @@ CLAUDE = ModelFamilyConfig(
         context_window=200000,
     ),
     specific_models={
+        "claude-opus-4-6": SpecificModelConfig(
+            version="4.6",
+            variant="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-opus-4-6-{snapshot:8d}",
+                "claude-opus-4-6",
+                "claude-opus-4-6@{snapshot:8d}",
+            ],
+        ),
+        "claude-sonnet-4-6": SpecificModelConfig(
+            version="4.6",
+            variant="sonnet",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-sonnet-4-6-{snapshot:8d}",
+                "claude-sonnet-4-6",
+                "claude-sonnet-4-6@{snapshot:8d}",
+            ],
+        ),
         "claude-sonnet-4-5": SpecificModelConfig(
             version="4.5",
             variant="sonnet",

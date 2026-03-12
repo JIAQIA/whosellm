@@ -54,6 +54,7 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     COGVIDEOX_2 = "cogvideox-2"
 
     # 保留旧枚举作为别名，用于向后兼容 / Keep old enums as aliases for backward compatibility
+    GLM_5 = "glm-text"  # 别名 -> GLM_TEXT
     GLM_4 = "glm-text"  # 别名 -> GLM_TEXT
     GLM_45 = "glm-text"  # 别名 -> GLM_TEXT
     GLM_46 = "glm-text"  # 别名 -> GLM_TEXT
@@ -81,6 +82,9 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
 
     # MiniMax 家族 / MiniMax family
     ABAB = "abab"
+
+    # Google 家族 / Google family
+    GEMINI = "gemini"
 
     UNKNOWN = "unknown"
 

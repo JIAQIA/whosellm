@@ -169,6 +169,74 @@ GLM_TEXT = ModelFamilyConfig(
         context_window=200000,
     ),
     specific_models={
+        # GLM-5 系列特定模型 / GLM-5 Series specific models
+        "glm-5": SpecificModelConfig(
+            version="5.0",
+            variant="base",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_mcp=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+        ),
+        # GLM-4.7 系列特定模型 / GLM-4.7 Series specific models
+        "glm-4.7": SpecificModelConfig(
+            version="4.7",
+            variant="base",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_mcp=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+        ),
+        "glm-4.7-flashx": SpecificModelConfig(
+            version="4.7",
+            variant="flashx",
+            variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_mcp=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+            patterns=[
+                "glm-4.7-flashx-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.7-flashx-{mmdd:4d}",
+                "glm-4.7-flashx",
+            ],
+        ),
+        "glm-4.7-flash": SpecificModelConfig(
+            version="4.7",
+            variant="flash",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_mcp=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+            patterns=[
+                "glm-4.7-flash-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.7-flash-{mmdd:4d}",
+                "glm-4.7-flash",
+            ],
+        ),
         # GLM-4.6 系列特定模型
         "glm-4.6": SpecificModelConfig(
             version="4.6",

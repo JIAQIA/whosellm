@@ -294,6 +294,16 @@ MODEL_PATTERNS: list[ModelPattern] = [
             "abab",
         ],
     ),
+    ModelPattern(
+        family=ModelFamily.GEMINI,
+        provider=Provider.GOOGLE,
+        version_default="2.5",
+        patterns=[
+            "gemini-{version}-{variant:variant}",
+            "gemini-{variant:variant}",
+            "gemini",
+        ],
+    ),
 ]
 
 

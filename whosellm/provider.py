@@ -36,6 +36,7 @@ class Provider(str, Enum, metaclass=DynamicEnumMeta):
     VIDU = "vidu"  # Vidu
     DEEPSEEK = "deepseek"  # DeepSeek
     MINIMAX = "minimax"  # MiniMax
+    GOOGLE = "google"  # Google
     UNKNOWN = "unknown"
 
     @classmethod
