@@ -10,6 +10,12 @@ description: Vidu 视频生成模型信息采集指南
 - **API 文档**：`https://api.vidu.com/docs`
 - **官网**：`https://www.vidu.com`
 
+## 采集策略
+
+- **首选工具**：Playwright（文档可能需要登录，且结构不确定）
+- **回退工具**：WebFetch + WebSearch
+- **可并行**：否 — 使用 Playwright 时必须独占浏览器
+
 ## Playwright 操作指南
 
 1. Vidu 文档可能需要登录才能查看完整 API 参考

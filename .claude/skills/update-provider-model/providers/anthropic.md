@@ -11,7 +11,13 @@ description: Anthropic Claude 模型信息采集指南
 - **API 参考**：`https://docs.anthropic.com/en/api`
 - **发布公告**：`https://www.anthropic.com/news`
 
-## Playwright 操作指南
+## 采集策略
+
+- **首选工具**：WebFetch（文档为静态渲染，fetch 即可获取完整内容）
+- **回退工具**：Playwright（仅当 WebFetch 返回内容不完整时）
+- **可并行**：是 — WebFetch 不受 Playwright 单实例限制
+
+## Playwright 操作指南（回退时参考）
 
 1. Anthropic 文档为静态渲染，`browser_snapshot` 通常能直接获取完整信息
 2. 模型列表页包含所有模型的能力矩阵表格，是最主要的信息来源

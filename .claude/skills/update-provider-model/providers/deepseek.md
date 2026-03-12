@@ -11,7 +11,13 @@ description: DeepSeek 模型信息采集指南
 - **模型列表**：`https://api-docs.deepseek.com/quick_start/pricing`
 - **官网**：`https://www.deepseek.com`
 
-## Playwright 操作指南
+## 采集策略
+
+- **首选工具**：WebFetch（文档结构清晰，静态渲染，fetch 即可获取）
+- **回退工具**：Playwright（仅当 WebFetch 返回内容不完整时）
+- **可并行**：是 — WebFetch 不受 Playwright 单实例限制
+
+## Playwright 操作指南（回退时参考）
 
 1. DeepSeek API 文档结构清晰，`browser_snapshot` 通常可直接获取
 2. 模型定价页面包含所有可用模型的 ID 和上下文窗口信息

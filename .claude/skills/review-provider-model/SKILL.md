@@ -63,17 +63,26 @@ whosellm/models/families/{provider}/            # 多文件供应商（如 opena
 
 ## 第三步：采集官方信息
 
-### 推荐工具：Playwright MCP
+### 采集工具与并发控制
 
-与 `update-provider-model` 技能相同，**优先使用 Playwright MCP 浏览器工具**。
+与 `update-provider-model` 技能相同的策略：
+
+- **先查阅 `${CLAUDE_SKILL_DIR}/providers/*.md` 中对应供应商的 `采集策略` 章节**，确定首选工具（WebFetch 或 Playwright）
+- **Playwright 为单实例共享浏览器，任何时刻只允许一个 Agent 使用 Playwright**，多 Agent 并发会导致页面竞争
+- **WebFetch 无此限制**，可与其他 Agent 并行执行
+
+#### 多供应商校验的推荐流程
+
+1. **串行采集阶段**：单个 Agent 依次使用 Playwright/WebFetch 访问各供应商文档，将采集的官方信息保存到临时文件（如 `/tmp/review-{provider}-official.md`）
+2. **并行比对阶段**：多个 Agent 各自读取临时文件 + 代码配置，并行执行比对和报告生成
 
 #### 操作流程
 
-1. **查阅 `${CLAUDE_SKILL_DIR}/providers/` 目录下对应供应商的指引文件**，获取官方文档 URL。
-2. **使用 `mcp__plugin_playwright_playwright__browser_navigate`** 打开供应商的模型文档页面。
-3. **使用 `mcp__plugin_playwright_playwright__browser_snapshot`** 获取页面内容。
-4. **使用 `mcp__plugin_playwright_playwright__browser_click`** 展开详情（如需要）。
-5. 如页面无法渲染，回退使用 **WebSearch + WebFetch** 补充。
+1. **查阅对应供应商的指引文件**，获取官方文档 URL 和首选采集工具。
+2. **根据首选工具执行采集**：
+   - **WebFetch 路径**：直接 `WebFetch` 获取文档页面
+   - **Playwright 路径**：`browser_navigate` → `browser_snapshot` → `browser_click`（展开详情）
+3. 如首选工具获取不完整，回退使用另一工具补充。
 
 #### 重点采集的校验项
 

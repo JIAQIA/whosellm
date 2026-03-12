@@ -11,6 +11,12 @@ description: OpenAI 模型信息采集指南
 - **API 参考**：`https://platform.openai.com/docs/api-reference`
 - **模型发布博客**：`https://openai.com/blog`
 
+## 采集策略
+
+- **首选工具**：Playwright（文档有折叠区域和动态内容，需要交互展开）
+- **回退工具**：WebFetch（可获取部分静态内容，但可能不完整）
+- **可并行**：否 — 使用 Playwright 时必须独占浏览器，不可与其他 Playwright Agent 并发
+
 ## Playwright 操作指南
 
 1. 导航到模型列表页后，使用 `browser_snapshot` 获取页面结构

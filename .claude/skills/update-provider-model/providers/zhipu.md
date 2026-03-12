@@ -11,6 +11,12 @@ description: 智谱 AI 模型信息采集指南
 - **模型列表**：`https://open.bigmodel.cn/dev/howuse/model`
 - **API 文档**：`https://open.bigmodel.cn/dev/api/normal-model/glm-4`
 
+## 采集策略
+
+- **首选工具**：Playwright（中文 SPA 应用，必须使用浏览器，WebFetch/WebSearch 效果很差）
+- **回退工具**：WebSearch（仅用于补充搜索特定模型的发布公告）
+- **可并行**：否 — 使用 Playwright 时必须独占浏览器，不可与其他 Playwright Agent 并发
+
 ## Playwright 操作指南
 
 1. 智谱文档为中文 SPA 应用，**必须使用 Playwright**，WebSearch 效果很差

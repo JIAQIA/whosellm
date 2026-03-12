@@ -16,17 +16,35 @@ allowed-tools: Read, Edit, Write, Grep, Glob, Bash, Agent, WebSearch, WebFetch
 
 ## 第一步：采集官方模型信息
 
-### 推荐工具：Playwright MCP
+### 采集工具选择
 
-很多 LLM 供应商的官方文档对搜索引擎不友好（SPA、动态加载、需要交互操作），因此**优先使用 Playwright MCP 浏览器工具**访问供应商官方网站。
+每个供应商的指引文件（`${CLAUDE_SKILL_DIR}/providers/*.md`）中标注了**首选采集工具**：
 
-#### 操作流程
+- **WebFetch 优先**：文档为静态渲染，直接 fetch 即可获取完整信息（如 Anthropic、DeepSeek、Google Gemini）
+- **Playwright 必需**：文档为 SPA/动态加载，或需要交互展开（如智谱、阿里巴巴、OpenAI）
 
-1. **查阅 `${CLAUDE_SKILL_DIR}/providers/` 目录下对应供应商的指引文件**，获取该供应商的官方文档 URL 和操作注意事项。
-2. **使用 `mcp__plugin_playwright_playwright__browser_navigate`** 打开供应商的模型文档页面。
-3. **使用 `mcp__plugin_playwright_playwright__browser_snapshot`** 获取页面结构，定位模型列表或模型详情区域。
-4. **使用 `mcp__plugin_playwright_playwright__browser_click`** 展开折叠区域、切换标签页，获取完整信息。
-5. 如果页面无法正常渲染，回退使用 **WebSearch + WebFetch** 作为补充。
+**请先查阅对应供应商指引文件的 `采集策略` 章节，按标注的首选工具操作。**
+
+### 浏览器并发控制（重要）
+
+> **Playwright MCP 为单实例共享浏览器。多个 Agent 并发操作会产生页面竞争（导航覆盖、快照错乱），必须避免。**
+
+**规则：任何时刻只允许一个 Agent 使用 Playwright。** 如果需要采集多个供应商的信息，采用以下策略：
+
+1. **串行采集**：单个 Agent 依次访问各供应商文档，将采集结果保存到临时文件（如 `/tmp/collect-{provider}.md`）
+2. **并行分析**：采集完成后，多个 Agent 可各自读取临时文件 + 代码配置，并行执行比对/修改/测试
+3. **WebFetch 不受此限制**：标注为 WebFetch 优先的供应商可与 Playwright 采集并行进行
+
+### 操作流程
+
+1. **查阅 `${CLAUDE_SKILL_DIR}/providers/` 目录下对应供应商的指引文件**，获取官方文档 URL、首选采集工具和操作注意事项。
+2. **根据首选工具执行采集**：
+   - **WebFetch 路径**：直接使用 `WebFetch` 获取文档页面内容
+   - **Playwright 路径**：
+     1. 使用 `mcp__plugin_playwright_playwright__browser_navigate` 打开文档页面
+     2. 使用 `mcp__plugin_playwright_playwright__browser_snapshot` 获取页面结构
+     3. 使用 `mcp__plugin_playwright_playwright__browser_click` 展开折叠区域/切换标签
+3. 如果首选工具获取不完整，回退使用另一工具补充。
 
 #### 需要采集的信息
 

@@ -12,7 +12,13 @@ description: Google Gemini 模型信息采集指南
 - **发布博客**：`https://blog.google/technology/google-deepmind/`
 - **Google AI Studio**：`https://aistudio.google.com/`
 
-## Playwright 操作指南
+## 采集策略
+
+- **首选工具**：WebFetch（Google AI 文档为静态渲染，fetch 可获取主要内容）
+- **回退工具**：Playwright（当需要展开详情卡片或切换标签时）
+- **可并行**：是 — WebFetch 不受 Playwright 单实例限制
+
+## Playwright 操作指南（回退时参考）
 
 1. 导航到模型列表页后，使用 `browser_snapshot` 获取页面结构
 2. Google 文档使用左侧导航 + 右侧内容面板，模型信息通常以表格形式展示

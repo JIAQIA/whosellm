@@ -11,6 +11,12 @@ description: 阿里巴巴通义千问模型信息采集指南
 - **API 文档**：`https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api`
 - **DashScope 文档**：`https://dashscope.aliyun.com`
 
+## 采集策略
+
+- **首选工具**：Playwright（中文 SPA，需要展开折叠面板和切换 Tab）
+- **回退工具**：WebSearch（搜索阿里云帮助文档中的特定模型参数）
+- **可并行**：否 — 使用 Playwright 时必须独占浏览器，不可与其他 Playwright Agent 并发
+
 ## Playwright 操作指南
 
 1. 阿里云文档为中文 SPA，建议使用 Playwright 操作
