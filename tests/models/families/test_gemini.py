@@ -89,8 +89,8 @@ class TestGemini25FlashLite:
         assert version == "2.5"
         assert variant == "flash-lite"
         assert capabilities is not None
-        assert capabilities.supports_thinking is False
-        assert capabilities.supports_code_interpreter is False
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_code_interpreter is True
 
     def test_pattern_match(self):
         matched = match_model_pattern("gemini-2.5-flash-lite")
