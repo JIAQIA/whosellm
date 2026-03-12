@@ -126,6 +126,30 @@ class LLMeta:
 
         return self.release_date < other.release_date
 
+    def __le__(self, other: object) -> bool:
+        """
+        小于等于比较 / Less than or equal comparison
+        """
+        if not isinstance(other, LLMeta):
+            return NotImplemented
+        return self < other or self == other
+
+    def __gt__(self, other: object) -> bool:
+        """
+        大于比较 / Greater than comparison
+        """
+        if not isinstance(other, LLMeta):
+            return NotImplemented
+        return not self <= other
+
+    def __ge__(self, other: object) -> bool:
+        """
+        大于等于比较 / Greater than or equal comparison
+        """
+        if not isinstance(other, LLMeta):
+            return NotImplemented
+        return not self < other
+
     def validate_params(self, params: dict[str, Any]) -> dict[str, Any]:
         """
         验证并调整参数 / Validate and adjust parameters

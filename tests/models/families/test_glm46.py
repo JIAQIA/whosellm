@@ -18,7 +18,7 @@ def test_glm46_default_capabilities() -> None:
     assert capabilities.supports_thinking is True
     assert capabilities.supports_function_calling is True
     assert capabilities.supports_streaming is True
-    assert capabilities.supports_structured_outputs is True
+    assert capabilities.supports_structured_outputs is False
     assert capabilities.max_tokens == 128000
     assert capabilities.context_window == 200000
 

@@ -28,10 +28,10 @@ class SpecificModelConfig:
     """
 
     # 模型版本 / Model version
-    version: str
+    version_default: str
 
     # 模型变体 / Model variant
-    variant: str
+    variant_default: str
 
     # 自定义能力（可选） / Custom capabilities (optional)
     capabilities: ModelCapabilities | None = None

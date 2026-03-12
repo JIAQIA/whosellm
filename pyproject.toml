@@ -1,13 +1,13 @@
 [project]
 name = "whosellm"
-version = "0.1.1.dev3"
+version = "0.1.1a3"
 description = "A unified LLM model version and capability management library"
 authors = [
     {name = "JQQ", email = "jqq1716@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11,<4.0"
+requires-python = ">=3.10,<4.0"
 dependencies = [
     "parse>=1.20.2",
     "vrl-python>=0.1.0,<0.2.0",

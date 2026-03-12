@@ -36,9 +36,11 @@ GPT_5 = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_thinking=True,
         supports_vision=True,
+        supports_pdf=True,
         supports_function_calling=True,
         supports_streaming=True,
         supports_structured_outputs=True,
+        supports_json_outputs=True,
         supports_fine_tuning=False,
         supports_distillation=True,
         supports_web_search=True,
@@ -54,15 +56,17 @@ GPT_5 = ModelFamilyConfig(
         # GPT-5 变体 / GPT-5 Variants
         # ================================================================
         "gpt-5-mini": SpecificModelConfig(
-            version="5.0",
-            variant="mini",
-            variant_priority=(0,),
+            version_default="5.0",
+            variant_default="mini",
+            variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_vision=True,
+                supports_pdf=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_web_search=True,
@@ -79,15 +83,17 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5-nano": SpecificModelConfig(
-            version="5.0",
-            variant="nano",
-            variant_priority=(0,),
+            version_default="5.0",
+            variant_default="nano",
+            variant_priority=(0,),  # nano 的优先级 / nano priority
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_vision=True,
+                supports_pdf=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_web_search=True,
@@ -104,15 +110,17 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5-pro": SpecificModelConfig(
-            version="5.0",
-            variant="pro",
-            variant_priority=(4,),
+            version_default="5.0",
+            variant_default="pro",
+            variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_vision=True,
+                supports_pdf=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=False,
                 supports_distillation=True,
                 supports_web_search=True,
@@ -133,8 +141,8 @@ GPT_5 = ModelFamilyConfig(
         # GPT-5.1 / GPT-5.1
         # ================================================================
         "gpt-5.1": SpecificModelConfig(
-            version="5.1",
-            variant="base",
+            version_default="5.1",
+            variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -161,8 +169,8 @@ GPT_5 = ModelFamilyConfig(
         # GPT-5.2 及其变体 / GPT-5.2 and variants
         # ================================================================
         "gpt-5.2": SpecificModelConfig(
-            version="5.2",
-            variant="base",
+            version_default="5.2",
+            variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -186,8 +194,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.2-pro": SpecificModelConfig(
-            version="5.2",
-            variant="pro",
+            version_default="5.2",
+            variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -215,8 +223,8 @@ GPT_5 = ModelFamilyConfig(
         # GPT-5.4 及其变体 / GPT-5.4 and variants (当前旗舰 / Current flagship)
         # ================================================================
         "gpt-5.4": SpecificModelConfig(
-            version="5.4",
-            variant="base",
+            version_default="5.4",
+            variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -241,8 +249,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.4-pro": SpecificModelConfig(
-            version="5.4",
-            variant="pro",
+            version_default="5.4",
+            variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -270,8 +278,8 @@ GPT_5 = ModelFamilyConfig(
         # GPT-5 Codex 系列 / GPT-5 Codex Series
         # ================================================================
         "gpt-5-codex": SpecificModelConfig(
-            version="5.0",
-            variant="codex",
+            version_default="5.0",
+            variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -289,8 +297,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.1-codex": SpecificModelConfig(
-            version="5.1",
-            variant="codex",
+            version_default="5.1",
+            variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -308,8 +316,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.1-codex-mini": SpecificModelConfig(
-            version="5.1",
-            variant="codex-mini",
+            version_default="5.1",
+            variant_default="codex-mini",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -327,8 +335,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.1-codex-max": SpecificModelConfig(
-            version="5.1",
-            variant="codex-max",
+            version_default="5.1",
+            variant_default="codex-max",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -346,8 +354,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.2-codex": SpecificModelConfig(
-            version="5.2",
-            variant="codex",
+            version_default="5.2",
+            variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -365,8 +373,8 @@ GPT_5 = ModelFamilyConfig(
             ],
         ),
         "gpt-5.3-codex": SpecificModelConfig(
-            version="5.3",
-            variant="codex",
+            version_default="5.3",
+            variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,

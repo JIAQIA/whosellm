@@ -68,8 +68,8 @@ GLM_VISION = ModelFamilyConfig(
     specific_models={
         # GLM-4V 系列特定模型
         "glm-4v-plus-0111": SpecificModelConfig(
-            version="4.0",
-            variant="vision-plus",
+            version_default="4.0",
+            variant_default="vision-plus",
             variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
@@ -88,8 +88,8 @@ GLM_VISION = ModelFamilyConfig(
             ],
         ),
         "glm-4v-plus": SpecificModelConfig(
-            version="4.0",
-            variant="vision-plus",
+            version_default="4.0",
+            variant_default="vision-plus",
             variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
@@ -109,8 +109,8 @@ GLM_VISION = ModelFamilyConfig(
             ],
         ),
         "glm-4v-flash": SpecificModelConfig(
-            version="4.0",
-            variant="vision-flash",
+            version_default="4.0",
+            variant_default="vision-flash",
             variant_priority=(0,),  # flash 的优先级 / flash priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
@@ -123,8 +123,8 @@ GLM_VISION = ModelFamilyConfig(
             ),
         ),
         "glm-4v": SpecificModelConfig(
-            version="4.0",
-            variant="base",
+            version_default="4.0",
+            variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_vision=True,
@@ -135,6 +135,55 @@ GLM_VISION = ModelFamilyConfig(
                 max_image_size_mb=10.0,
                 max_image_pixels=(4096, 4096),
             ),
+        ),
+        "glm-4.5v": SpecificModelConfig(
+            version_default="4.5",
+            variant_default="base",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=8192,
+                context_window=64000,
+            ),
+        ),
+        "glm-4.6v": SpecificModelConfig(
+            version_default="4.6",
+            variant_default="base",
+            variant_priority=(4,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=128000,
+            ),
+        ),
+        "glm-4.6v-flash": SpecificModelConfig(
+            version_default="4.6",
+            variant_default="flash",
+            variant_priority=(0,),  # flash 的优先级 / flash priority
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=128000,
+            ),
+            patterns=[
+                "glm-4.6v-flash-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.6v-flash-{mmdd:4d}",
+                "glm-4.6v-flash",
+            ],
         ),
     },
 )
@@ -163,16 +212,18 @@ GLM_TEXT = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_thinking=True,
         supports_function_calling=True,
-        supports_structured_outputs=True,
+        supports_structured_outputs=False,
         supports_streaming=True,
+        supports_web_search=True,
+        supports_mcp=True,
         max_tokens=128000,
         context_window=200000,
     ),
     specific_models={
         # GLM-5 系列特定模型 / GLM-5 Series specific models
         "glm-5": SpecificModelConfig(
-            version="5.0",
-            variant="base",
+            version_default="5.0",
+            variant_default="base",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -186,8 +237,8 @@ GLM_TEXT = ModelFamilyConfig(
         ),
         # GLM-4.7 系列特定模型 / GLM-4.7 Series specific models
         "glm-4.7": SpecificModelConfig(
-            version="4.7",
-            variant="base",
+            version_default="4.7",
+            variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -200,8 +251,8 @@ GLM_TEXT = ModelFamilyConfig(
             ),
         ),
         "glm-4.7-flashx": SpecificModelConfig(
-            version="4.7",
-            variant="flashx",
+            version_default="4.7",
+            variant_default="flashx",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -219,8 +270,8 @@ GLM_TEXT = ModelFamilyConfig(
             ],
         ),
         "glm-4.7-flash": SpecificModelConfig(
-            version="4.7",
-            variant="flash",
+            version_default="4.7",
+            variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
@@ -239,36 +290,46 @@ GLM_TEXT = ModelFamilyConfig(
         ),
         # GLM-4.6 系列特定模型
         "glm-4.6": SpecificModelConfig(
-            version="4.6",
-            variant="base",
+            version_default="4.6",
+            variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
-                supports_structured_outputs=True,
+                supports_structured_outputs=False,
+                supports_web_search=True,
+                supports_mcp=True,
                 max_tokens=128000,
                 context_window=200000,
             ),
         ),
         # GLM-4.5 系列特定模型
         "glm-4.5": SpecificModelConfig(
-            version="4.5",
-            variant="base",
+            version_default="4.5",
+            variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,
-                supports_structured_outputs=True,
+                supports_structured_outputs=False,
                 supports_streaming=True,
                 max_tokens=96000,
                 context_window=128000,
             ),
         ),
         "glm-4.5-air": SpecificModelConfig(
-            version="4.5",
-            variant="air",
+            version_default="4.5",
+            variant_default="air",
             variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-air-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-air-{mmdd:4d}",
@@ -276,9 +337,17 @@ GLM_TEXT = ModelFamilyConfig(
             ],
         ),
         "glm-4.5-airx": SpecificModelConfig(
-            version="4.5",
-            variant="airx",
+            version_default="4.5",
+            variant_default="airx",
             variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-airx-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-airx-{mmdd:4d}",
@@ -286,9 +355,17 @@ GLM_TEXT = ModelFamilyConfig(
             ],
         ),
         "glm-4.5-x": SpecificModelConfig(
-            version="4.5",
-            variant="x",
+            version_default="4.5",
+            variant_default="x",
             variant_priority=(4,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-x-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-x-{mmdd:4d}",
@@ -296,9 +373,17 @@ GLM_TEXT = ModelFamilyConfig(
             ],
         ),
         "glm-4.5-flash": SpecificModelConfig(
-            version="4.5",
-            variant="flash",
+            version_default="4.5",
+            variant_default="flash",
             variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=96000,
+                context_window=128000,
+            ),
             patterns=[
                 "glm-4.5-flash-{year:4d}-{month:2d}-{day:2d}",
                 "glm-4.5-flash-{mmdd:4d}",
@@ -307,8 +392,8 @@ GLM_TEXT = ModelFamilyConfig(
         ),
         # GLM-4 系列特定模型（需要特殊能力配置的）
         "glm-4": SpecificModelConfig(
-            version="4.0",
-            variant="base",
+            version_default="4.0",
+            variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
                 supports_function_calling=True,

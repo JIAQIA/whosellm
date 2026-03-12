@@ -25,9 +25,12 @@ GPT_4_1 = ModelFamilyConfig(
         "gpt-4.1",
     ],
     capabilities=ModelCapabilities(
+        supports_vision=True,
+        supports_pdf=True,
         supports_function_calling=True,
         supports_streaming=True,
         supports_structured_outputs=True,
+        supports_json_outputs=True,
         supports_fine_tuning=True,
         supports_distillation=True,
         supports_web_search=True,
@@ -40,13 +43,16 @@ GPT_4_1 = ModelFamilyConfig(
     ),
     specific_models={
         "gpt-4.1-mini": SpecificModelConfig(
-            version="4.1",
-            variant="mini",
+            version_default="4.1",
+            variant_default="mini",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_pdf=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=True,
                 supports_distillation=False,
                 supports_predicted_outputs=True,
@@ -59,13 +65,16 @@ GPT_4_1 = ModelFamilyConfig(
             ],
         ),
         "gpt-4.1-nano": SpecificModelConfig(
-            version="4.1",
-            variant="nano",
+            version_default="4.1",
+            variant_default="nano",
             variant_priority=(0,),  # nano 的优先级 (< mini) / nano priority
             capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_pdf=True,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=True,
                 supports_distillation=False,
                 supports_predicted_outputs=True,

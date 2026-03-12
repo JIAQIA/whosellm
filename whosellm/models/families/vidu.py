@@ -2,7 +2,7 @@
 # @Time    : 2025/11/8 23:53
 # @Author  : Cascade
 """
-Vidu Q1 模型家族配置 / Vidu Q1 model family configuration
+GLM Vidu Q1 模型家族配置 / Vidu Q1 model family configuration
 """
 
 from whosellm.capabilities import ModelCapabilities
@@ -27,8 +27,8 @@ VIDU_Q1 = ModelFamilyConfig(
     ),
     specific_models={
         "viduq1-image": SpecificModelConfig(
-            version="1.0",
-            variant="image",
+            version_default="1.0",
+            variant_default="image",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,
@@ -39,8 +39,8 @@ VIDU_Q1 = ModelFamilyConfig(
             patterns=["viduq1-image"],
         ),
         "viduq1-start-end": SpecificModelConfig(
-            version="1.0",
-            variant="start-end",
+            version_default="1.0",
+            variant_default="start-end",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,
@@ -51,8 +51,8 @@ VIDU_Q1 = ModelFamilyConfig(
             patterns=["viduq1-start-end"],
         ),
         "viduq1-text": SpecificModelConfig(
-            version="1.0",
-            variant="text",
+            version_default="1.0",
+            variant_default="text",
             capabilities=ModelCapabilities(
                 supports_video=True,
                 supports_streaming=False,
@@ -84,8 +84,8 @@ VIDU_2 = ModelFamilyConfig(
     ),
     specific_models={
         "vidu2-image": SpecificModelConfig(
-            version="2.0",
-            variant="image",
+            version_default="2.0",
+            variant_default="image",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,
@@ -97,8 +97,8 @@ VIDU_2 = ModelFamilyConfig(
             patterns=["vidu2-image"],
         ),
         "vidu2-start-end": SpecificModelConfig(
-            version="2.0",
-            variant="start-end",
+            version_default="2.0",
+            variant_default="start-end",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,
@@ -110,8 +110,8 @@ VIDU_2 = ModelFamilyConfig(
             patterns=["vidu2-start-end"],
         ),
         "vidu2-reference": SpecificModelConfig(
-            version="2.0",
-            variant="reference",
+            version_default="2.0",
+            variant_default="reference",
             capabilities=ModelCapabilities(
                 supports_vision=True,
                 supports_video=True,

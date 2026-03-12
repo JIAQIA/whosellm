@@ -271,7 +271,7 @@ class TestModelVersion(unittest.TestCase):
         """测试子 SpecificModel 的 capabilities 覆盖 / Test specific model capabilities override"""
         # 测试 GPT-4 Turbo 的特殊 capabilities
         gpt4_turbo = LLMeta("gpt-4o-audio-preview")
-        assert gpt4_turbo.capabilities.supports_vision is True
+        assert gpt4_turbo.capabilities.supports_vision is False
         assert gpt4_turbo.capabilities.context_window == 128000  # 上下文窗口
         assert gpt4_turbo.capabilities.max_tokens == 16384  # 最大输出token
         assert gpt4_turbo.variant == "audio-preview"

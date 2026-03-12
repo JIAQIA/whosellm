@@ -109,17 +109,17 @@ Provider.add_member("MY_CORP", "my-corp")
 
 # 注册自己的模型家族
 ModelFamilyConfig(
-    family=ModelFamily.MY_LAB,
-    provider=Provider.MY_CORP,
-    patterns=["my-corp-{version}-{variant}"],
-    version_default="1.0",
-    specific_models={
+    family = ModelFamily.MY_LAB,
+    provider = Provider.MY_CORP,
+    patterns = ["my-corp-{version}-{variant}"],
+    version_default = "1.0",
+    specific_models = {
         "my-corp-1.0-pro": SpecificModelConfig(
-            version="1.0",
-            variant="pro",
-            capabilities=ModelCapabilities(
-                supports_vision=True,
-                max_video_size_mb=200,
+            version_default = "1.0",
+            variant_default = "pro",
+            capabilities = ModelCapabilities(
+                supports_vision = True,
+                max_video_size_mb = 200,
             ),
         ),
     },

@@ -35,6 +35,7 @@ def test_gpt5_base_capabilities():
     m = LLMeta("gpt-5")
     assert m.capabilities.supports_thinking is True
     assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_pdf is True
     assert m.capabilities.supports_function_calling is True
     assert m.capabilities.supports_streaming is True
     assert m.capabilities.supports_structured_outputs is True
@@ -74,10 +75,12 @@ def test_gpt5_mini_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "mini"
+    assert capabilities is not None
     assert capabilities.max_tokens == 128_000
     assert capabilities.context_window == 400_000
     assert capabilities.supports_thinking is True
     assert capabilities.supports_vision is True
+    assert capabilities.supports_pdf is True
     assert capabilities.supports_distillation is False
     assert capabilities.supports_image_generation is False
 
@@ -89,6 +92,7 @@ def test_gpt5_nano_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "nano"
+    assert capabilities is not None
     assert capabilities.max_tokens == 16_384
     assert capabilities.context_window == 128_000
     assert capabilities.supports_thinking is True
@@ -102,6 +106,7 @@ def test_gpt5_pro_model():
     version, variant, capabilities = config
     assert version == "5.0"
     assert variant == "pro"
+    assert capabilities is not None
     assert capabilities.max_tokens == 128_000
     assert capabilities.context_window == 400_000
     assert capabilities.supports_computer_use is True

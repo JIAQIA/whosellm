@@ -22,7 +22,11 @@ if TYPE_CHECKING:
     from whosellm.models.config import ModelFamilyConfig
 
 # 核心注册表：所有模型家族配置 / Core registry: all model family configs
-_FAMILY_CONFIGS: dict[ModelFamily, "ModelFamilyConfig"] = {}
+# 格式: {(family, provider): ModelFamilyConfig}
+_FAMILY_CONFIGS: dict[tuple[ModelFamily, Provider], "ModelFamilyConfig"] = {}
+
+# 默认 Provider 映射 / Default provider mapping
+_DEFAULT_PROVIDER: dict[ModelFamily, Provider] = {}
 
 # 缓存：模型名称 -> ModelInfo / Cache: model_name -> ModelInfo
 _MODEL_CACHE: dict[str, ModelInfo] = {}
@@ -35,20 +39,31 @@ def register_family_config(config: "ModelFamilyConfig") -> None:
     Args:
         config: 模型家族配置 / Model family configuration
     """
-    _FAMILY_CONFIGS[config.family] = config
+    key = (config.family, config.provider)
+    _FAMILY_CONFIGS[key] = config
+
+    # 如果该家族还没有默认 Provider，设置第一个注册的为默认
+    if config.family not in _DEFAULT_PROVIDER:
+        _DEFAULT_PROVIDER[config.family] = config.provider
 
 
-def get_family_config(family: ModelFamily) -> "ModelFamilyConfig | None":
+def get_family_config(family: ModelFamily, provider: Provider | None = None) -> "ModelFamilyConfig | None":
     """
     获取模型家族配置 / Get model family configuration
 
     Args:
         family: 模型家族 / Model family
+        provider: Provider（可选，如果未指定则使用默认） / Provider (optional, use default if not specified)
 
     Returns:
         ModelFamilyConfig | None: 配置或None / Config or None
     """
-    return _FAMILY_CONFIGS.get(family)
+    if provider is None:
+        provider = _DEFAULT_PROVIDER.get(family)
+        if provider is None:
+            return None
+
+    return _FAMILY_CONFIGS.get((family, provider))
 
 
 def get_default_provider(family: ModelFamily) -> Provider | None:
@@ -61,21 +76,21 @@ def get_default_provider(family: ModelFamily) -> Provider | None:
     Returns:
         Provider | None: 默认Provider或None / Default provider or None
     """
-    config = _FAMILY_CONFIGS.get(family)
-    return config.provider if config else None
+    return _DEFAULT_PROVIDER.get(family)
 
 
-def get_default_capabilities(family: ModelFamily) -> ModelCapabilities:
+def get_default_capabilities(family: ModelFamily, provider: Provider | None = None) -> ModelCapabilities:
     """
     获取模型家族的默认能力 / Get default capabilities for model family
 
     Args:
         family: 模型家族 / Model family
+        provider: Provider（可选） / Provider (optional)
 
     Returns:
         ModelCapabilities: 默认能力 / Default capabilities
     """
-    config = _FAMILY_CONFIGS.get(family)
+    config = get_family_config(family, provider)
     return config.capabilities if config else ModelCapabilities()
 
 
@@ -91,7 +106,7 @@ def get_all_patterns() -> list[tuple[ModelFamily, Provider, list[str], str]]:
     ]
 
 
-def match_model_pattern(model_name: str) -> dict[str, Any] | None:
+def match_model_pattern(model_name: str, provider: Provider | None = None) -> dict[str, Any] | None:
     """
     匹配模型名称到模式 / Match model name to pattern
 
@@ -107,6 +122,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
 
     Args:
         model_name: 模型名称 / Model name
+        provider: 指定 Provider 进行过滤（可选） / Specify provider for filtering (optional)
 
     Returns:
         dict | None: 匹配结果或None / Match result or None
@@ -114,14 +130,22 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
     model_lower = model_name.lower()
     matched: dict[str, Any]
 
+    # 如果指定了 Provider，只匹配该 Provider 的配置
+    # If provider is specified, only match configs from that provider
+    configs_to_check = (
+        [config for config in _FAMILY_CONFIGS.values() if config.provider == provider]
+        if provider
+        else list(_FAMILY_CONFIGS.values())
+    )
+
     # 【最高优先级】精确匹配 specific_models 的名称
     # [Highest Priority] Exact match in specific_models
-    for config in _FAMILY_CONFIGS.values():
+    for config in configs_to_check:
         if model_lower in config.specific_models:
             spec_config = config.specific_models[model_lower]
             return {
-                "version": spec_config.version,
-                "variant": spec_config.variant,
+                "version": spec_config.version_default,
+                "variant": spec_config.variant_default,
                 "family": config.family,
                 "provider": config.provider,
                 "capabilities": spec_config.capabilities,
@@ -131,7 +155,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
 
     # 【次优先级】遍历所有家族配置的 specific_models 的子 patterns
     # [Secondary Priority] Iterate all specific_models sub-patterns in family configs
-    for config in _FAMILY_CONFIGS.values():
+    for config in configs_to_check:
         for _spec_model_name, spec_config in config.specific_models.items():
             if not spec_config.patterns:
                 continue
@@ -142,10 +166,17 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
                     # 转换为字典并添加默认值 / Convert to dict and add defaults
                     matched = dict(result.named)
                     if not matched.get("version"):
-                        matched["version"] = spec_config.version
+                        matched["version"] = spec_config.version_default
                     matched["family"] = config.family
                     matched["provider"] = config.provider
-                    matched["variant"] = spec_config.variant
+                    if not matched.get("variant"):
+                        matched["variant"] = spec_config.variant_default
+                        # 只有当使用默认 variant 时，才使用 variant_priority_default
+                        matched["variant_priority"] = spec_config.variant_priority
+                    else:
+                        # 如果从 pattern 提取到了 variant，不设置 variant_priority
+                        # 让后续逻辑根据 variant 推断
+                        matched["variant_priority"] = None
                     matched["capabilities"] = spec_config.capabilities
                     matched["variant_priority"] = spec_config.variant_priority
                     # 标记这是从 specific_model 匹配的 / Mark this as matched from specific_model
@@ -154,7 +185,7 @@ def match_model_pattern(model_name: str) -> dict[str, Any] | None:
 
     # 【最低优先级】遍历所有家族配置的父 patterns
     # [Lowest Priority] Iterate all parent patterns in family configs
-    for config in _FAMILY_CONFIGS.values():
+    for config in configs_to_check:
         for pattern in config.patterns:
             result = parse_pattern(pattern, model_lower)
             if result:
@@ -188,20 +219,21 @@ def list_all_families() -> list[ModelFamily]:
     Returns:
         list[ModelFamily]: 模型家族列表 / List of model families
     """
-    return list(_FAMILY_CONFIGS.keys())
+    return list({family for family, _ in _FAMILY_CONFIGS})
 
 
-def get_family_info(family: ModelFamily) -> dict[str, Any]:
+def get_family_info(family: ModelFamily, provider: Provider | None = None) -> dict[str, Any]:
     """
     获取模型家族的完整信息 / Get complete information for model family
 
     Args:
         family: 模型家族 / Model family
+        provider: Provider（可选） / Provider (optional)
 
     Returns:
         dict: 家族信息 / Family information
     """
-    config = _FAMILY_CONFIGS.get(family)
+    config = get_family_config(family, provider)
     if not config:
         return {}
 
@@ -241,7 +273,7 @@ def get_specific_model_config(model_name: str) -> tuple[str, str, ModelCapabilit
     for config in _FAMILY_CONFIGS.values():
         if model_lower in config.specific_models:
             spec_config = config.specific_models[model_lower]
-            return spec_config.version, spec_config.variant, spec_config.capabilities
+            return spec_config.version_default, spec_config.variant_default, spec_config.capabilities
 
     # 方式2：通过子 patterns 匹配 / Method 2: Match by sub-patterns
     for config in _FAMILY_CONFIGS.values():
@@ -252,7 +284,7 @@ def get_specific_model_config(model_name: str) -> tuple[str, str, ModelCapabilit
             for pattern in spec_config.patterns:
                 result = parse.parse(pattern, model_lower)
                 if result:
-                    return spec_config.version, spec_config.variant, spec_config.capabilities
+                    return spec_config.version_default, spec_config.variant_default, spec_config.capabilities
 
     return None
 

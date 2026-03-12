@@ -453,15 +453,15 @@ from whosellm import whosellm
 
 # 测试自动注册
 model = whosellm("gemini-1-pro")
-print(f"Family: {model.family}")        # GEMINI
-print(f"Provider: {model.provider}")    # GOOGLE
-print(f"Version: {model.version}")      # 1.0
-print(f"Variant: {model.variant}")      # pro
+print(f"Family: {model.family}")  # GEMINI
+print(f"Provider: {model.provider}")  # GOOGLE
+print(f"Version: {model.version_default}")  # 1.0
+print(f"Variant: {model.variant_default}")  # pro
 print(f"Supports vision: {model.capabilities.supports_vision}")  # True
 
 # 测试新变体自动注册
 model2 = whosellm("gemini-2-flash")
-print(f"Variant: {model2.variant}")     # flash
+print(f"Variant: {model2.variant_default}")  # flash
 # 自动继承 GEMINI 家族的默认能力
 ```
 
@@ -495,24 +495,25 @@ It's recommended to add test cases for the new model family:
 import unittest
 from whosellm import whosellm, ModelFamily, Provider
 
+
 class TestGemini(unittest.TestCase):
     def test_gemini_auto_register(self):
         """测试 Gemini 自动注册"""
         model = whosellm("gemini-1-pro")
-        
+
         assert model.family == ModelFamily.GEMINI
         assert model.provider == Provider.GOOGLE
-        assert model.version == "1.0"
-        assert model.variant == "pro"
+        assert model.version_default == "1.0"
+        assert model.variant_default == "pro"
         assert model.capabilities.supports_vision is True
         assert model.capabilities.context_window == 1000000
-    
+
     def test_gemini_variant_comparison(self):
         """测试 Gemini 型号比较"""
         flash = whosellm("gemini-flash")
         pro = whosellm("gemini-pro")
         ultra = whosellm("gemini-ultra")
-        
+
         assert flash < pro < ultra
 ```
 

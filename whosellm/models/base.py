@@ -34,6 +34,7 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     """
 
     # OpenAI 家族 / OpenAI family
+    GPT_5_1 = "gpt-5.1"
     GPT_5 = "gpt-5"
     GPT_4_1 = "gpt-4.1"
     GPT_4O = "gpt-4o"
@@ -83,7 +84,7 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     # MiniMax 家族 / MiniMax family
     ABAB = "abab"
 
-    # Google 家族 / Google family
+    # Google Gemini 家族 / Google Gemini family
     GEMINI = "gemini"
 
     UNKNOWN = "unknown"
@@ -383,7 +384,7 @@ def auto_register_model(
     from whosellm.models.registry import match_model_pattern
 
     # 使用模式匹配解析模型名称 / Use pattern matching to parse model name
-    matched = match_model_pattern(model_name)
+    matched = match_model_pattern(model_name, specified_provider)
 
     if not matched:
         # 无法匹配任何模式 / Cannot match any pattern
@@ -419,7 +420,7 @@ def auto_register_model(
     else:
         from whosellm.models.registry import get_default_capabilities
 
-        model_capabilities = get_default_capabilities(family)
+        model_capabilities = get_default_capabilities(family, provider)
 
     # 获取或推断型号优先级 / Get or infer variant priority
     # 优先使用配置中的 variant_priority，如果没有则推断
@@ -485,20 +486,29 @@ def get_model_info(model_name: str, auto_register: bool = True) -> ModelInfo:
         # 尝试从模型名称解析日期 / Try to parse date from model name
         parsed_date = parse_date_from_model_name(actual_name)
 
-        # 如果指定了Provider且与注册的不同，或解析到了日期，创建新的ModelInfo
-        # If Provider is specified and different from registered, or date is parsed, create new ModelInfo
-        if (specified_provider and specified_provider != info.provider) or parsed_date:
+        # 如果指定了Provider且与注册的不同，需要重新进行模式匹配
+        # If Provider is specified and different from registered, need to re-match pattern
+        if specified_provider and specified_provider != info.provider:
+            # 跳过注册表，直接进入自动注册流程以重新匹配正确的 Provider 配置
+            # Skip registry, go to auto-registration to re-match correct Provider config
+            pass
+        elif parsed_date:
+            # 只有日期不同，可以复用配置
+            # Only date is different, can reuse config
             return ModelInfo(
-                provider=specified_provider or info.provider,
+                provider=info.provider,
                 family=info.family,
                 version=info.version,
                 variant=info.variant,
                 capabilities=info.capabilities,
                 version_tuple=info.version_tuple,
                 variant_priority=info.variant_priority,
-                release_date=parsed_date or info.release_date,
+                release_date=parsed_date,
             )
-        return info
+        else:
+            # 完全匹配，直接返回
+            # Exact match, return directly
+            return info
 
     # 【优先级3】如果没有找到且启用自动注册，尝试自动注册
     # [Priority 3] If not found and auto-register enabled, try auto-registration

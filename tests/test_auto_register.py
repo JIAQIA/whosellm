@@ -31,7 +31,7 @@ class TestAutoRegister(unittest.TestCase):
 
         # 其他厂商 / Other providers
         assert infer_model_family("qwen3-custom") == ModelFamily.QWEN
-        assert infer_model_family("deepseek-custom") == ModelFamily.DEEPSEEK
+        assert infer_model_family("deepseek-chat-custom") == ModelFamily.DEEPSEEK
         assert infer_model_family("claude-sonnet-4-5") == ModelFamily.CLAUDE
 
         # 未知模型 / Unknown model
@@ -96,12 +96,13 @@ class TestAutoRegister(unittest.TestCase):
 
     def test_auto_register_deepseek_variant(self) -> None:
         """测试自动注册 DeepSeek 新型号 / Test auto-register DeepSeek new variant"""
-        model = LLMeta("deepseek-chat-v2")
+        # 使用 Provider 前缀确保使用官方配置
+        model = LLMeta("deepseek::deepseek-chat-v2")
 
         assert model.family == ModelFamily.DEEPSEEK
         assert model.provider == Provider.DEEPSEEK
         assert model.capabilities.supports_function_calling is True
-        assert model.capabilities.context_window == 64000
+        assert model.capabilities.context_window == 128000
 
     def test_auto_register_qwen_variant(self) -> None:
         """测试自动注册 Qwen 新型号 / Test auto-register Qwen new variant"""
@@ -189,14 +190,15 @@ class TestAutoRegister(unittest.TestCase):
 
     def test_auto_register_variant_priority_order(self) -> None:
         """测试自动注册的型号优先级顺序 / Test auto-register variant priority order"""
+        # 使用 GPT-4o 家族测试，因为它支持更多 variant
         # 创建不同型号的模型 / Create models with different variants
-        mini = LLMeta("deepseek-mini-test")
-        flash = LLMeta("deepseek-flash-test")
-        base = LLMeta("deepseek-test")
-        turbo = LLMeta("deepseek-turbo-test")
-        plus = LLMeta("deepseek-plus-test")
-        pro = LLMeta("deepseek-pro-test")
-        ultra = LLMeta("deepseek-ultra-test")
+        mini = LLMeta("gpt-4o-mini-test")
+        flash = LLMeta("gpt-4o-flash-test")
+        base = LLMeta("gpt-4o-test")
+        turbo = LLMeta("gpt-4o-turbo-test")
+        plus = LLMeta("gpt-4o-plus-test")
+        pro = LLMeta("gpt-4o-pro-test")
+        ultra = LLMeta("gpt-4o-ultra-test")
 
         # 验证优先级顺序: mini < flash < base < turbo < plus < pro < ultra
         # Verify priority order: mini < flash < base < turbo < plus < pro < ultra

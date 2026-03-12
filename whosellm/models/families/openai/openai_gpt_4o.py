@@ -26,9 +26,11 @@ GPT_4O = ModelFamilyConfig(
     ],
     capabilities=ModelCapabilities(
         supports_vision=True,
+        supports_pdf=True,
         supports_streaming=True,
         supports_function_calling=True,
         supports_structured_outputs=True,
+        supports_json_outputs=True,
         supports_fine_tuning=True,
         supports_distillation=True,
         supports_predicted_outputs=True,
@@ -37,14 +39,17 @@ GPT_4O = ModelFamilyConfig(
     ),
     specific_models={
         "gpt-4o-audio-preview": SpecificModelConfig(
-            version="4.0",
-            variant="audio-preview",
+            version_default="4.0",
+            variant_default="audio-preview",
             variant_priority=(0,),  # preview 的优先级 / preview priority
             capabilities=ModelCapabilities(
-                supports_vision=True,
+                supports_vision=False,
+                supports_pdf=True,
+                supports_audio=True,
                 supports_streaming=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
+                supports_json_outputs=False,
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,
@@ -57,14 +62,16 @@ GPT_4O = ModelFamilyConfig(
             ],
         ),
         "gpt-4o-mini": SpecificModelConfig(
-            version="4.0",
-            variant="mini",
+            version_default="4.0",
+            variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
+                supports_pdf=True,
                 supports_streaming=True,
                 supports_function_calling=True,
                 supports_structured_outputs=True,
+                supports_json_outputs=True,
                 supports_fine_tuning=True,
                 supports_predicted_outputs=True,
                 max_tokens=16384,
@@ -76,14 +83,17 @@ GPT_4O = ModelFamilyConfig(
             ],
         ),
         "gpt-4o-mini-audio-preview": SpecificModelConfig(
-            version="4.0",
-            variant="mini-audio-preview",
+            version_default="4.0",
+            variant_default="mini-audio-preview",
             variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
-                supports_vision=True,
+                supports_vision=False,
+                supports_pdf=True,
+                supports_audio=True,
                 supports_streaming=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
+                supports_json_outputs=False,
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,
@@ -96,14 +106,16 @@ GPT_4O = ModelFamilyConfig(
             ],
         ),
         "gpt-4o-mini-realtime-preview": SpecificModelConfig(
-            version="4.0",
-            variant="mini-realtime-preview",
+            version_default="4.0",
+            variant_default="mini-realtime-preview",
             variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
                 supports_vision=True,
+                supports_pdf=True,
                 supports_streaming=False,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
+                supports_json_outputs=False,
                 supports_fine_tuning=False,
                 supports_distillation=False,
                 supports_predicted_outputs=False,

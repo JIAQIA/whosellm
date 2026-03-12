@@ -41,8 +41,8 @@ def test_basic_functionality():
         ),
         specific_models={
             "test-special": SpecificModelConfig(
-                version="4.5",
-                variant="special",
+                version_default="4.5",
+                variant_default="special",
                 capabilities=ModelCapabilities(
                     supports_vision=True,
                     max_tokens=16384,
@@ -116,8 +116,8 @@ def test_validation():
             ],
             specific_models={
                 "invalid": SpecificModelConfig(
-                    version="1.0",
-                    variant="invalid",
+                    version_default="1.0",
+                    variant_default="invalid",
                     patterns=[
                         "completely-different-{variant:variant}",  # 这个不匹配父 pattern
                     ],
@@ -155,8 +155,8 @@ def test_priority():
         ),
         specific_models={
             "priority-special": SpecificModelConfig(
-                version="5.0",
-                variant="special-override",
+                version_default="5.0",
+                variant_default="special-override",
                 capabilities=ModelCapabilities(
                     supports_vision=True,
                     max_tokens=16384,

@@ -24,6 +24,8 @@ GPT_4 = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
+        supports_structured_outputs=False,
+        supports_json_outputs=True,
         max_tokens=8192,
         context_window=128000,
     ),

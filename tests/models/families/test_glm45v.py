@@ -19,6 +19,25 @@ def test_glm45v_default_capabilities() -> None:
     assert capabilities.context_window == 64000
 
 
+def test_glm45v_specific_model_capabilities() -> None:
+    """验证 glm-4.5v 精确模型能力是否正确 / Validate exact glm-4.5v specific model capabilities"""
+    matched = match_model_pattern("glm-4.5v")
+
+    assert matched is not None
+    assert matched["family"] == ModelFamily.GLM_VISION
+    assert matched["variant"] == "base"
+    assert matched["version"] == "4.5"
+
+    capabilities = matched["capabilities"]
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_vision is True
+    assert capabilities.supports_video is True
+    assert capabilities.supports_pdf is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.max_tokens == 8192
+    assert capabilities.context_window == 64000
+
+
 def test_glm45v_base_pattern() -> None:
     """验证基础 GLM-4.5V 模型匹配 / Validate base GLM-4.5V pattern"""
     matched = match_model_pattern("glm-4.5v")
