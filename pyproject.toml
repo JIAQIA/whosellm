@@ -69,3 +69,9 @@ rm -rf .pytest_cache .mypy_cache .ruff_cache .coverage htmlcov dist build *.egg-
 find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 """
 help = "清理所有缓存和构建文件 / Clean all cache and build files"
+
+[dependency-groups]
+dev = [
+    "bump-my-version>=0.33",
+    "click<8.2",
+]
