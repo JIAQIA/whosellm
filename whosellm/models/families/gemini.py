@@ -295,6 +295,25 @@ GEMINI = ModelFamilyConfig(
             ),
             patterns=["gemini-2.5-pro-preview-tts"],
         ),
+        "gemini-3-flash-preview": SpecificModelConfig(
+            version_default="3.0",
+            variant_default="flash",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_audio=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_structured_outputs=True,
+                supports_streaming=True,
+                supports_code_interpreter=True,
+                max_tokens=65536,
+                context_window=1048576,
+            ),
+            patterns=["gemini-3-flash-preview"],
+        ),
         # Gemini 3.1 系列 / Gemini 3.1 Series
         "gemini-3-1-pro-preview": SpecificModelConfig(
             version_default="3.1",
