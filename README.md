@@ -75,23 +75,25 @@ print(mystery.family)    # ModelFamily.UNKNOWN
 ```python
 from whosellm import LLMeta
 
-# GPT-4 系列型号比较: mini < base < turbo < omni
+# 同一模型家族内的型号比较（跨家族比较会抛出 ValueError）
+
+# GPT-4O 系列: mini < omni
 gpt4o_mini = LLMeta("gpt-4o-mini")
-gpt4_base = LLMeta("gpt-4")
-gpt4_turbo = LLMeta("gpt-4-turbo")
 gpt4o = LLMeta("gpt-4o")
 
-print(gpt4o_mini < gpt4_base)  # True
-print(gpt4_base < gpt4_turbo)  # True
-print(gpt4_turbo < gpt4o)  # True
+print(gpt4o_mini < gpt4o)  # True
 
-# GLM-4V 系列型号比较: flash < base < plus < plus-0111
+# GLM-4V 系列: flash < plus
 glm4v_flash = LLMeta("glm-4v-flash")
 glm4v_plus = LLMeta("glm-4v-plus")
-glm4v_plus_0111 = LLMeta("glm-4v-plus-0111")
 
 print(glm4v_flash < glm4v_plus)  # True
-print(glm4v_plus < glm4v_plus_0111)  # True
+
+# Claude 系列同版本比较: haiku < sonnet
+claude_haiku = LLMeta("claude-haiku-4-5")
+claude_sonnet = LLMeta("claude-sonnet-4-5")
+
+print(claude_haiku < claude_sonnet)  # True
 ```
 
 ## 自助编写模型配置 / Bring Your Own Config
@@ -157,25 +159,23 @@ print(model3.provider)  # Provider.TENCENT
 ```python
 from whosellm import LLMeta
 
-# 场景1: 选择支持视觉的最便宜模型
+# 场景1: 在同一家族中选择支持视觉的最经济模型
 available_models = [
     LLMeta("gpt-4o-mini"),
-    LLMeta("gpt-4"),
-    LLMeta("gpt-4-turbo"),
     LLMeta("gpt-4o"),
 ]
 
 vision_models = [m for m in available_models if m.capabilities.supports_vision]
-cheapest_vision = min(vision_models)  # 自动选择最便宜的（优先级最低的）
+cheapest_vision = min(vision_models)  # 自动选择优先级最低的
 print(f"推荐模型: {cheapest_vision.model_name}")  # gpt-4o-mini
 
 # 场景2: 检查模型升级
-current = LLMeta("glm-4v-plus")
-new = LLMeta("glm-4v-plus-0111")
+current = LLMeta("glm-4v-flash")
+new = LLMeta("glm-4v-plus")
 
 if new > current:
     print("这是一个升级版本")
-    print(f"视频大小限制提升: {current.capabilities.max_video_size_mb}MB → {new.capabilities.max_video_size_mb}MB")
+    print(f"新增视频支持: {current.capabilities.supports_video} → {new.capabilities.supports_video}")
 ```
 
 更多示例请参考 [examples/advanced_usage.py](examples/advanced_usage.py)
