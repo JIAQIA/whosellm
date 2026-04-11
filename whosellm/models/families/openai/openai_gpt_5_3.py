@@ -11,16 +11,11 @@ from whosellm.provider import Provider
 # ============================================================================
 
 GPT_5_3 = ModelFamilyConfig(
-    family=ModelFamily.GPT_5_3,
+    family=ModelFamily.GPT,
     provider=Provider.OPENAI,
     version_default="5.3",
     variant_priority_default=(1,),
-    patterns=[
-        "gpt-5.3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-5.3-{variant:variant}",
-        "gpt-5.3-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-5.3",
-    ],
+    patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_thinking=True,
         supports_function_calling=True,
@@ -32,20 +27,21 @@ GPT_5_3 = ModelFamilyConfig(
         context_window=1_050_000,
     ),
     specific_models={
+        "gpt-5.3": SpecificModelConfig(
+            version_default="5.3",
+            variant_default="base",
+            variant_priority=(1,),
+            # capabilities 继承版本级默认值 / inherits version-level default
+            patterns=[
+                "gpt-5.3-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-5.3",
+            ],
+        ),
         "gpt-5.3-codex": SpecificModelConfig(
             version_default="5.3",
             variant_default="codex",
             variant_priority=(1,),
-            capabilities=ModelCapabilities(
-                supports_thinking=True,
-                supports_function_calling=True,
-                supports_streaming=True,
-                supports_structured_outputs=True,
-                supports_fine_tuning=False,
-                supports_distillation=False,
-                max_tokens=128_000,
-                context_window=1_050_000,
-            ),
+            # capabilities 继承版本级默认值 / inherits version-level default
             patterns=[
                 "gpt-5.3-codex-{year:4d}-{month:2d}-{day:2d}",
                 "gpt-5.3-codex",

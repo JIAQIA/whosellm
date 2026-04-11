@@ -10,7 +10,7 @@ def test_glm45_base_capabilities() -> None:
     model = LLMeta("glm-4.5")
 
     assert model.provider == Provider.ZHIPU
-    assert model.family == ModelFamily.GLM_TEXT
+    assert model.family == ModelFamily.GLM
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -45,7 +45,7 @@ def test_glm45_release_date_parsing() -> None:
     """确保带日期后缀的模型能够正确解析发布日期。"""
     model = LLMeta("glm-4.5-air-2025-11-08")
 
-    assert model.family == ModelFamily.GLM_TEXT
+    assert model.family == ModelFamily.GLM
     assert model.variant == "air"
     assert model.release_date == date(2025, 11, 8)
 
@@ -55,7 +55,7 @@ def test_glm46_capabilities() -> None:
     model = LLMeta("glm-4.6")
 
     assert model.provider == Provider.ZHIPU
-    assert model.family == ModelFamily.GLM_TEXT
+    assert model.family == ModelFamily.GLM
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -81,7 +81,7 @@ def test_glm46_release_date_parsing() -> None:
     """确保 GLM-4.6 带日期后缀能解析发布日期。"""
     model = LLMeta("glm-4.6-2025-11-08")
 
-    assert model.family == ModelFamily.GLM_TEXT
+    assert model.family == ModelFamily.GLM
     assert model.variant == "base"
     assert model.release_date == date(2025, 11, 8)
 
@@ -91,7 +91,7 @@ def test_gpt51_base_capabilities() -> None:
     model = LLMeta("gpt-5.1")
 
     assert model.provider == Provider.OPENAI
-    assert model.family == ModelFamily.GPT_5_1
+    assert model.family == ModelFamily.GPT
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -109,7 +109,7 @@ def test_gpt51_release_date_parsing() -> None:
     model = LLMeta("gpt-5.1-2025-11-13")
 
     assert model.provider == Provider.OPENAI
-    assert model.family == ModelFamily.GPT_5_1
+    assert model.family == ModelFamily.GPT
     assert model.variant == "base"
     assert model.release_date == date(2025, 11, 13)
 

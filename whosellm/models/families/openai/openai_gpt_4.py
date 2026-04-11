@@ -5,7 +5,7 @@
 # @Software: PyCharm
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
-from whosellm.models.config import ModelFamilyConfig
+from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -13,14 +13,11 @@ from whosellm.provider import Provider
 # ============================================================================
 
 GPT_4 = ModelFamilyConfig(
-    family=ModelFamily.GPT_4,
+    family=ModelFamily.GPT,
     provider=Provider.OPENAI,
     version_default="4.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "gpt-4-{mmdd:4d}",  # gpt-4-0613
-        "gpt-4",  # gpt-4 (base)
-    ],
+    patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
@@ -29,4 +26,17 @@ GPT_4 = ModelFamilyConfig(
         max_tokens=8192,
         context_window=128000,
     ),
+    specific_models={
+        "gpt-4": SpecificModelConfig(
+            version_default="4.0",
+            variant_default="base",
+            variant_priority=(1,),
+            # capabilities 继承版本级默认值 / inherits version-level default
+            patterns=[
+                "gpt-4-{mmdd:4d}",
+                "gpt-4-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-4",
+            ],
+        ),
+    },
 )

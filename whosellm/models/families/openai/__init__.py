@@ -3,6 +3,11 @@
 # @Author  : JQQ
 # @Email   : jiaqia@qknode.com
 # @Software: PyCharm
+#
+# 导入顺序约束 / Import order constraint:
+# 同一 family 的 config 按版本从低到高导入。Registry Merge 的 fallback default
+# 取最后导入的 config，因此最新版本应放在最后。各版本的 capabilities 通过
+# _version_capabilities 独立保留，不受导入顺序影响。
 from whosellm.models.families.openai.openai_gpt_3_5 import GPT_3_5
 from whosellm.models.families.openai.openai_gpt_4 import GPT_4
 from whosellm.models.families.openai.openai_gpt_4_1 import GPT_4_1

@@ -34,34 +34,40 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     """
 
     # OpenAI 家族 / OpenAI family
-    GPT_5_4 = "gpt-5.4"
-    GPT_5_3 = "gpt-5.3"
-    GPT_5_2 = "gpt-5.2"
-    GPT_5_1 = "gpt-5.1"
-    GPT_5 = "gpt-5"
-    GPT_4_1 = "gpt-4.1"
-    GPT_4O = "gpt-4o"
-    GPT_4 = "gpt-4"
-    GPT_3_5 = "gpt-3.5"
-    O1 = "o1"
-    O3 = "o3"
-    O4 = "o4"
+    GPT = "gpt"  # 统一的 GPT 产品线 / Unified GPT lineage (gpt-3.5, gpt-4, gpt-4.1, gpt-5, gpt-5.4, ...)
+    GPT_4O = "gpt-4o"  # GPT-4o 独立产品线 / GPT-4o independent lineage
+    O = "o"  # noqa: E741  # 统一的 O 产品线 / Unified O lineage (o1, o3, o4, ...)
 
     CLAUDE = "claude"
 
     # 智谱 AI 家族 / Zhipu AI family
-    GLM_TEXT = "glm-text"  # 统一的GLM文本模型家族 / Unified GLM text model family
-    GLM_VISION = "glm-vision"  # 统一的GLM视觉模型家族 / Unified GLM vision model family
-    GLM_3 = "glm-3"
+    GLM = "glm"  # 统一的 GLM 文本产品线 / Unified GLM text lineage (glm-3, glm-4, glm-4.5, glm-4.6, glm-5, ...)
+    GLM_VISION = "glm-vision"  # GLM 视觉产品线 / GLM vision lineage (glm-4v, glm-4.5v, glm-4.6v, ...)
     COGVIEW_4 = "cogview-4"
     COGVIDEOX_3 = "cogvideox-3"
     COGVIDEOX_2 = "cogvideox-2"
 
     # 保留旧枚举作为别名，用于向后兼容 / Keep old enums as aliases for backward compatibility
-    GLM_5 = "glm-text"  # 别名 -> GLM_TEXT
-    GLM_4 = "glm-text"  # 别名 -> GLM_TEXT
-    GLM_45 = "glm-text"  # 别名 -> GLM_TEXT
-    GLM_46 = "glm-text"  # 别名 -> GLM_TEXT
+    # OpenAI GPT 别名 / OpenAI GPT aliases
+    GPT_5_4 = "gpt"  # 别名 -> GPT
+    GPT_5_3 = "gpt"  # 别名 -> GPT
+    GPT_5_2 = "gpt"  # 别名 -> GPT
+    GPT_5_1 = "gpt"  # 别名 -> GPT
+    GPT_5 = "gpt"  # 别名 -> GPT
+    GPT_4_1 = "gpt"  # 别名 -> GPT
+    GPT_4 = "gpt"  # 别名 -> GPT
+    GPT_3_5 = "gpt"  # 别名 -> GPT
+    # O 系列别名 / O series aliases
+    O1 = "o"  # 别名 -> O
+    O3 = "o"  # 别名 -> O
+    O4 = "o"  # 别名 -> O
+    # GLM 别名 / GLM aliases
+    GLM_TEXT = "glm"  # 别名 -> GLM
+    GLM_3 = "glm"  # 别名 -> GLM
+    GLM_5 = "glm"  # 别名 -> GLM
+    GLM_4 = "glm"  # 别名 -> GLM
+    GLM_45 = "glm"  # 别名 -> GLM
+    GLM_46 = "glm"  # 别名 -> GLM
     GLM_4V = "glm-vision"  # 别名 -> GLM_VISION
     GLM_45V = "glm-vision"  # 别名 -> GLM_VISION
 
@@ -417,13 +423,15 @@ def auto_register_model(
         capabilities = matched.get("capabilities")
         variant_priority = matched.get("variant_priority")
 
-    # 获取或继承能力 / Get or inherit capabilities
+    # 获取或继承能力（三级继承：specific_model → version → family）
+    # Get or inherit capabilities (three-level: specific_model → version → family)
     if capabilities:
         model_capabilities = capabilities
     else:
-        from whosellm.models.registry import get_default_capabilities
+        from whosellm.models.registry import get_default_capabilities, get_version_capabilities
 
-        model_capabilities = get_default_capabilities(family, provider)
+        version_caps = get_version_capabilities(family, version, provider)
+        model_capabilities = version_caps if version_caps else get_default_capabilities(family, provider)
 
     # 获取或推断型号优先级 / Get or infer variant priority
     # 优先使用配置中的 variant_priority，如果没有则推断

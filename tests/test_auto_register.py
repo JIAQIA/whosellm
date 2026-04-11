@@ -21,13 +21,13 @@ class TestAutoRegister(unittest.TestCase):
         """测试模型家族推断 / Test model family inference"""
         # GPT 系列 / GPT series
         assert infer_model_family("gpt-4o-new-variant") == ModelFamily.GPT_4O
-        assert infer_model_family("gpt-3.5-turbo-custom") == ModelFamily.GPT_3_5
-        assert infer_model_family("o1-custom") == ModelFamily.O1
+        assert infer_model_family("gpt-3.5-turbo-custom") == ModelFamily.GPT
+        assert infer_model_family("o1-custom") == ModelFamily.O
 
         # 智谱 AI 系列 / Zhipu AI series
-        assert infer_model_family("glm-4-0621") == ModelFamily.GLM_TEXT
+        assert infer_model_family("glm-4-0621") == ModelFamily.GLM
         assert infer_model_family("glm-4v-preview") == ModelFamily.GLM_VISION
-        assert infer_model_family("glm-3-custom") == ModelFamily.GLM_3
+        assert infer_model_family("glm-3-custom") == ModelFamily.GLM
 
         # 其他厂商 / Other providers
         assert infer_model_family("qwen3-custom") == ModelFamily.QWEN
@@ -152,7 +152,7 @@ class TestAutoRegister(unittest.TestCase):
         # O1 系列支持 thinking 模式 / O1 series supports thinking mode
         model = LLMeta("o1-pro")
 
-        assert model.family == ModelFamily.O1
+        assert model.family == ModelFamily.O
         assert model.capabilities.supports_thinking is True
         assert model.capabilities.supports_streaming is False
         assert model.capabilities.context_window == 200000
@@ -171,13 +171,13 @@ class TestAutoRegister(unittest.TestCase):
         """测试手动调用自动注册函数 / Test manually calling auto-register function"""
         model_info = auto_register_model("gpt-4-0621")
 
-        assert model_info.family == ModelFamily.GPT_4
+        assert model_info.family == ModelFamily.GPT
         assert model_info.provider == Provider.OPENAI
         assert model_info.capabilities.supports_function_calling is True
 
         # 验证已注册到全局注册表 / Verify registered to global registry
         model = LLMeta("gpt-4-0621")
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT
 
     def test_auto_register_with_mmdd_date(self) -> None:
         """测试自动注册带 MMDD 格式日期的模型 / Test auto-register with MMDD format date"""
@@ -185,7 +185,7 @@ class TestAutoRegister(unittest.TestCase):
 
         model = LLMeta("gpt-4-1225")
 
-        assert model.family == ModelFamily.GPT_4
+        assert model.family == ModelFamily.GPT
         assert model.release_date == date(datetime.datetime.now().year, 12, 25)
 
     def test_auto_register_variant_priority_order(self) -> None:

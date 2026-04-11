@@ -55,7 +55,7 @@ class TestGLM5PatternMatching:
         matched = match_model_pattern("glm-5")
 
         assert matched is not None
-        assert matched["family"] == ModelFamily.GLM_TEXT
+        assert matched["family"] == ModelFamily.GLM
         assert matched["provider"].value == "zhipu"
         assert matched["variant"] == "base"
         assert matched["version"] == "5.0"
@@ -66,18 +66,18 @@ class TestGLM5PatternMatching:
         matched = match_model_pattern("glm-5-flash")
 
         assert matched is not None
-        assert matched["family"] == ModelFamily.GLM_TEXT
+        assert matched["family"] == ModelFamily.GLM
         assert matched["variant"] == "flash"
-        assert matched["version"] == "5"
+        assert matched["version"] == "5.0"
 
     def test_glm5_with_variant_and_date_pattern(self) -> None:
         """验证带变体和日期的 glm-5 模型匹配 / Validate glm-5 with variant and date"""
         matched = match_model_pattern("glm-5-plus-2026-03-01")
 
         assert matched is not None
-        assert matched["family"] == ModelFamily.GLM_TEXT
+        assert matched["family"] == ModelFamily.GLM
         assert matched["variant"] == "plus"
-        assert matched["version"] == "5"
+        assert matched["version"] == "5.0"
 
         parsed_date = parse_date_from_model_name("glm-5-plus-2026-03-01")
         assert parsed_date == date(2026, 3, 1)
@@ -87,8 +87,8 @@ class TestGLM5PatternMatching:
         matched = match_model_pattern("glm-5-0212")
 
         assert matched is not None
-        assert matched["family"] == ModelFamily.GLM_TEXT
-        assert matched["version"] == "5"
+        assert matched["family"] == ModelFamily.GLM
+        assert matched["version"] == "5.0"
 
         parsed_date = parse_date_from_model_name("glm-5-0212")
         assert parsed_date is not None
@@ -104,7 +104,7 @@ class TestGLM5LLMetaIntegration:
         model = LLMeta("glm-5")
 
         assert model.provider == Provider.ZHIPU
-        assert model.family == ModelFamily.GLM_TEXT
+        assert model.family == ModelFamily.GLM
         assert model.variant == "base"
         assert model.version == "5.0"
         assert model.capabilities.supports_thinking is True
@@ -116,7 +116,7 @@ class TestGLM5LLMetaIntegration:
         model = LLMeta("zhipu::glm-5")
 
         assert model.provider == Provider.ZHIPU
-        assert model.family == ModelFamily.GLM_TEXT
+        assert model.family == ModelFamily.GLM
         assert model.version == "5.0"
 
     def test_glm5_greater_than_glm47(self) -> None:
@@ -128,5 +128,5 @@ class TestGLM5LLMetaIntegration:
 
     def test_glm5_family_alias(self) -> None:
         """验证 ModelFamily.GLM_5 别名 / Validate ModelFamily.GLM_5 alias"""
-        assert ModelFamily.GLM_5 == ModelFamily.GLM_TEXT
-        assert ModelFamily.GLM_5.value == "glm-text"
+        assert ModelFamily.GLM_5 == ModelFamily.GLM
+        assert ModelFamily.GLM_5.value == "glm"

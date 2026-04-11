@@ -34,13 +34,53 @@ _MODEL_CACHE: dict[str, ModelInfo] = {}
 
 def register_family_config(config: "ModelFamilyConfig") -> None:
     """
-    注册模型家族配置 / Register model family configuration
+    注册模型家族配置，支持 Registry Merge / Register model family configuration with Registry Merge support
+
+    当多个 ModelFamilyConfig 声明相同的 (family, provider) 时，自动合并而非覆盖。
+    When multiple ModelFamilyConfig instances declare the same (family, provider), merge instead of overwrite.
+
+    合并规则 / Merge rules:
+    - patterns: 新 patterns 追加到列表前面（更具体的在前），自动去重
+      New patterns prepended to the list (more specific first), auto-deduplicated
+    - specific_models: 合并字典，key 冲突时后注册的覆盖
+      Merge dict, later registration overrides on key conflict
+    - version_default / variant_default / variant_priority_default / capabilities: 取最后注册的值
+      Take the last registered value
+    - _version_capabilities: 每次 merge 追加 {version_default: capabilities}，保留所有版本的能力
+      Each merge appends {version_default: capabilities}, preserving all versions' capabilities
+
+    导入顺序约束 / Import order constraint:
+      family 的 fallback default（version_default / capabilities）由最后导入的 config 决定。
+      对于 GPT family，__init__.py 按 GPT_3_5 → GPT_4 → ... → GPT_5_4 导入，
+      因此 fallback 为 GPT-5.4 的配置。此 fallback 仅影响未匹配任何 specific_model 的模型
+      （如 gpt-6-turbo），各版本的 capabilities 通过 _version_capabilities 独立保留。
 
     Args:
         config: 模型家族配置 / Model family configuration
     """
     key = (config.family, config.provider)
-    _FAMILY_CONFIGS[key] = config
+    existing = _FAMILY_CONFIGS.get(key)
+
+    if existing is not None:
+        # Registry Merge：合并 patterns（新的在前，去重）
+        existing_set = set(existing.patterns)
+        new_patterns = [p for p in config.patterns if p not in existing_set]
+        existing.patterns = new_patterns + existing.patterns
+
+        # 合并 specific_models（后注册覆盖）
+        existing.specific_models.update(config.specific_models)
+
+        # 保存版本级别 capabilities（三级继承的中间层）
+        # Store version-level capabilities (middle tier of three-level inheritance)
+        existing._version_capabilities[config.version_default] = config.capabilities
+
+        # 更新默认值为最新注册的
+        existing.version_default = config.version_default
+        existing.variant_default = config.variant_default
+        existing.variant_priority_default = config.variant_priority_default
+        existing.capabilities = config.capabilities
+    else:
+        _FAMILY_CONFIGS[key] = config
 
     # 如果该家族还没有默认 Provider，设置第一个注册的为默认
     if config.family not in _DEFAULT_PROVIDER:
@@ -77,6 +117,31 @@ def get_default_provider(family: ModelFamily) -> Provider | None:
         Provider | None: 默认Provider或None / Default provider or None
     """
     return _DEFAULT_PROVIDER.get(family)
+
+
+def get_version_capabilities(
+    family: ModelFamily, version: str, provider: Provider | None = None
+) -> ModelCapabilities | None:
+    """
+    获取指定版本的能力配置 / Get capabilities for a specific version
+
+    三级继承的中间层：当 SpecificModelConfig.capabilities 为 None 时，
+    优先使用版本级别的 capabilities，而非直接回退到 family default。
+    Middle tier of three-level inheritance: when SpecificModelConfig.capabilities
+    is None, prefer version-level capabilities over family default.
+
+    Args:
+        family: 模型家族 / Model family
+        version: 版本字符串（如 "5.0"） / Version string (e.g. "5.0")
+        provider: Provider（可选） / Provider (optional)
+
+    Returns:
+        ModelCapabilities | None: 版本级别能力或 None / Version-level capabilities or None
+    """
+    config = get_family_config(family, provider)
+    if config and version in config._version_capabilities:
+        return config._version_capabilities[version]
+    return None
 
 
 def get_default_capabilities(family: ModelFamily, provider: Provider | None = None) -> ModelCapabilities:
@@ -178,7 +243,6 @@ def match_model_pattern(model_name: str, provider: Provider | None = None) -> di
                         # 让后续逻辑根据 variant 推断
                         matched["variant_priority"] = None
                     matched["capabilities"] = spec_config.capabilities
-                    matched["variant_priority"] = spec_config.variant_priority
                     # 标记这是从 specific_model 匹配的 / Mark this as matched from specific_model
                     matched["_from_specific_model"] = _spec_model_name
                     return matched
@@ -196,7 +260,7 @@ def match_model_pattern(model_name: str, provider: Provider | None = None) -> di
                     if "minor" in matched:
                         matched["version"] = f"{matched['major']}.{matched['minor']}"
                     else:
-                        matched["version"] = str(matched["major"])
+                        matched["version"] = f"{matched['major']}.0"
                 if not matched.get("version"):
                     matched["version"] = config.version_default
                 if not matched.get("variant"):
@@ -212,7 +276,7 @@ def match_model_pattern(model_name: str, provider: Provider | None = None) -> di
                     matched["variant_priority"] = None
                 matched["family"] = config.family
                 matched["provider"] = config.provider
-                matched["capabilities"] = config.capabilities
+                matched["capabilities"] = None
                 return matched
 
     return None
@@ -271,8 +335,6 @@ def get_specific_model_config(model_name: str) -> tuple[str, str, ModelCapabilit
     Returns:
         tuple | None: (version, variant, capabilities) 或 None
     """
-    import parse  # type: ignore[import-untyped]
-
     model_lower = model_name.lower()
 
     # 方式1：精确匹配 / Method 1: Exact match
@@ -288,7 +350,7 @@ def get_specific_model_config(model_name: str) -> tuple[str, str, ModelCapabilit
                 continue
 
             for pattern in spec_config.patterns:
-                result = parse.parse(pattern, model_lower)
+                result = parse_pattern(pattern, model_lower)
                 if result:
                     return spec_config.version_default, spec_config.variant_default, spec_config.capabilities
 
@@ -332,6 +394,7 @@ __all__ = [
     "get_family_config",
     "get_family_info",
     "get_specific_model_config",
+    "get_version_capabilities",
     "list_all_families",
     "match_model_pattern",
     "register_family",  # 用户友好的动态注册接口 / User-friendly dynamic registration interface

@@ -4,22 +4,21 @@
 # @Email   : jqq1716@gmail.com
 # @Software: PyCharm
 
-from whosellm.models.base import ModelFamily
+from whosellm.models.base import ModelFamily, get_model_info
 from whosellm.models.registry import (
-    get_default_capabilities,
     get_specific_model_config,
     match_model_pattern,
 )
 
 
 def test_o1_base_defaults():
-    """验证 O1 家族默认能力 / Validate O1 family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.O1)
+    """验证 O1 base 模型能力（通过 get_model_info 验证三级继承）/ Validate O1 base capabilities via three-level inheritance"""
+    info = get_model_info("o1")
 
-    assert capabilities.supports_vision is True
-    assert capabilities.supports_streaming is True
-    assert capabilities.supports_function_calling is True
-    assert capabilities.supports_structured_outputs is True
+    assert info.capabilities.supports_vision is True
+    assert info.capabilities.supports_streaming is True
+    assert info.capabilities.supports_function_calling is True
+    assert info.capabilities.supports_structured_outputs is True
 
 
 def _assert_specific_config(
@@ -32,18 +31,16 @@ def _assert_specific_config(
     structured_outputs: bool,
 ) -> None:
     """通用 O1 具体模型断言 / Generic O1 specific model assertions"""
-    config = get_specific_model_config(name)
-
-    assert config is not None
-    version, cfg_variant, capabilities = config
-    assert version == "1.0"
-    assert cfg_variant == variant
-    assert capabilities is not None
+    # 使用 get_model_info 验证解析后的能力（包含三级继承）
+    # Use get_model_info to verify resolved capabilities (with three-level inheritance)
+    info = get_model_info(name)
+    assert info.version == "1.0"
+    assert info.variant == variant
     if supports_vision is not None:
-        assert capabilities.supports_vision is supports_vision
-    assert capabilities.supports_streaming is streaming
-    assert capabilities.supports_function_calling is function_calling
-    assert capabilities.supports_structured_outputs is structured_outputs
+        assert info.capabilities.supports_vision is supports_vision
+    assert info.capabilities.supports_streaming is streaming
+    assert info.capabilities.supports_function_calling is function_calling
+    assert info.capabilities.supports_structured_outputs is structured_outputs
 
 
 def test_o1_base_specific_model():
@@ -63,15 +60,13 @@ def test_o1_base_with_date_pattern():
     matched = match_model_pattern("o1-2025-04-16")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O1
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o1"
     assert matched["variant"] == "base"
 
-    # 通过具体模型配置验证视觉能力 / Validate vision capability via specific model config
-    config = get_specific_model_config(matched["_from_specific_model"])
-    assert config is not None
-    _, _, capabilities = config
-    assert capabilities.supports_vision is True
+    # 通过 get_model_info 验证解析后的能力 / Validate capabilities via get_model_info
+    info = get_model_info("o1-2025-04-16")
+    assert info.capabilities.supports_vision is True
 
 
 def test_o1_mini_specific_model():
@@ -91,7 +86,7 @@ def test_o1_mini_with_date_pattern():
     matched = match_model_pattern("o1-mini-2025-01-31")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O1
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o1-mini"
     assert matched["variant"] == "mini"
 
@@ -113,7 +108,7 @@ def test_o1_pro_with_date_pattern():
     matched = match_model_pattern("o1-pro-2025-06-10")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O1
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o1-pro"
     assert matched["variant"] == "pro"
 

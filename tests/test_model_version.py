@@ -148,7 +148,7 @@ class TestModelVersion(unittest.TestCase):
         gpt4o_turbo = LLMeta("gpt-4o-turbo")
         gpt4o = LLMeta("gpt-4o")
 
-        assert gpt4.family == ModelFamily.GPT_4
+        assert gpt4.family == ModelFamily.GPT
         assert gpt4o_turbo.family == ModelFamily.GPT_4O
         assert gpt4o.family == ModelFamily.GPT_4O
 
@@ -158,34 +158,34 @@ class TestModelVersion(unittest.TestCase):
         glm45 = LLMeta("glm-4.5")
         glm46 = LLMeta("glm-4.6")
 
-        assert glm4.family == ModelFamily.GLM_TEXT
-        assert glm4_plus.family == ModelFamily.GLM_TEXT
-        assert glm45.family == ModelFamily.GLM_TEXT
-        assert glm46.family == ModelFamily.GLM_TEXT
+        assert glm4.family == ModelFamily.GLM
+        assert glm4_plus.family == ModelFamily.GLM
+        assert glm45.family == ModelFamily.GLM
+        assert glm46.family == ModelFamily.GLM
 
-        # GLM-VISION 家族（与 GLM-TEXT 不同）
+        # GLM-VISION 是独立产品线（命名模式含 v 后缀）
         glm4v = LLMeta("glm-4v")
         glm45v = LLMeta("glm-4.5v")
         assert glm4v.family == ModelFamily.GLM_VISION
         assert glm45v.family == ModelFamily.GLM_VISION
-        assert glm4v.family != glm4.family
+        assert glm4v.family != glm4.family  # 不同产品线
 
     def test_provider_prefix_syntax(self) -> None:
         """测试 Provider::ModelName 语法 / Test Provider::ModelName syntax"""
         # 测试 Provider::ModelName 语法
         model1 = LLMeta("openai::gpt-4")
         assert model1.provider == Provider.OPENAI
-        assert model1.family == ModelFamily.GPT_4
+        assert model1.family == ModelFamily.GPT
 
         # 测试不同的Provider
         model2 = LLMeta("openai::gpt-4")
         assert model2.provider == Provider.OPENAI
-        assert model2.family == ModelFamily.GPT_4
+        assert model2.family == ModelFamily.GPT
 
         # 测试普通语法（使用默认Provider）
         model3 = LLMeta("gpt-4")
         assert model3.provider == Provider.OPENAI
-        assert model3.family == ModelFamily.GPT_4
+        assert model3.family == ModelFamily.GPT
 
     def test_same_model_different_providers(self) -> None:
         """测试同一模型不同Provider / Test same model with different providers"""
@@ -214,7 +214,7 @@ class TestModelVersion(unittest.TestCase):
         # 测试 MMDD 格式（假设为2024年）
         model2 = LLMeta("gpt-4-0125")
         assert model2.release_date == date(datetime.now().year, 1, 25)
-        assert model2.family == ModelFamily.GPT_4
+        assert model2.family == ModelFamily.GPT
 
         model3 = LLMeta("gpt-4o")
         assert model3.release_date is None
@@ -250,22 +250,20 @@ class TestModelVersion(unittest.TestCase):
         # 同一型号：有日期 < 无日期（无日期指向最新）
         assert gpt4_base_with_date < gpt4_base_no_date
 
-        # 测试未配置的模型名称（GPT-4 Turbo 已下线，未在配置中）
-        # Test unconfigured model names (GPT-4 Turbo is offline and not in config)
+        # GPT-4 Turbo 通过通用 GPT pattern 匹配（合并后可识别任意 GPT 变体）
+        # GPT-4 Turbo matched via generic GPT patterns (all GPT variants recognized after merge)
         gpt4_turbo_with_date = LLMeta("gpt-4-turbo-2024-04-09")
         gpt4_turbo_no_date = LLMeta("gpt-4-turbo")
 
-        # 未匹配到配置的模型，variant、provider、family 等应为空
-        # Models not matched to config should have empty variant, provider, family, etc.
-        assert gpt4_turbo_with_date.variant == ""
-        assert gpt4_turbo_with_date._variant_priority == (0,)
-        assert gpt4_turbo_with_date.family == ModelFamily.UNKNOWN
-        assert gpt4_turbo_with_date.provider == Provider.UNKNOWN
+        assert gpt4_turbo_with_date.variant == "turbo"
+        assert gpt4_turbo_with_date._variant_priority == (2,)  # turbo priority
+        assert gpt4_turbo_with_date.family == ModelFamily.GPT
+        assert gpt4_turbo_with_date.provider == Provider.OPENAI
 
-        assert gpt4_turbo_no_date.variant == ""
-        assert gpt4_turbo_no_date._variant_priority == (0,)
-        assert gpt4_turbo_no_date.family == ModelFamily.UNKNOWN
-        assert gpt4_turbo_no_date.provider == Provider.UNKNOWN
+        assert gpt4_turbo_no_date.variant == "turbo"
+        assert gpt4_turbo_no_date._variant_priority == (2,)
+        assert gpt4_turbo_no_date.family == ModelFamily.GPT
+        assert gpt4_turbo_no_date.provider == Provider.OPENAI
 
     def test_specific_model_capabilities(self) -> None:
         """测试子 SpecificModel 的 capabilities 覆盖 / Test specific model capabilities override"""

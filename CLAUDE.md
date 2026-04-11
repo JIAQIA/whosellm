@@ -8,6 +8,57 @@
 
 包名：`whosellm` | Python >=3.11 | 许可证：MIT
 
+## 核心概念
+
+理解以下四个概念是理解本项目的前提。
+
+### Family（产品线）
+
+Family 的语义是**产品线**（Lineage），同时也是**版本比较的唯一边界**。判断标准是**命名风格**——命名模式相同的模型属于同一 Family，不依赖供应商的营销定位。
+
+| 命名模式 | Family | 典型成员 |
+|---------|--------|---------|
+| `gpt-{version}[-{variant}]` | `GPT` | gpt-3.5-turbo, gpt-4, gpt-4.1, gpt-5, gpt-5.4-mini |
+| `gpt-4o[-{variant}]` | `GPT_4O` | gpt-4o, gpt-4o-mini（"4o"是专名，不是版本号） |
+| `o{version}[-{variant}]` | `O` | o1, o3-mini, o4-mini |
+| `claude-{variant}-{major}-{minor}` | `CLAUDE` | claude-sonnet-4-6, claude-haiku-4-5 |
+| `gemini-{major}.{minor}-{variant}` | `GEMINI` | gemini-2.5-flash, gemini-3.0-pro |
+| `glm-{version}[v][-{variant}]` | `GLM` | glm-4, glm-4.6v, glm-5 |
+
+**关键**：`gpt-4.1` 和 `gpt-5.4` 属于同一 Family（GPT），因此 `LLMeta("gpt-4.1") < LLMeta("gpt-5.4")` 合法。而 `o3` 和 `gpt-5` 属于不同 Family，比较将抛出 `ValueError`。
+
+### Provider（供应商）
+
+模型的提供方/来源（OpenAI、Anthropic、Google、Zhipu 等）。同一模型可通过不同 Provider 提供（如 `Tencent::deepseek-chat`）。**Provider 不参与比较逻辑。**
+
+### Version（版本）
+
+产品线内的**迭代代次**，解析为 `(major, minor)` 数字元组。是比较的**第一优先级**。
+
+> `gpt-3.5` → (3,5)，`gpt-4.1` → (4,1)，`gpt-5.4` → (5,4)，`o3` → (3,0)
+
+### Variant（变体）
+
+同一版本内的**模型规格**，主要表示尺寸/成本等级。存在两种类型：
+
+- **尺寸等级**（有线性排序）：`nano(0) < mini(0) < base(1) < pro(4) < opus(5)`
+- **功能特化**（无线性排序）：codex、audio-preview、search-preview、deep-research 等
+
+两类共存于 `variant` 字段，通过 `variant_priority` 元组控制排序。
+
+### 比较规则
+
+```
+同一 Family 内可比较，排序维度（优先级递减）：
+  1. Version    — (5, 4) > (5, 0) > (4, 1)
+  2. Variant    — nano < mini < base < pro
+  3. Date       — 2026-03-17 > 2026-01-15
+
+跨 Family → ValueError
+```
+
+因此 `gpt-4.1-pro < gpt-5-mini` 成立（version 优先，4.1 < 5.0）。
+
 ## 环境管理
 
 **本项目使用 [uv](https://docs.astral.sh/uv/) 管理 Python 环境和依赖。所有命令必须通过 `uv run` 执行，禁止使用 `pip install` 或裸 `python` 命令。**

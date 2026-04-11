@@ -13,17 +13,11 @@ from whosellm.provider import Provider
 # ============================================================================
 
 GPT_4_1 = ModelFamilyConfig(
-    family=ModelFamily.GPT_4_1,
+    family=ModelFamily.GPT,
     provider=Provider.OPENAI,
     version_default="4.1",
     variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-4.1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-4.1-{variant:variant}",
-        "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-4.1",
-    ],
+    patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_vision=True,
         supports_pdf=True,
@@ -42,6 +36,16 @@ GPT_4_1 = ModelFamilyConfig(
         context_window=1_047_576,
     ),
     specific_models={
+        "gpt-4.1": SpecificModelConfig(
+            version_default="4.1",
+            variant_default="base",
+            variant_priority=(1,),
+            # capabilities 继承版本级默认值 / inherits version-level default
+            patterns=[
+                "gpt-4.1-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-4.1",
+            ],
+        ),
         "gpt-4.1-mini": SpecificModelConfig(
             version_default="4.1",
             variant_default="mini",

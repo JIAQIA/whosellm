@@ -14,16 +14,11 @@ from whosellm.provider import Provider
 
 
 O3 = ModelFamilyConfig(
-    family=ModelFamily.O3,
+    family=ModelFamily.O,
     provider=Provider.OPENAI,
     version_default="3.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "o3-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o3-{variant:variant}",
-        "o3-{year:4d}-{month:2d}-{day:2d}",
-        "o3",
-    ],
+    patterns=[],  # 父 patterns 由 o4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_vision=True,
         supports_pdf=True,

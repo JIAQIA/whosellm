@@ -27,6 +27,69 @@
    - 各类资源的大小和格式限制
 6. **参数验证** - 针对具体模型，提供请求参数验证的可选实现，基于 VRL 脚本语言自动整改参数
 
+## 核心概念 / Core Concepts
+
+whosellm 用四个维度描述一个模型：
+
+### Family — 产品线
+
+Family 是**版本比较的边界**。命名模式相同的模型属于同一 Family，可以互相比较大小。
+
+```python
+from whosellm import LLMeta
+
+# 同一 Family (GPT)，可以比较 — version 4.1 < 5.0
+assert LLMeta("gpt-4.1") < LLMeta("gpt-5")
+
+# 同一 Family (GPT)，跨子版本也能比 — version 5.0 < 5.4
+assert LLMeta("gpt-5") < LLMeta("gpt-5.4")
+
+# 不同 Family (O vs GPT)，比较会报错
+# LLMeta("o3") < LLMeta("gpt-5")  → ValueError!
+```
+
+常见 Family 与归属：
+
+| Family | 包含的模型 |
+|--------|----------|
+| `GPT` | gpt-3.5-turbo, gpt-4, gpt-4.1, gpt-5, gpt-5.4-mini, ... |
+| `GPT_4O` | gpt-4o, gpt-4o-mini, gpt-4o-audio-preview, ... |
+| `O` | o1, o3, o3-pro, o4-mini, ... |
+| `CLAUDE` | claude-haiku-4-5, claude-sonnet-4-6, claude-opus-4-6, ... |
+| `GEMINI` | gemini-2.5-flash, gemini-3.0-pro, ... |
+| `GLM` | glm-4, glm-4.6v, glm-5, ... |
+
+### Provider — 供应商
+
+模型的来源。同一模型可以通过不同供应商提供，用 `Provider::ModelName` 语法指定：
+
+```python
+default = LLMeta("deepseek-chat")          # Provider.DEEPSEEK
+tencent = LLMeta("Tencent::deepseek-chat") # Provider.TENCENT（腾讯代理）
+```
+
+### Version — 版本
+
+产品线内的迭代代次，是比较的**第一优先级**。
+
+```python
+# version 决定大小关系，即使 variant 不同
+assert LLMeta("gpt-4.1-pro") < LLMeta("gpt-5-mini")  # 4.1 < 5.0
+```
+
+### Variant — 变体
+
+同一版本内的模型规格，通常反映尺寸/成本等级：
+
+```python
+# 同版本内，variant 决定大小关系
+assert LLMeta("gpt-5-nano") < LLMeta("gpt-5")      # nano < base
+assert LLMeta("gpt-5")      < LLMeta("gpt-5-pro")   # base < pro
+
+# Claude 也是同理
+assert LLMeta("claude-haiku-4-5") < LLMeta("claude-sonnet-4-5")  # haiku < sonnet
+```
+
 ## 安装 / Installation
 
 ```bash
@@ -48,7 +111,7 @@ from whosellm import LLMeta
 model = LLMeta("glm-4v-plus")
 
 print(model.provider)                  # Provider.ZHIPU
-print(model.family)                    # ModelFamily.GLM_VISION
+print(model.family)                    # ModelFamily.GLM
 print(model.capabilities.supports_vision)  # True
 print(model.capabilities.max_video_size_mb)  # 20.0
 
@@ -75,25 +138,27 @@ print(mystery.family)    # ModelFamily.UNKNOWN
 ```python
 from whosellm import LLMeta
 
-# 同一模型家族内的型号比较（跨家族比较会抛出 ValueError）
+# 同一 Family 内的比较（跨 Family 比较会抛出 ValueError）
 
-# GPT-4O 系列: mini < omni
-gpt4o_mini = LLMeta("gpt-4o-mini")
-gpt4o = LLMeta("gpt-4o")
+# GPT 家族: 跨版本比较
+gpt41 = LLMeta("gpt-4.1")
+gpt54 = LLMeta("gpt-5.4")
+print(gpt41 < gpt54)  # True (version 4.1 < 5.4)
 
-print(gpt4o_mini < gpt4o)  # True
+# GPT 家族: 同版本内按 variant 排序
+gpt5_mini = LLMeta("gpt-5-mini")
+gpt5_pro = LLMeta("gpt-5-pro")
+print(gpt5_mini < gpt5_pro)  # True (mini < pro)
 
-# GLM-4V 系列: flash < plus
-glm4v_flash = LLMeta("glm-4v-flash")
-glm4v_plus = LLMeta("glm-4v-plus")
-
-print(glm4v_flash < glm4v_plus)  # True
-
-# Claude 系列同版本比较: haiku < sonnet
+# Claude 家族: 同版本比较
 claude_haiku = LLMeta("claude-haiku-4-5")
 claude_sonnet = LLMeta("claude-sonnet-4-5")
+print(claude_haiku < claude_sonnet)  # True (haiku < sonnet)
 
-print(claude_haiku < claude_sonnet)  # True
+# Claude 家族: 跨版本比较
+claude_old = LLMeta("claude-sonnet-4-5")
+claude_new = LLMeta("claude-sonnet-4-6")
+print(claude_old < claude_new)  # True (version 4.5 < 4.6)
 ```
 
 ## 自助编写模型配置 / Bring Your Own Config
@@ -141,8 +206,8 @@ from whosellm import LLMeta, ModelFamily, Provider
 gpt4 = LLMeta("gpt-4")
 gpt4_turbo = LLMeta("gpt-4-turbo")
 
-print(gpt4.family == gpt4_turbo.family)  # True (都是 GPT_4 家族)
-print(gpt4.family)  # ModelFamily.GPT_4
+print(gpt4.family == gpt4_turbo.family)  # True (都是 GPT 家族)
+print(gpt4.family)  # ModelFamily.GPT
 
 # 使用 Provider::ModelName 语法指定Provider
 model1 = LLMeta("gpt-4")  # 使用默认Provider

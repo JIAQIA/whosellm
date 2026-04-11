@@ -13,16 +13,12 @@ from whosellm.provider import Provider
 
 
 GPT_3_5 = ModelFamilyConfig(
-    family=ModelFamily.GPT_3_5,
+    family=ModelFamily.GPT,
     provider=Provider.OPENAI,
     version_default="3.5",
     variant_default="turbo",
     variant_priority_default=(2,),  # turbo 的优先级 / turbo priority
-    patterns=[
-        "gpt-3.5-turbo-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-3.5-turbo-{snapshot}",
-        "gpt-3.5-turbo",
-    ],
+    patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_streaming=False,
         supports_function_calling=False,
@@ -37,15 +33,7 @@ GPT_3_5 = ModelFamilyConfig(
             version_default="3.5",
             variant_default="turbo",
             variant_priority=(2,),
-            capabilities=ModelCapabilities(
-                supports_streaming=False,
-                supports_function_calling=False,
-                supports_structured_outputs=False,
-                supports_json_outputs=True,
-                supports_fine_tuning=True,
-                max_tokens=4096,
-                context_window=16385,
-            ),
+            # capabilities 继承版本级默认值 / inherits version-level default
             patterns=[
                 "gpt-3.5-turbo-{year:4d}-{month:2d}-{day:2d}",
                 "gpt-3.5-turbo-{snapshot}",
@@ -56,15 +44,7 @@ GPT_3_5 = ModelFamilyConfig(
             version_default="3.5",
             variant_default="turbo",
             variant_priority=(2,),
-            capabilities=ModelCapabilities(
-                supports_streaming=False,
-                supports_function_calling=False,
-                supports_structured_outputs=False,
-                supports_json_outputs=True,
-                supports_fine_tuning=True,
-                max_tokens=4096,
-                context_window=16385,
-            ),
+            # capabilities 继承版本级默认值 / inherits version-level default
             patterns=["gpt-3.5-turbo-0125"],
         ),
     },

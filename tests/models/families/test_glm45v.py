@@ -3,12 +3,16 @@
 from datetime import date
 
 from whosellm.models.base import ModelFamily, parse_date_from_model_name
-from whosellm.models.registry import get_default_capabilities, match_model_pattern
+from whosellm.models.registry import match_model_pattern
 
 
 def test_glm45v_default_capabilities() -> None:
-    """验证 GLM-4.5V 家族默认能力 / Validate GLM-4.5V family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.GLM_VISION)
+    """验证 glm-4.5v 模型能力（通过 specific_model 查询）/ Validate glm-4.5v capabilities via specific_model"""
+    from whosellm.models.registry import get_specific_model_config
+
+    config = get_specific_model_config("glm-4.5v")
+    assert config is not None
+    _, _, capabilities = config
 
     assert capabilities.supports_thinking is True
     assert capabilities.supports_vision is True

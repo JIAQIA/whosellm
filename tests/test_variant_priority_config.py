@@ -30,60 +30,27 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "ultra": ["gpt-4o-ultra"],
         "omni": ["gpt-4o"],
     },
-    ModelFamily.GPT_4: {
-        "base": ["gpt-4"],
+    ModelFamily.GPT: {
+        "turbo": ["gpt-3.5-turbo", "gpt-4.1-turbo", "gpt-5-turbo"],
+        "base": ["gpt-4", "gpt-4.1", "gpt-5"],
+        "mini": ["gpt-4.1-mini", "gpt-5-mini"],
+        "nano": ["gpt-4.1-nano", "gpt-5-nano"],
+        "plus": ["gpt-4.1-plus", "gpt-5-plus"],
+        "pro": ["gpt-4.1-pro", "gpt-5-pro"],
+        "ultra": ["gpt-4.1-ultra", "gpt-5-ultra"],
+        "omni": ["gpt-4.1-omni", "gpt-5-omni"],
     },
-    ModelFamily.GPT_3_5: {
-        "turbo": ["gpt-3.5-turbo"],
-    },
-    ModelFamily.GPT_4_1: {
-        "mini": ["gpt-4.1-mini"],
-        "nano": ["gpt-4.1-nano"],
-        "base": ["gpt-4.1"],
-        "turbo": ["gpt-4.1-turbo"],
-        "plus": ["gpt-4.1-plus"],
-        "pro": ["gpt-4.1-pro"],
-        "ultra": ["gpt-4.1-ultra"],
-        "omni": ["gpt-4.1-omni"],
-    },
-    ModelFamily.GPT_5: {
-        "mini": ["gpt-5-mini"],
-        "nano": ["gpt-5-nano"],
-        "base": ["gpt-5"],
-        "turbo": ["gpt-5-turbo"],
-        "plus": ["gpt-5-plus"],
-        "pro": ["gpt-5-pro"],
-        "ultra": ["gpt-5-ultra"],
-        "omni": ["gpt-5-omni"],
-    },
-    ModelFamily.O1: {
-        "mini": ["o1-mini"],
-        "flash": ["o1-flash"],
-        "base": ["o1"],
-        "turbo": ["o1-turbo"],
-        "plus": ["o1-plus"],
-        "pro": ["o1-pro"],
-        "ultra": ["o1-ultra"],
-        "omni": ["o1-omni"],
-    },
-    ModelFamily.O3: {
-        "mini": ["o3-mini"],
-        "base": ["o3"],
-        "turbo": ["o3-turbo"],
-        "plus": ["o3-plus"],
-        "pro": ["o3-pro"],
-        "deep-research": ["o3-deep-research"],
-    },
-    ModelFamily.O4: {
-        "mini": ["o4-mini"],
+    ModelFamily.O: {
+        "mini": ["o1-mini", "o3-mini", "o4-mini"],
         "mini-deep-research": ["o4-mini-deep-research"],
-        "base": ["o4-base"],
-        "turbo": ["o4-turbo"],
-        "plus": ["o4-plus"],
-        "pro": ["o4-pro"],
-        "ultra": ["o4-ultra"],
-        "omni": ["o4-omni"],
-        "deep-research": ["o4-deep-research"],
+        "flash": ["o1-flash"],
+        "base": ["o1", "o3", "o4-base"],
+        "turbo": ["o1-turbo", "o3-turbo", "o4-turbo"],
+        "plus": ["o1-plus", "o3-plus", "o4-plus"],
+        "pro": ["o1-pro", "o3-pro", "o4-pro"],
+        "ultra": ["o1-ultra", "o4-ultra"],
+        "omni": ["o1-omni", "o4-omni"],
+        "deep-research": ["o3-deep-research", "o4-deep-research"],
     },
     ModelFamily.GLM_VISION: {
         "vision-flash": ["glm-4v-flash"],
@@ -91,26 +58,18 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "base": ["glm-4v", "glm-4.5v"],
         "vision-plus": ["glm-4v-plus", "glm-4v-plus-0111"],
     },
-    ModelFamily.GLM_TEXT: {
-        "mini": ["glm-4-mini"],
-        "flash": ["glm-4-flash", "glm-4.5-flash"],
+    ModelFamily.GLM: {
+        "mini": ["glm-4-mini", "glm-3-mini"],
+        "flash": ["glm-4-flash", "glm-4.5-flash", "glm-3-flash"],
         "preview": ["glm-4-preview"],
         "air": ["glm-4.5-air"],
         "airx": ["glm-4.5-airx"],
-        "base": ["glm-4", "glm-4.5", "glm-4.6"],
+        "base": ["glm-4", "glm-4.5", "glm-4.6", "glm-3"],
         "x": ["glm-4.5-x"],
-        "turbo": ["glm-4-turbo"],
-        "plus": ["glm-4-plus"],
-        "pro": ["glm-4-pro"],
+        "turbo": ["glm-4-turbo", "glm-3-turbo"],
+        "plus": ["glm-4-plus", "glm-3-plus"],
+        "pro": ["glm-4-pro", "glm-3-pro"],
         "ultra": ["glm-4-ultra"],
-    },
-    ModelFamily.GLM_3: {
-        "mini": ["glm-3-mini"],
-        "flash": ["glm-3-flash"],
-        "base": ["glm-3"],
-        "turbo": ["glm-3-turbo"],
-        "plus": ["glm-3-plus"],
-        "pro": ["glm-3-pro"],
     },
     ModelFamily.QWEN: {
         "mini": ["qwen3-mini"],
@@ -210,15 +169,19 @@ def _resolve_expected_priority(
         return spec_config.variant_priority
 
     # 尝试使用 specific_models 的子模式匹配样例名称，以获取显式 variant_priority
-    import parse  # type: ignore[import-untyped]
+    from whosellm.models.patterns import parse_pattern
 
     for config in family_config.specific_models.values():
         if not config.patterns or config.variant_priority is None:
             continue
 
         for sub_pattern in config.patterns:
-            result = parse.parse(sub_pattern, sample_lower)
+            result = parse_pattern(sub_pattern, sample_lower)
             if result is not None:
+                # 如果 variant 从 pattern 提取，优先级应从 variant 推断而非使用 spec_config 的值
+                # If variant extracted from pattern, priority should be inferred from variant
+                if "variant" in result.named:
+                    return infer_variant_priority(model_variant)
                 return config.variant_priority
 
     if model_variant == family_config.variant_default and family_config.variant_priority_default is not None:

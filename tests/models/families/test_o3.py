@@ -8,12 +8,14 @@ O3 模型家族测试 / O3 model family tests
 """
 
 from whosellm.models.base import ModelFamily
-from whosellm.models.registry import get_default_capabilities, get_specific_model_config, match_model_pattern
+from whosellm.models.registry import get_specific_model_config, match_model_pattern
 
 
 def test_o3_base_defaults():
-    """验证 O3 家族默认能力 / Validate O3 family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.O3)
+    """验证 O3 base ���型能力（通过 specific_model 查询）/ Validate O3 base model capabilities via specific_model"""
+    config = get_specific_model_config("o3")
+    assert config is not None
+    _, _, capabilities = config
 
     assert capabilities.supports_vision is True
     assert capabilities.supports_streaming is True
@@ -67,7 +69,7 @@ def test_o3_base_with_date_pattern():
     matched = match_model_pattern("o3-2025-04-16")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O3
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o3"
     assert matched["variant"] == "base"
 
@@ -96,7 +98,7 @@ def test_o3_mini_with_date_pattern():
     matched = match_model_pattern("o3-mini-2025-01-31")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O3
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o3-mini"
     assert matched["variant"] == "mini"
 
@@ -118,7 +120,7 @@ def test_o3_pro_with_date_pattern():
     matched = match_model_pattern("o3-pro-2025-06-10")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O3
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o3-pro"
     assert matched["variant"] == "pro"
 
@@ -146,7 +148,7 @@ def test_o3_deep_research_with_date_pattern():
     matched = match_model_pattern("o3-deep-research-2025-06-26")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O3
+    assert matched["family"] == ModelFamily.O
     assert matched["_from_specific_model"] == "o3-deep-research"
     assert matched["variant"] == "deep-research"
 

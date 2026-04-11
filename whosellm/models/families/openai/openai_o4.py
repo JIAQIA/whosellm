@@ -13,13 +13,17 @@ from whosellm.provider import Provider
 # ============================================================================
 
 O4 = ModelFamilyConfig(
-    family=ModelFamily.O4,
+    family=ModelFamily.O,
     provider=Provider.OPENAI,
     version_default="4.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
+    # 通用 O 产品线 patterns（通过 Registry Merge 合并到 O family）
+    # Generic O lineage patterns (merged into O family via Registry Merge)
     patterns=[
-        "o4-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "o4-{variant:variant}",
+        "o{major:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "o{major:d}-{variant:variant}",
+        "o{major:d}-{year:4d}-{month:2d}-{day:2d}",
+        "o{major:d}",
     ],
     capabilities=ModelCapabilities(
         supports_vision=True,

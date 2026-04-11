@@ -8,12 +8,14 @@ O4 模型家族测试 / O4 model family tests
 """
 
 from whosellm.models.base import ModelFamily
-from whosellm.models.registry import get_default_capabilities, get_specific_model_config, match_model_pattern
+from whosellm.models.registry import get_specific_model_config, match_model_pattern
 
 
 def test_o4_family_defaults():
-    """验证 O4 家族默认能力 / Validate O4 family default capabilities"""
-    capabilities = get_default_capabilities(ModelFamily.O4)
+    """验证 O4-mini 模型能力（通过 specific_model 查询）/ Validate O4-mini model capabilities via specific_model"""
+    config = get_specific_model_config("o4-mini")
+    assert config is not None
+    _, _, capabilities = config
 
     assert capabilities.supports_streaming is True
     assert capabilities.supports_function_calling is True
@@ -64,7 +66,7 @@ def test_o4_mini_pattern_with_date():
     matched = match_model_pattern("o4-mini-2025-04-16")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O4
+    assert matched["family"] == ModelFamily.O
     assert matched["variant"] == "mini"
     assert matched["_from_specific_model"] == "o4-mini"
 
@@ -86,6 +88,6 @@ def test_o4_mini_deep_research_pattern_with_date():
     matched = match_model_pattern("o4-mini-deep-research-2025-06-26")
 
     assert matched is not None
-    assert matched["family"] == ModelFamily.O4
+    assert matched["family"] == ModelFamily.O
     assert matched["variant"] == "mini-deep-research"
     assert matched["_from_specific_model"] == "o4-mini-deep-research"

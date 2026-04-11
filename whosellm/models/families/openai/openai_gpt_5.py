@@ -14,16 +14,11 @@ from whosellm.provider import Provider
 
 
 GPT_5 = ModelFamilyConfig(
-    family=ModelFamily.GPT_5,
+    family=ModelFamily.GPT,
     provider=Provider.OPENAI,
     version_default="5.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "gpt-5-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",  # gpt-5-mini-2025-08-07
-        "gpt-5-{variant:variant}",  # gpt-5-mini
-        "gpt-5-{year:4d}-{month:2d}-{day:2d}",  # gpt-5-2025-08-07
-        "gpt-5",  # gpt-5 (base)
-    ],
+    patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
         supports_thinking=True,
         supports_vision=True,
@@ -43,6 +38,16 @@ GPT_5 = ModelFamilyConfig(
         context_window=400_000,
     ),
     specific_models={
+        "gpt-5": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="base",
+            variant_priority=(1,),
+            # capabilities 继承版本级默认值 / inherits version-level default
+            patterns=[
+                "gpt-5-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-5",
+            ],
+        ),
         "gpt-5-mini": SpecificModelConfig(
             version_default="5.0",
             variant_default="mini",

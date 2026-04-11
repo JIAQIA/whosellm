@@ -19,20 +19,29 @@ from whosellm.provider import Provider
 # ============================================================================
 
 GLM_3 = ModelFamilyConfig(
-    family=ModelFamily.GLM_3,
+    family=ModelFamily.GLM,
     provider=Provider.ZHIPU,
     version_default="3.0",
     variant_priority_default=(1,),  # base 的优先级 / base priority
-    patterns=[
-        "glm-3-{variant:variant}",
-        "glm-3",
-    ],
+    patterns=[],  # 父 patterns 由 GLM_TEXT config 通过 Registry Merge 合并提供
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
         max_tokens=8192,
         context_window=32000,
     ),
+    specific_models={
+        "glm-3": SpecificModelConfig(
+            version_default="3.0",
+            variant_default="base",
+            variant_priority=(1,),
+            # capabilities 继承版本级默认值 / inherits version-level default
+            patterns=[
+                "glm-3-{variant:variant}",
+                "glm-3",
+            ],
+        ),
+    },
 )
 
 # ============================================================================
@@ -45,9 +54,9 @@ GLM_VISION = ModelFamilyConfig(
     provider=Provider.ZHIPU,
     version_default="4.5",
     variant_priority_default=(1,),  # base 的优先级 / base priority
+    # Vision patterns（含 v 后缀，更具体，在 merge 后排在 text patterns 之前）
+    # Vision patterns (with v suffix, more specific, ordered before text patterns after merge)
     patterns=[
-        # 通用 GLM-{version}V patterns，支持 4v, 4.5v 等
-        # Generic GLM-{version}V patterns, supports 4v, 4.5v, etc.
         "glm-{version}v-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "glm-{version}v-{variant:variant}-{mmdd:4d}",
         "glm-{version}v-{variant:variant}",
@@ -194,19 +203,25 @@ GLM_VISION = ModelFamilyConfig(
 # ============================================================================
 
 GLM_TEXT = ModelFamilyConfig(
-    family=ModelFamily.GLM_TEXT,
+    family=ModelFamily.GLM,
     provider=Provider.ZHIPU,
     version_default="4.6",
     variant_priority_default=(3,),
+    # 使用 {major:d}/{minor:d} 数字 patterns，避免匹配 v 后缀的视觉模型
+    # Use {major:d}/{minor:d} numeric patterns to avoid matching v-suffixed vision models
     patterns=[
-        # 通用 GLM-{version} patterns，支持 4, 4.5, 4.6 等
-        # Generic GLM-{version} patterns, supports 4, 4.5, 4.6, etc.
-        "glm-{version}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-{version}-{variant:variant}-{mmdd:4d}",
-        "glm-{version}-{variant:variant}",
-        "glm-{version}-{year:4d}-{month:2d}-{day:2d}",
-        "glm-{version}-{mmdd:4d}",
-        "glm-{version}",
+        "glm-{major:d}.{minor:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{major:d}.{minor:d}-{variant:variant}-{mmdd:4d}",
+        "glm-{major:d}.{minor:d}-{variant:variant}",
+        "glm-{major:d}.{minor:d}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{major:d}.{minor:d}-{mmdd:4d}",
+        "glm-{major:d}.{minor:d}",
+        "glm-{major:d}-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{major:d}-{variant:variant}-{mmdd:4d}",
+        "glm-{major:d}-{variant:variant}",
+        "glm-{major:d}-{year:4d}-{month:2d}-{day:2d}",
+        "glm-{major:d}-{mmdd:4d}",
+        "glm-{major:d}",
         "chatglm",  # 别名 / Alias
     ],
     capabilities=ModelCapabilities(

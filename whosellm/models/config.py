@@ -79,8 +79,28 @@ class ModelFamilyConfig:
     # Format: {model_name: SpecificModelConfig}
     specific_models: dict[str, SpecificModelConfig] = field(default_factory=dict)
 
+    # 版本级别能力映射 / Version-level capabilities mapping
+    #
+    # 维护逻辑 / Maintenance logic:
+    #   1. __post_init__: 初始化时写入 {self.version_default: self.capabilities}
+    #   2. registry.register_family_config (merge): 每次合并新 config 时追加
+    #      existing._version_capabilities[config.version_default] = config.capabilities
+    #
+    # 用途 / Usage:
+    #   当 SpecificModelConfig.capabilities 为 None 时，auto_register_model 按以下顺序回退：
+    #     specific_model.capabilities → _version_capabilities[version] → self.capabilities (family default)
+    #   这避免了 Registry Merge 覆盖 family default 后，所有版本被迫继承最后注册者的能力。
+    #
+    # 不参与 __init__，由上述两处自动填充。
+    # Excluded from __init__, auto-populated by the two locations above.
+    _version_capabilities: dict[str, "ModelCapabilities"] = field(default_factory=dict, repr=False, init=False)
+
     def __post_init__(self) -> None:
         """注册到全局注册表并验证配置 / Register to global registry and validate configuration"""
+        # 将当前 config 的 capabilities 存入版本级缓存
+        # Store current config's capabilities in version-level cache
+        self._version_capabilities[self.version_default] = self.capabilities
+
         self._validate_specific_models()
 
         from whosellm.models.registry import register_family_config
@@ -91,7 +111,20 @@ class ModelFamilyConfig:
         """
         验证 specific_models 的子 patterns 必须匹配父 patterns
         Validate that sub-patterns in specific_models must match parent patterns
+
+        当 self.patterns 为空时跳过验证（Registry Merge 场景下，
+        部分 Config 仅提供 specific_models，父 patterns 由其他 Config 合并而来）
+        Skip validation when self.patterns is empty (in Registry Merge scenarios,
+        some Configs only provide specific_models, parent patterns come from other Configs)
         """
+        # Trade-off: patterns 为空时跳过验证。Registry Merge 场景下部分 Config
+        # 仅提供 specific_models，父 patterns 由其他 Config 合并而来，此时无法在
+        # 单个 Config 的 __post_init__ 阶段验证子 pattern 与父 pattern 的匹配关系。
+        # 合并后不重新验证是已知限制——配置错误（如 specific_model 的 sub-pattern
+        # 在合并后的父 patterns 中不存在）需通过测试覆盖发现。
+        if not self.patterns:
+            return
+
         for model_name, config in self.specific_models.items():
             if not config.patterns:
                 continue
