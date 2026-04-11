@@ -191,6 +191,12 @@ def match_model_pattern(model_name: str, provider: Provider | None = None) -> di
             if result:
                 # 转换为字典并添加默认值 / Convert to dict and add defaults
                 matched = dict(result.named)
+                # 从 major/minor 构造 version / Construct version from major/minor
+                if not matched.get("version") and "major" in matched:
+                    if "minor" in matched:
+                        matched["version"] = f"{matched['major']}.{matched['minor']}"
+                    else:
+                        matched["version"] = str(matched["major"])
                 if not matched.get("version"):
                     matched["version"] = config.version_default
                 if not matched.get("variant"):

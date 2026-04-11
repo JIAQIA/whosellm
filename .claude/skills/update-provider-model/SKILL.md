@@ -1,6 +1,6 @@
 ---
 name: update-provider-model
-description: 更新或新增 Provider-Model 配置的完整工作流，包括信息采集、代码变更、测试覆盖
+description: 更新或新增 Provider-Model 配置的完整工作流，包括信息采集、代码变更、测试覆盖。仅指定 Provider 时自动发现新模型。
 user-invocable: true
 argument-hint: [provider] [model-name]
 allowed-tools: Read, Edit, Write, Grep, Glob, Bash, Agent, WebSearch, WebFetch
@@ -11,6 +11,113 @@ allowed-tools: Read, Edit, Write, Grep, Glob, Bash, Agent, WebSearch, WebFetch
 本技能指导完成一个 Provider 下模型配置的新增或更新，覆盖：信息采集 → 代码变更 → 测试验证 全链路。
 
 目标模型：$ARGUMENTS
+
+---
+
+## 第零步：判断运行模式
+
+根据用户输入判断进入哪种工作模式：
+
+| 输入形式 | 示例 | 运行模式 |
+|---------|------|---------|
+| `[provider] [model-name]` | `openai gpt-4o-mini` | **指定模型模式** — 直接跳到第一步 |
+| `[provider]` | `openai` | **自动发现模式** — 进入下方发现流程 |
+
+### 自动发现模式
+
+仅指定 Provider 时，自动从官方文档发现本仓库尚未收录或配置过时的模型。
+
+#### D1. 盘点仓库现有模型
+
+读取该 Provider 对应的配置文件，提取所有已注册的模型 ID 列表：
+
+```bash
+# 定位配置文件
+# 单文件供应商
+whosellm/models/families/{provider}.py
+# 多文件供应商（如 openai）
+whosellm/models/families/{provider}/
+```
+
+使用代码提取已注册模型：
+
+```python
+uv run python -c "
+from whosellm.models.registry import get_all_registered_models
+from whosellm.provider import Provider
+
+provider = Provider.{PROVIDER_UPPER}
+registered = get_all_registered_models()
+models = {name: info for name, info in registered.items() if info.provider == provider}
+for name in sorted(models):
+    print(name)
+"
+```
+
+如果上述 API 不存在，改为直接读取配置文件中 `specific_models` 字典的所有 key，以及 `ModelFamilyConfig` 的 `patterns` 列表来推断覆盖范围。
+
+#### D2. 采集官方最新模型列表
+
+查阅 `${CLAUDE_SKILL_DIR}/providers/{provider}.md` 中的**采集策略**和**官方文档入口**，获取该 Provider 当前提供的完整模型列表。
+
+采集目标：
+- 所有可用的模型 ID（API 中的 model name）
+- 每个模型的状态：GA / Preview / Deprecated / Experimental
+
+**注意**：
+- 优先采集 GA（正式版）和 Preview（预览版）模型，Experimental（实验版）可标记但不强制收录
+- 已标记 Deprecated 的模型如仓库已有则保留，无需新增
+- 遵守浏览器并发控制规则（见第一步"浏览器并发控制"章节）
+
+#### D3. 差异比对
+
+将官方模型列表与仓库已注册列表对比，生成发现报告：
+
+```markdown
+## 模型发现报告：{Provider}
+
+### 采集时间：{date}
+### 官方文档来源：{url}
+
+### 🆕 新增模型（仓库未收录）
+
+| 模型 ID | 状态 | 所属家族（推测） | 说明 |
+|---------|------|----------------|------|
+| gpt-4o-mini-2025-04-16 | GA | GPT_4O | 新 snapshot |
+| o3-pro | GA | O3 | 新变体 |
+
+### 🔄 可能需要更新（已收录但可能过时）
+
+| 模型 ID | 可疑项 | 说明 |
+|---------|--------|------|
+| gpt-4o | context_window | 官方已从 128K 提升到 200K |
+
+### ✅ 已覆盖（无需操作）
+
+已收录 {N} 个模型，与官方一致。
+
+### ⏭️ 跳过（不收录）
+
+| 模型 ID | 原因 |
+|---------|------|
+| xxx-exp-0401 | Experimental，暂不收录 |
+```
+
+#### D4. 向用户展示报告并确认
+
+**必须先展示发现报告，等用户确认要处理哪些模型后，再逐个执行更新。**
+
+用户可能的回复：
+- "全部更新" — 按顺序处理所有新增和需更新的模型
+- "只更新 xxx 和 yyy" — 仅处理指定模型
+- "先不更新" — 结束流程
+
+对于用户确认要处理的每个模型，进入下方**第一步**开始正式的采集 → 代码变更 → 测试流程。
+
+如果需要处理多个模型：
+- **同一家族的多个 snapshot 变体**（如 `gpt-4o-2025-04-16`）：通常只需确认已有 patterns 能匹配，无需新增 `specific_models` 条目
+- **新的变体**（如 `o3-pro`）：需要完整走一遍新增流程
+- **能力字段更新**：直接修改对应 `specific_models` 中的 `capabilities`
 
 ---
 

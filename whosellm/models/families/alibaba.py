@@ -26,6 +26,10 @@ QWEN = ModelFamilyConfig(
         "qwen{version:d}-{variant:variant}",
         "qwen-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
         "qwen-{variant:variant}",
+        # Ollama 短格式 / Ollama short format (e.g. qwen2.5-coder, qwen2.5, qwen2, qwen3)
+        "qwen{major:d}.{minor:d}-{variant:variant}",
+        "qwen{major:d}.{minor:d}",
+        "qwen{version:d}",
     ],
     capabilities=ModelCapabilities(
         supports_function_calling=True,
