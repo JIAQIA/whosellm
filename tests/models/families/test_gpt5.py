@@ -137,24 +137,29 @@ def test_gpt5_pro_with_date_suffix():
 
 
 # ============================================================================
-# GPT-5 点版本测试 / GPT-5 Dot-Version Tests
+# GPT-5.1 测试 / GPT-5.1 Tests
 # ============================================================================
 
 
 def test_gpt5_1_model():
     """测试GPT-5.1模型 / Test GPT-5.1 model"""
     m = LLMeta("gpt-5.1")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_1
     assert m.version == "5.1"
     assert m.variant == "base"
     assert m.capabilities.context_window == 1_050_000
     assert m.capabilities.max_tokens == 128_000
 
 
+# ============================================================================
+# GPT-5.2 测试 / GPT-5.2 Tests
+# ============================================================================
+
+
 def test_gpt5_2_model():
     """测试GPT-5.2模型 / Test GPT-5.2 model"""
     m = LLMeta("gpt-5.2")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_2
     assert m.version == "5.2"
     assert m.variant == "base"
     assert m.capabilities.context_window == 1_050_000
@@ -163,16 +168,21 @@ def test_gpt5_2_model():
 def test_gpt5_2_pro_model():
     """测试GPT-5.2-pro模型 / Test GPT-5.2-pro model"""
     m = LLMeta("gpt-5.2-pro")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_2
     assert m.version == "5.2"
     assert m.variant == "pro"
     assert m.capabilities.supports_computer_use is True
 
 
+# ============================================================================
+# GPT-5.4 测试 / GPT-5.4 Tests (当前旗舰 / Current flagship)
+# ============================================================================
+
+
 def test_gpt5_4_model():
     """测试GPT-5.4模型（当前旗舰）/ Test GPT-5.4 model (current flagship)"""
     m = LLMeta("gpt-5.4")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_4
     assert m.version == "5.4"
     assert m.variant == "base"
     assert m.capabilities.context_window == 1_050_000
@@ -186,7 +196,7 @@ def test_gpt5_4_model():
 def test_gpt5_4_with_date_suffix():
     """测试带日期的GPT-5.4模型 / Test GPT-5.4 with date suffix"""
     m = LLMeta("gpt-5.4-2026-03-05")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_4
     assert m.version == "5.4"
     assert m.variant == "base"
     assert m.release_date == date(2026, 3, 5)
@@ -195,7 +205,7 @@ def test_gpt5_4_with_date_suffix():
 def test_gpt5_4_pro_model():
     """测试GPT-5.4-pro模型 / Test GPT-5.4-pro model"""
     m = LLMeta("gpt-5.4-pro")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_4
     assert m.version == "5.4"
     assert m.variant == "pro"
     assert m.capabilities.supports_computer_use is True
@@ -204,10 +214,66 @@ def test_gpt5_4_pro_model():
 def test_gpt5_4_pro_with_date_suffix():
     """测试带日期的GPT-5.4-pro模型 / Test GPT-5.4-pro with date suffix"""
     m = LLMeta("gpt-5.4-pro-2026-03-05")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_4
     assert m.version == "5.4"
     assert m.variant == "pro"
     assert m.release_date == date(2026, 3, 5)
+
+
+def test_gpt5_4_mini_model():
+    """测试GPT-5.4-mini模型 / Test GPT-5.4-mini model"""
+    m = LLMeta("gpt-5.4-mini")
+    assert m.family == ModelFamily.GPT_5_4
+    assert m.version == "5.4"
+    assert m.variant == "mini"
+    assert m.capabilities.context_window == 400_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_function_calling is True
+    assert m.capabilities.supports_streaming is True
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_fine_tuning is False
+    assert m.capabilities.supports_distillation is True
+    assert m.capabilities.supports_computer_use is True
+    assert m.capabilities.supports_mcp is True
+
+
+def test_gpt5_4_mini_with_date_suffix():
+    """测试带日期的GPT-5.4-mini模型 / Test GPT-5.4-mini with date suffix"""
+    m = LLMeta("gpt-5.4-mini-2026-03-17")
+    assert m.family == ModelFamily.GPT_5_4
+    assert m.version == "5.4"
+    assert m.variant == "mini"
+    assert m.release_date == date(2026, 3, 17)
+
+
+def test_gpt5_4_nano_model():
+    """测试GPT-5.4-nano模型 / Test GPT-5.4-nano model"""
+    m = LLMeta("gpt-5.4-nano")
+    assert m.family == ModelFamily.GPT_5_4
+    assert m.version == "5.4"
+    assert m.variant == "nano"
+    assert m.capabilities.context_window == 400_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_function_calling is True
+    assert m.capabilities.supports_streaming is True
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_fine_tuning is False
+    assert m.capabilities.supports_distillation is True
+    assert m.capabilities.supports_computer_use is False
+    assert m.capabilities.supports_mcp is True
+
+
+def test_gpt5_4_nano_with_date_suffix():
+    """测试带日期的GPT-5.4-nano模型 / Test GPT-5.4-nano with date suffix"""
+    m = LLMeta("gpt-5.4-nano-2026-03-17")
+    assert m.family == ModelFamily.GPT_5_4
+    assert m.version == "5.4"
+    assert m.variant == "nano"
+    assert m.release_date == date(2026, 3, 17)
 
 
 # ============================================================================
@@ -228,7 +294,7 @@ def test_gpt5_codex_model():
 def test_gpt5_1_codex_model():
     """测试GPT-5.1 Codex模型 / Test GPT-5.1 Codex model"""
     m = LLMeta("gpt-5.1-codex")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_1
     assert m.version == "5.1"
     assert m.variant == "codex"
 
@@ -236,7 +302,7 @@ def test_gpt5_1_codex_model():
 def test_gpt5_1_codex_mini_model():
     """测试GPT-5.1 Codex mini模型 / Test GPT-5.1 Codex mini model"""
     m = LLMeta("gpt-5.1-codex-mini")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_1
     assert m.version == "5.1"
     assert m.variant == "codex-mini"
 
@@ -244,26 +310,14 @@ def test_gpt5_1_codex_mini_model():
 def test_gpt5_3_codex_model():
     """测试GPT-5.3 Codex模型 / Test GPT-5.3 Codex model"""
     m = LLMeta("gpt-5.3-codex")
-    assert m.family == ModelFamily.GPT_5
+    assert m.family == ModelFamily.GPT_5_3
     assert m.version == "5.3"
     assert m.variant == "codex"
 
 
 # ============================================================================
-# GPT-5 版本比较测试 / GPT-5 Version Comparison Tests
+# GPT-5 变体优先级测试 / GPT-5 Variant Priority Tests
 # ============================================================================
-
-
-def test_gpt5_version_ordering():
-    """测试GPT-5版本排序 / Test GPT-5 version ordering"""
-    v50 = LLMeta("gpt-5")
-    v51 = LLMeta("gpt-5.1")
-    v52 = LLMeta("gpt-5.2")
-    v54 = LLMeta("gpt-5.4")
-
-    assert v50 < v51
-    assert v51 < v52
-    assert v52 < v54
 
 
 def test_gpt5_variant_priority():
@@ -276,34 +330,49 @@ def test_gpt5_variant_priority():
     assert base < pro
 
 
+def test_gpt5_4_variant_priority():
+    """测试GPT-5.4变体优先级 / Test GPT-5.4 variant priority"""
+    nano = LLMeta("gpt-5.4-nano")
+    mini = LLMeta("gpt-5.4-mini")
+    base = LLMeta("gpt-5.4")
+    pro = LLMeta("gpt-5.4-pro")
+
+    assert nano < base
+    assert mini < base
+    assert base < pro
+
+
 # ============================================================================
 # 参数化测试 / Parametrized Tests
 # ============================================================================
 
 
 @pytest.mark.parametrize(
-    "model_name,expected_version,expected_variant",
+    "model_name,expected_family,expected_version,expected_variant",
     [
-        ("gpt-5", "5.0", "base"),
-        ("gpt-5-mini", "5.0", "mini"),
-        ("gpt-5-nano", "5.0", "nano"),
-        ("gpt-5-pro", "5.0", "pro"),
-        ("gpt-5.1", "5.1", "base"),
-        ("gpt-5.2", "5.2", "base"),
-        ("gpt-5.2-pro", "5.2", "pro"),
-        ("gpt-5.4", "5.4", "base"),
-        ("gpt-5.4-pro", "5.4", "pro"),
-        ("gpt-5-codex", "5.0", "codex"),
-        ("gpt-5.1-codex", "5.1", "codex"),
-        ("gpt-5.1-codex-mini", "5.1", "codex-mini"),
+        ("gpt-5", ModelFamily.GPT_5, "5.0", "base"),
+        ("gpt-5-mini", ModelFamily.GPT_5, "5.0", "mini"),
+        ("gpt-5-nano", ModelFamily.GPT_5, "5.0", "nano"),
+        ("gpt-5-pro", ModelFamily.GPT_5, "5.0", "pro"),
+        ("gpt-5-codex", ModelFamily.GPT_5, "5.0", "codex"),
+        ("gpt-5.1", ModelFamily.GPT_5_1, "5.1", "base"),
+        ("gpt-5.1-codex", ModelFamily.GPT_5_1, "5.1", "codex"),
+        ("gpt-5.1-codex-mini", ModelFamily.GPT_5_1, "5.1", "codex-mini"),
+        ("gpt-5.2", ModelFamily.GPT_5_2, "5.2", "base"),
+        ("gpt-5.2-pro", ModelFamily.GPT_5_2, "5.2", "pro"),
+        ("gpt-5.3-codex", ModelFamily.GPT_5_3, "5.3", "codex"),
+        ("gpt-5.4", ModelFamily.GPT_5_4, "5.4", "base"),
+        ("gpt-5.4-pro", ModelFamily.GPT_5_4, "5.4", "pro"),
+        ("gpt-5.4-mini", ModelFamily.GPT_5_4, "5.4", "mini"),
+        ("gpt-5.4-nano", ModelFamily.GPT_5_4, "5.4", "nano"),
     ],
 )
-def test_gpt5_version_variant(model_name, expected_version, expected_variant):
-    """参数化测试GPT-5版本和变体解析 / Parametrized test for GPT-5 version and variant"""
+def test_gpt5_family_version_variant(model_name, expected_family, expected_version, expected_variant):
+    """参数化测试GPT-5系列家族、版本和变体解析"""
     m = LLMeta(model_name)
+    assert m.family == expected_family
     assert m.version == expected_version
     assert m.variant == expected_variant
-    assert m.family == ModelFamily.GPT_5
 
 
 @pytest.mark.parametrize(
@@ -315,6 +384,8 @@ def test_gpt5_version_variant(model_name, expected_version, expected_variant):
         ("gpt-5.1", 1_050_000),
         ("gpt-5.2", 1_050_000),
         ("gpt-5.4", 1_050_000),
+        ("gpt-5.4-mini", 400_000),
+        ("gpt-5.4-nano", 400_000),
     ],
 )
 def test_gpt5_context_window(model_name, expected_ctx):

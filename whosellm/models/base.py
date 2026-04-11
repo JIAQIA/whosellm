@@ -34,6 +34,9 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
     """
 
     # OpenAI 家族 / OpenAI family
+    GPT_5_4 = "gpt-5.4"
+    GPT_5_3 = "gpt-5.3"
+    GPT_5_2 = "gpt-5.2"
     GPT_5_1 = "gpt-5.1"
     GPT_5 = "gpt-5"
     GPT_4_1 = "gpt-4.1"

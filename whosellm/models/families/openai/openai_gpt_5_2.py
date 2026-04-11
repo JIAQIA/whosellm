@@ -4,19 +4,19 @@ from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
 
 # ============================================================================
-# GPT-5.1 系列 / GPT-5.1 Series
+# GPT-5.2 系列 / GPT-5.2 Series
 # ============================================================================
 
-GPT_5_1 = ModelFamilyConfig(
-    family=ModelFamily.GPT_5_1,
+GPT_5_2 = ModelFamilyConfig(
+    family=ModelFamily.GPT_5_2,
     provider=Provider.OPENAI,
-    version_default="5.1",
+    version_default="5.2",
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[
-        "gpt-5.1-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-5.1-{variant:variant}",
-        "gpt-5.1-{year:4d}-{month:2d}-{day:2d}",
-        "gpt-5.1",
+        "gpt-5.2-{variant:variant}-{year:4d}-{month:2d}-{day:2d}",
+        "gpt-5.2-{variant:variant}",
+        "gpt-5.2-{year:4d}-{month:2d}-{day:2d}",
+        "gpt-5.2",
     ],
     capabilities=ModelCapabilities(
         supports_thinking=True,
@@ -35,8 +35,34 @@ GPT_5_1 = ModelFamilyConfig(
         context_window=1_050_000,
     ),
     specific_models={
-        "gpt-5.1-codex": SpecificModelConfig(
-            version_default="5.1",
+        "gpt-5.2-pro": SpecificModelConfig(
+            version_default="5.2",
+            variant_default="pro",
+            variant_priority=(4,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_vision=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_fine_tuning=False,
+                supports_distillation=True,
+                supports_web_search=True,
+                supports_file_search=True,
+                supports_image_generation=True,
+                supports_code_interpreter=True,
+                supports_computer_use=True,
+                supports_mcp=True,
+                max_tokens=128_000,
+                context_window=1_050_000,
+            ),
+            patterns=[
+                "gpt-5.2-pro-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-5.2-pro",
+            ],
+        ),
+        "gpt-5.2-codex": SpecificModelConfig(
+            version_default="5.2",
             variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
@@ -50,46 +76,8 @@ GPT_5_1 = ModelFamilyConfig(
                 context_window=1_050_000,
             ),
             patterns=[
-                "gpt-5.1-codex-{year:4d}-{month:2d}-{day:2d}",
-                "gpt-5.1-codex",
-            ],
-        ),
-        "gpt-5.1-codex-mini": SpecificModelConfig(
-            version_default="5.1",
-            variant_default="codex-mini",
-            variant_priority=(0,),
-            capabilities=ModelCapabilities(
-                supports_thinking=True,
-                supports_function_calling=True,
-                supports_streaming=True,
-                supports_structured_outputs=True,
-                supports_fine_tuning=False,
-                supports_distillation=False,
-                max_tokens=128_000,
-                context_window=400_000,
-            ),
-            patterns=[
-                "gpt-5.1-codex-mini-{year:4d}-{month:2d}-{day:2d}",
-                "gpt-5.1-codex-mini",
-            ],
-        ),
-        "gpt-5.1-codex-max": SpecificModelConfig(
-            version_default="5.1",
-            variant_default="codex-max",
-            variant_priority=(5,),
-            capabilities=ModelCapabilities(
-                supports_thinking=True,
-                supports_function_calling=True,
-                supports_streaming=True,
-                supports_structured_outputs=True,
-                supports_fine_tuning=False,
-                supports_distillation=False,
-                max_tokens=128_000,
-                context_window=1_050_000,
-            ),
-            patterns=[
-                "gpt-5.1-codex-max-{year:4d}-{month:2d}-{day:2d}",
-                "gpt-5.1-codex-max",
+                "gpt-5.2-codex-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-5.2-codex",
             ],
         ),
     },

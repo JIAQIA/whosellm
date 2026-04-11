@@ -52,6 +52,9 @@ dmypy.json
 .DS_Store
 Thumbs.db
 
+# Playwright MCP
+.playwright-mcp/
+
 # Project specific
 *.log
 .env

@@ -91,7 +91,7 @@ def test_gpt51_base_capabilities() -> None:
     model = LLMeta("gpt-5.1")
 
     assert model.provider == Provider.OPENAI
-    assert model.family == ModelFamily.GPT_5
+    assert model.family == ModelFamily.GPT_5_1
     assert model.variant == "base"
 
     capabilities = model.capabilities
@@ -109,7 +109,7 @@ def test_gpt51_release_date_parsing() -> None:
     model = LLMeta("gpt-5.1-2025-11-13")
 
     assert model.provider == Provider.OPENAI
-    assert model.family == ModelFamily.GPT_5
+    assert model.family == ModelFamily.GPT_5_1
     assert model.variant == "base"
     assert model.release_date == date(2025, 11, 13)
 
