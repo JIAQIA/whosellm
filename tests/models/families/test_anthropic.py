@@ -38,7 +38,7 @@ class TestClaudeOpus46:
         assert capabilities.supports_function_calling is True
         assert capabilities.supports_streaming is True
         assert capabilities.max_tokens == 128000
-        assert capabilities.context_window == 200000
+        assert capabilities.context_window == 1000000
 
     def test_pattern_match(self):
         """验证 claude-opus-4-6 模式匹配 / Validate claude-opus-4-6 pattern match"""
@@ -81,7 +81,7 @@ class TestClaudeSonnet46:
         assert capabilities.supports_function_calling is True
         assert capabilities.supports_streaming is True
         assert capabilities.max_tokens == 64000
-        assert capabilities.context_window == 200000
+        assert capabilities.context_window == 1000000
 
     def test_pattern_match(self):
         """验证 claude-sonnet-4-6 模式匹配 / Validate claude-sonnet-4-6 pattern match"""

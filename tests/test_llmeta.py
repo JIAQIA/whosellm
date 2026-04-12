@@ -16,7 +16,7 @@ def test_glm45_base_capabilities() -> None:
     capabilities = model.capabilities
     assert capabilities.supports_thinking is True
     assert capabilities.supports_function_calling is True
-    assert capabilities.supports_structured_outputs is False
+    assert capabilities.supports_structured_outputs is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_vision is False
     assert capabilities.supports_video is False
@@ -186,8 +186,8 @@ def test_claude_opus_41_capabilities() -> None:
     assert model.version == "4.1"
 
     capabilities = model.capabilities
-    # Opus 4.1 支持所有高级功能
-    assert capabilities.supports_structured_outputs is True
+    # Opus 4.1 不在 Structured Outputs GA 支持列表中
+    assert capabilities.supports_structured_outputs is False
     assert capabilities.supports_json_outputs is True
     assert capabilities.supports_vision is True
     assert capabilities.supports_pdf is True
@@ -233,8 +233,8 @@ def test_claude_3_haiku_base_capabilities() -> None:
     assert capabilities.supports_function_calling is True
     assert capabilities.supports_streaming is True
     assert capabilities.supports_structured_outputs is False
-    # 最小的输出限制
-    assert capabilities.max_tokens == 4000
+    # 最小的输出限制 (4k = 4096)
+    assert capabilities.max_tokens == 4096
     assert capabilities.context_window == 200000
 
 

@@ -26,6 +26,7 @@ O4 = ModelFamilyConfig(
         "o{major:d}",
     ],
     capabilities=ModelCapabilities(
+        supports_thinking=True,
         supports_vision=True,
         supports_pdf=True,
         supports_streaming=True,
@@ -40,6 +41,7 @@ O4 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                supports_thinking=True,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_streaming=True,
@@ -60,6 +62,7 @@ O4 = ModelFamilyConfig(
             variant_default="mini-deep-research",
             variant_priority=(0,),  # mini-deep-research 的优先级 / mini-deep-research priority
             capabilities=ModelCapabilities(
+                supports_thinking=True,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_streaming=True,

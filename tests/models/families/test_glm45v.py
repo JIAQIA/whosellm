@@ -19,7 +19,7 @@ def test_glm45v_default_capabilities() -> None:
     assert capabilities.supports_video is True
     assert capabilities.supports_pdf is True
     assert capabilities.supports_streaming is True
-    assert capabilities.max_tokens == 8192
+    assert capabilities.max_tokens == 16384
     assert capabilities.context_window == 64000
 
 
@@ -38,7 +38,7 @@ def test_glm45v_specific_model_capabilities() -> None:
     assert capabilities.supports_video is True
     assert capabilities.supports_pdf is True
     assert capabilities.supports_streaming is True
-    assert capabilities.max_tokens == 8192
+    assert capabilities.max_tokens == 16384
     assert capabilities.context_window == 64000
 
 
