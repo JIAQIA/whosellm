@@ -193,7 +193,6 @@ def test_gpt5_4_model():
     assert m.capabilities.supports_computer_use is True
 
 
-
 def test_gpt5_4_with_date_suffix():
     """测试带日期的GPT-5.4模型 / Test GPT-5.4 with date suffix"""
     m = LLMeta("gpt-5.4-2026-03-05")
@@ -239,7 +238,6 @@ def test_gpt5_4_mini_model():
     assert m.capabilities.supports_computer_use is True
 
 
-
 def test_gpt5_4_mini_with_date_suffix():
     """测试带日期的GPT-5.4-mini模型 / Test GPT-5.4-mini with date suffix"""
     m = LLMeta("gpt-5.4-mini-2026-03-17")
@@ -265,7 +263,6 @@ def test_gpt5_4_nano_model():
     assert m.capabilities.supports_fine_tuning is False
     assert m.capabilities.supports_distillation is True
     assert m.capabilities.supports_computer_use is False
-
 
 
 def test_gpt5_4_nano_with_date_suffix():

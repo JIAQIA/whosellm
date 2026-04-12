@@ -33,7 +33,6 @@ GPT_5 = ModelFamilyConfig(
         supports_file_search=True,
         supports_image_generation=True,
         supports_code_interpreter=True,
-
         max_tokens=128_000,
         context_window=400_000,
     ),
@@ -66,7 +65,6 @@ GPT_5 = ModelFamilyConfig(
                 supports_file_search=True,
                 supports_image_generation=False,
                 supports_code_interpreter=True,
-        
                 max_tokens=128_000,
                 context_window=400_000,
             ),
@@ -93,7 +91,6 @@ GPT_5 = ModelFamilyConfig(
                 supports_file_search=True,
                 supports_image_generation=False,
                 supports_code_interpreter=False,
-        
                 max_tokens=16_384,
                 context_window=128_000,
             ),
@@ -121,7 +118,6 @@ GPT_5 = ModelFamilyConfig(
                 supports_image_generation=True,
                 supports_code_interpreter=True,
                 supports_computer_use=True,
-        
                 max_tokens=128_000,
                 context_window=400_000,
             ),
