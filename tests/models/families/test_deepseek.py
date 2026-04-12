@@ -91,6 +91,21 @@ def test_deepseek_reasoner_does_not_use_chat_capabilities() -> None:
     assert model.capabilities.supports_thinking is True
 
 
+def test_deepseek_no_structured_outputs() -> None:
+    """验证 DeepSeek 官方模型不支持 structured_outputs（仅支持 json_object）"""
+    from whosellm import LLMeta
+
+    for model_id in ["deepseek-chat", "deepseek-reasoner"]:
+        model = LLMeta(f"deepseek::{model_id}")
+        assert model.capabilities.supports_structured_outputs is False, (
+            f"{model_id}: DeepSeek API 仅支持 response_format={{type:'json_object'}}，"
+            "不支持 json_schema 类型，supports_structured_outputs 应为 False"
+        )
+        assert model.capabilities.supports_json_outputs is True, (
+            f"{model_id}: DeepSeek API 支持 response_format={{type:'json_object'}}，supports_json_outputs 应为 True"
+        )
+
+
 def test_deepseek_official_invalid_model_names() -> None:
     """验证 DeepSeek 官方不支持的模型名称会被识别为 UNKNOWN / Validate unsupported official model names are recognized as UNKNOWN"""
     from whosellm import LLMeta

@@ -50,6 +50,20 @@ def test_glm46v_flash_specific_model_capabilities() -> None:
     assert capabilities.context_window == 128000
 
 
+def test_glm46v_no_structured_or_json_outputs() -> None:
+    """验证 glm-4.6v 不支持 structured_outputs 和 json_outputs（Vision 模型不支持 response_format）"""
+    matched = match_model_pattern("glm-4.6v")
+
+    assert matched is not None
+    capabilities = matched["capabilities"]
+    assert capabilities.supports_structured_outputs is False, (
+        "glm-4.6v: Vision 模型不支持 response_format 参数，supports_structured_outputs 应为 False"
+    )
+    assert capabilities.supports_json_outputs is False, (
+        "glm-4.6v: Vision 模型不支持 response_format 参数，supports_json_outputs 应为 False"
+    )
+
+
 def test_glm46v_mmdd_pattern() -> None:
     """验证 glm-4.6v 带 MMDD 日期后缀模式 / Validate glm-4.6v pattern with MMDD date suffix"""
     model_name = "glm-4.6v-0815"

@@ -68,6 +68,20 @@ def test_glm45v_mmdd_pattern() -> None:
     assert parsed.day == 1
 
 
+def test_glm45v_no_structured_or_json_outputs() -> None:
+    """验证 glm-4.5v 不支持 structured_outputs 和 json_outputs（Vision 模型不支持 response_format）"""
+    matched = match_model_pattern("glm-4.5v")
+
+    assert matched is not None
+    capabilities = matched["capabilities"]
+    assert capabilities.supports_structured_outputs is False, (
+        "glm-4.5v: Vision 模型不支持 response_format 参数，supports_structured_outputs 应为 False"
+    )
+    assert capabilities.supports_json_outputs is False, (
+        "glm-4.5v: Vision 模型不支持 response_format 参数，supports_json_outputs 应为 False"
+    )
+
+
 def test_glm45v_variant_full_date_pattern() -> None:
     """验证变体带完整日期的模式 / Validate variant with YYYY-MM-DD pattern"""
     model_name = "glm-4.5v-plus-2025-11-08"

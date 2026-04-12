@@ -28,6 +28,7 @@ DEEPSEEK = ModelFamilyConfig(
     capabilities=ModelCapabilities(
         supports_function_calling=True,
         supports_streaming=True,
+        supports_structured_outputs=False,
         max_tokens=8000,
         context_window=128000,
     ),
@@ -38,6 +39,7 @@ DEEPSEEK = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_function_calling=True,
                 supports_streaming=True,
+                supports_structured_outputs=False,
                 max_tokens=8000,
                 context_window=128000,
             ),
@@ -56,6 +58,7 @@ DEEPSEEK = ModelFamilyConfig(
                 # DS Reasoner模型原生是不支持工具调用的，但是官方做了优化，如果向R1模型发起带有Tools调用的请求，会自动路由至Chat模型。
                 # 因此在这里标记为支持FunctionCall
                 supports_function_calling=True,
+                supports_structured_outputs=False,
                 max_tokens=64000,
                 context_window=128000,
             ),

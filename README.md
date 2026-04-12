@@ -25,6 +25,8 @@
    - 是否支持视频
    - 是否支持 PDF
    - 各类资源的大小和格式限制
+   - 是否支持 JSON 输出（`supports_json_outputs`）— 限制输出为合法 JSON，不约束结构
+   - 是否支持结构化输出（`supports_structured_outputs`）— 按给定 JSON Schema 严格生成，蕴含 JSON 输出
 6. **参数验证** - 针对具体模型，提供请求参数验证的可选实现，基于 VRL 脚本语言自动整改参数
 
 ## 核心概念 / Core Concepts
