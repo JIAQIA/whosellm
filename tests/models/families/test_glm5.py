@@ -37,7 +37,7 @@ class TestGLM5SpecificModel:
         assert capabilities.supports_function_calling is True
         assert capabilities.supports_structured_outputs is False
         assert capabilities.supports_streaming is True
-        assert capabilities.supports_mcp is True
+
         assert capabilities.max_tokens == 128000
         assert capabilities.context_window == 200000
 
@@ -108,7 +108,7 @@ class TestGLM5LLMetaIntegration:
         assert model.variant == "base"
         assert model.version == "5.0"
         assert model.capabilities.supports_thinking is True
-        assert model.capabilities.supports_mcp is True
+
         assert model.capabilities.supports_function_calling is True
 
     def test_glm5_llmeta_with_provider_prefix(self) -> None:

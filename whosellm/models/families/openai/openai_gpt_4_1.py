@@ -31,7 +31,7 @@ GPT_4_1 = ModelFamilyConfig(
         supports_file_search=True,
         supports_image_generation=True,
         supports_code_interpreter=True,
-        supports_mcp=True,
+
         max_tokens=32768,
         context_window=1_047_576,
     ),

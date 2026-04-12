@@ -42,5 +42,5 @@ Claude 有两种命名格式（新旧版本不同）：
 - Claude 的 `max_tokens` 因版本不同差异较大（3-haiku: 4000, 3-5-haiku: 8000, opus: 32000, sonnet: 64000）
 - 所有 Claude 模型的 `context_window` 目前统一为 200000
 - `supports_thinking` 从 3.7-sonnet 开始支持，3.5 及更早版本不支持
-- `supports_computer_use` 和 `supports_mcp` 等能力需要逐模型确认
+- `supports_computer_use` 等能力需要逐模型确认
 - 变体优先级：`haiku=0, sonnet=3, opus=5`

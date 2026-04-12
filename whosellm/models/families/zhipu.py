@@ -246,7 +246,6 @@ GLM_TEXT = ModelFamilyConfig(
         supports_structured_outputs=False,
         supports_streaming=True,
         supports_web_search=True,
-        supports_mcp=True,
         max_tokens=128000,
         context_window=200000,
     ),
@@ -261,7 +260,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=False,
                 supports_streaming=True,
-                supports_mcp=True,
+
                 max_tokens=128000,
                 context_window=200000,
             ),
@@ -276,7 +275,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=False,
                 supports_streaming=True,
-                supports_mcp=True,
+
                 max_tokens=128000,
                 context_window=200000,
             ),
@@ -290,7 +289,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=False,
                 supports_streaming=True,
-                supports_mcp=True,
+
                 max_tokens=128000,
                 context_window=200000,
             ),
@@ -309,7 +308,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_function_calling=True,
                 supports_structured_outputs=False,
                 supports_streaming=True,
-                supports_mcp=True,
+
                 max_tokens=128000,
                 context_window=200000,
             ),
@@ -330,7 +329,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_streaming=True,
                 supports_structured_outputs=False,
                 supports_web_search=True,
-                supports_mcp=True,
+
                 max_tokens=128000,
                 context_window=200000,
             ),

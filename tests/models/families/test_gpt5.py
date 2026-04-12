@@ -45,7 +45,7 @@ def test_gpt5_base_capabilities():
     assert m.capabilities.supports_file_search is True
     assert m.capabilities.supports_image_generation is True
     assert m.capabilities.supports_code_interpreter is True
-    assert m.capabilities.supports_mcp is True
+
     assert m.capabilities.max_tokens == 128_000
     assert m.capabilities.context_window == 400_000
 
@@ -191,7 +191,7 @@ def test_gpt5_4_model():
     assert m.capabilities.supports_thinking is True
     assert m.capabilities.supports_vision is True
     assert m.capabilities.supports_computer_use is True
-    assert m.capabilities.supports_mcp is True
+
 
 
 def test_gpt5_4_with_date_suffix():
@@ -237,7 +237,7 @@ def test_gpt5_4_mini_model():
     assert m.capabilities.supports_fine_tuning is False
     assert m.capabilities.supports_distillation is True
     assert m.capabilities.supports_computer_use is True
-    assert m.capabilities.supports_mcp is True
+
 
 
 def test_gpt5_4_mini_with_date_suffix():
@@ -265,7 +265,7 @@ def test_gpt5_4_nano_model():
     assert m.capabilities.supports_fine_tuning is False
     assert m.capabilities.supports_distillation is True
     assert m.capabilities.supports_computer_use is False
-    assert m.capabilities.supports_mcp is True
+
 
 
 def test_gpt5_4_nano_with_date_suffix():

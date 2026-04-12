@@ -25,7 +25,7 @@ GPT_5_2 = ModelFamilyConfig(
         supports_file_search=True,
         supports_image_generation=True,
         supports_code_interpreter=True,
-        supports_mcp=True,
+
         max_tokens=128_000,
         context_window=1_050_000,
     ),
@@ -57,7 +57,7 @@ GPT_5_2 = ModelFamilyConfig(
                 supports_image_generation=True,
                 supports_code_interpreter=True,
                 supports_computer_use=True,
-                supports_mcp=True,
+        
                 max_tokens=128_000,
                 context_window=1_050_000,
             ),

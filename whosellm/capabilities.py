@@ -38,7 +38,6 @@ class ModelCapabilities:
     supports_audio_generation: bool = False  # 是否支持音频生成工具 / Whether audio generation tool is supported
     supports_code_interpreter: bool = False  # 是否支持代码解释器 / Whether code interpreter tool is supported
     supports_computer_use: bool = False  # 是否支持电脑远程操作 / Whether computer use tool is supported
-    supports_mcp: bool = False  # 是否支持 MCP / Whether MCP integration is supported
 
     # 通用限制 / General limitations
     max_tokens: int | None = None  # 最大输出token数 / Maximum number of tokens

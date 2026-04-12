@@ -40,7 +40,7 @@ GPT_5_4 = ModelFamilyConfig(
         supports_image_generation=True,
         supports_code_interpreter=True,
         supports_computer_use=True,
-        supports_mcp=True,
+
         max_tokens=128_000,
         context_window=1_050_000,
     ),
@@ -72,7 +72,7 @@ GPT_5_4 = ModelFamilyConfig(
                 supports_image_generation=True,
                 supports_code_interpreter=False,
                 supports_computer_use=True,
-                supports_mcp=True,
+        
                 max_tokens=128_000,
                 context_window=1_050_000,
             ),
@@ -98,7 +98,7 @@ GPT_5_4 = ModelFamilyConfig(
                 supports_image_generation=True,
                 supports_code_interpreter=True,
                 supports_computer_use=True,
-                supports_mcp=True,
+        
                 max_tokens=128_000,
                 context_window=400_000,
             ),
@@ -124,7 +124,7 @@ GPT_5_4 = ModelFamilyConfig(
                 supports_image_generation=True,
                 supports_code_interpreter=True,
                 supports_computer_use=False,
-                supports_mcp=True,
+        
                 max_tokens=128_000,
                 context_window=400_000,
             ),
