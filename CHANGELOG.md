@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2026-04-24
+
+### Added
+- DeepSeek V4 系列模型支持：`deepseek-v4-flash`、`deepseek-v4-pro`（1M 上下文，384K 最大输出，支持思考/非思考双模式）
+- DeepSeek 官方 Provider 支持版本号命名模式（`deepseek-v{major}.{minor}-{variant}` 等），V4 起可通过版本号直接调用
+- 腾讯云 DeepSeek-V3.2（GA 版，685B MoE，稀疏注意力）
+
+### Changed
+- `deepseek-chat` / `deepseek-reasoner` 能力基线升级为 V4-flash 非思考/思考模式别名（1M 上下文，384K 输出）
+
+### Fixed
+- 腾讯云 `deepseek-r1-0528` 的 `supports_function_calling` 修正为 `False`（官方文档明确列为不支持）
+
 ## [Unreleased]
 
 ### Added
