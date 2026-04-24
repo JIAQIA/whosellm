@@ -66,6 +66,8 @@ def test_tencent_deepseek_r1_0528() -> None:
     assert capabilities is not None
     assert capabilities.supports_thinking is True
     assert capabilities.context_window == 128000
+    # 腾讯云 LKE 官方文档明确列为不支持 Function Calling
+    assert capabilities.supports_function_calling is False
 
 
 def test_tencent_deepseek_v3_1() -> None:
@@ -106,6 +108,22 @@ def test_tencent_deepseek_v3_2_exp() -> None:
     assert capabilities is not None
     assert capabilities.supports_thinking is True
     assert capabilities.max_tokens == 64000
+    assert capabilities.context_window == 128000
+
+
+def test_tencent_deepseek_v3_2() -> None:
+    """测试腾讯云 DeepSeek-V3.2（GA） / Test Tencent DeepSeek-V3.2 (GA)"""
+    config = get_specific_model_config("deepseek-v3.2")
+
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "v3.2"
+    assert variant == "v3.2"
+    assert capabilities is not None
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.max_tokens == 32000
     assert capabilities.context_window == 128000
 
 
@@ -158,8 +176,12 @@ def test_tencent_deepseek_no_collision_with_official() -> None:
     assert tencent_v3.variant == "base"
 
     # 不同的能力配置
-    assert official_chat.capabilities.max_tokens == 8000
+    # 官方 deepseek-chat 当前指向 V4-flash 非思考模式（1M 上下文，384K 输出）
+    assert official_chat.capabilities.max_tokens == 384_000
+    assert official_chat.capabilities.context_window == 1_000_000
+    # 腾讯云保持其自有的 DeepSeek 部署规格
     assert tencent_v3.capabilities.max_tokens == 16000
+    assert tencent_v3.capabilities.context_window == 64000
 
 
 def test_tencent_deepseek_invalid_model_names() -> None:

@@ -78,12 +78,14 @@ DEEPSEEK_TENCENT = ModelFamilyConfig(
             ],
         ),
         # DeepSeek-R1-0528
+        # 腾讯云 LKE 文档明确列为 Function Calling 不支持（位于"不支持设置的功能"）
+        # Tencent LKE docs explicitly list Function Calling as unsupported for this model
         "deepseek-r1-0528": SpecificModelConfig(
             version_default="r1-0528",
             variant_default="r1-0528",
             capabilities=ModelCapabilities(
                 supports_thinking=True,
-                supports_function_calling=True,
+                supports_function_calling=False,
                 supports_streaming=True,
                 max_tokens=16000,
                 context_window=128000,
@@ -125,7 +127,8 @@ DEEPSEEK_TENCENT = ModelFamilyConfig(
                 "deepseek-v3.1-terminus",
             ],
         ),
-        # DeepSeek-V3.2-Exp
+        # DeepSeek-V3.2-Exp（已被 deepseek-v3.2 GA 版替代，保留以兼容历史调用）
+        # DeepSeek-V3.2-Exp (superseded by deepseek-v3.2 GA; kept for backward compatibility)
         "deepseek-v3.2-exp": SpecificModelConfig(
             version_default="v3.2-exp",
             variant_default="v3.2-exp",
@@ -139,6 +142,23 @@ DEEPSEEK_TENCENT = ModelFamilyConfig(
             variant_priority=(1,),
             patterns=[
                 "deepseek-v3.2-exp",
+            ],
+        ),
+        # DeepSeek-V3.2（GA 版，685B MoE，稀疏注意力，可选思考模式）
+        # DeepSeek-V3.2 (GA, 685B MoE, sparse attention, optional thinking mode)
+        "deepseek-v3.2": SpecificModelConfig(
+            version_default="v3.2",
+            variant_default="v3.2",
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                max_tokens=32000,
+                context_window=128000,
+            ),
+            variant_priority=(1,),
+            patterns=[
+                "deepseek-v3.2",
             ],
         ),
     },
