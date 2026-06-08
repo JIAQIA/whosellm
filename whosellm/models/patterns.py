@@ -35,7 +35,20 @@ def _convert_variant(text: str) -> str:
     return text
 
 
-DEFAULT_EXTRA_TYPES: dict[str, Any] = {"variant": _convert_variant}
+@parse.with_pattern(r"\d{8}")
+def _convert_snapshot(text: str) -> int:
+    """快照日期戳：精确 8 位（YYYYMMDD） / Snapshot date stamp: exactly 8 digits (YYYYMMDD)
+
+    使用自定义类型而非 parse 内置 ``{:8d}``：后者的宽度是"最多 8 位"，会把单个数字（如
+    ``claude-opus-4-5`` 里的 ``5``）误当作 snapshot 匹配，导致 minor 版本号被吞、版本回退。
+    Using a custom type instead of parse's built-in ``{:8d}``: the latter's width means
+    "up to 8 digits" and would wrongly swallow a single digit (e.g. the ``5`` in
+    ``claude-opus-4-5``) as a snapshot, dropping the minor version.
+    """
+    return int(text)
+
+
+DEFAULT_EXTRA_TYPES: dict[str, Any] = {"variant": _convert_variant, "snapshot": _convert_snapshot}
 
 
 def _merge_extra_types(extra_types: dict[str, Any] | None) -> dict[str, Any]:

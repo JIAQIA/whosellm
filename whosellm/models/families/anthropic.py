@@ -23,14 +23,14 @@ CLAUDE = ModelFamilyConfig(
     variant_default="sonnet",
     variant_priority_default=(3,),  # sonnet 的默认优先级 / default priority for sonnet
     patterns=[
-        "claude-{variant:variant}-{major:d}-{minor:d}@{snapshot:8d}",
-        "claude-{variant:variant}-{major:d}-{minor:d}-{snapshot:8d}",
+        "claude-{variant:variant}-{major:d}-{minor:d}@{snapshot:snapshot}",
+        "claude-{variant:variant}-{major:d}-{minor:d}-{snapshot:snapshot}",
         "claude-{variant:variant}-{major:d}-{minor:d}",
-        "claude-{variant:variant}-{major:d}-{snapshot:8d}",
+        "claude-{variant:variant}-{major:d}-{snapshot:snapshot}",
         "claude-{variant:variant}-{major:d}",
-        "claude-{major:d}-{minor:d}-{variant:variant}-{snapshot:8d}",
+        "claude-{major:d}-{minor:d}-{variant:variant}-{snapshot:snapshot}",
         "claude-{major:d}-{minor:d}-{variant:variant}",
-        "claude-{major:d}-{variant:variant}-{snapshot:8d}",
+        "claude-{major:d}-{variant:variant}-{snapshot:snapshot}",
         "claude-{major:d}-{variant:variant}",
     ],
     capabilities=ModelCapabilities(
@@ -42,6 +42,46 @@ CLAUDE = ModelFamilyConfig(
         context_window=200000,
     ),
     specific_models={
+        "claude-opus-4-8": SpecificModelConfig(
+            version_default="4.8",
+            variant_default="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-opus-4-8-{snapshot:snapshot}",
+                "claude-opus-4-8",
+                "claude-opus-4-8@{snapshot:snapshot}",
+            ],
+        ),
+        "claude-opus-4-7": SpecificModelConfig(
+            version_default="4.7",
+            variant_default="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-opus-4-7-{snapshot:snapshot}",
+                "claude-opus-4-7",
+                "claude-opus-4-7@{snapshot:snapshot}",
+            ],
+        ),
         "claude-opus-4-6": SpecificModelConfig(
             version_default="4.6",
             variant_default="opus",
@@ -57,9 +97,9 @@ CLAUDE = ModelFamilyConfig(
                 context_window=1000000,
             ),
             patterns=[
-                "claude-opus-4-6-{snapshot:8d}",
+                "claude-opus-4-6-{snapshot:snapshot}",
                 "claude-opus-4-6",
-                "claude-opus-4-6@{snapshot:8d}",
+                "claude-opus-4-6@{snapshot:snapshot}",
             ],
         ),
         "claude-sonnet-4-6": SpecificModelConfig(
@@ -77,9 +117,9 @@ CLAUDE = ModelFamilyConfig(
                 context_window=1000000,
             ),
             patterns=[
-                "claude-sonnet-4-6-{snapshot:8d}",
+                "claude-sonnet-4-6-{snapshot:snapshot}",
                 "claude-sonnet-4-6",
-                "claude-sonnet-4-6@{snapshot:8d}",
+                "claude-sonnet-4-6@{snapshot:snapshot}",
             ],
         ),
         "claude-sonnet-4-5": SpecificModelConfig(
@@ -97,7 +137,11 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=64000,
                 context_window=200000,
             ),
-            patterns=["claude-sonnet-4-5-{snapshot:8d}", "claude-sonnet-4-5", "claude-sonnet-4-5@{snapshot:8d}"],
+            patterns=[
+                "claude-sonnet-4-5-{snapshot:snapshot}",
+                "claude-sonnet-4-5",
+                "claude-sonnet-4-5@{snapshot:snapshot}",
+            ],
         ),
         "claude-haiku-4-5": SpecificModelConfig(
             version_default="4.5",
@@ -114,7 +158,32 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=64000,
                 context_window=200000,
             ),
-            patterns=["claude-haiku-4-5-{snapshot:8d}", "claude-haiku-4-5", "claude-haiku-4-5@{snapshot:8d}"],
+            patterns=[
+                "claude-haiku-4-5-{snapshot:snapshot}",
+                "claude-haiku-4-5",
+                "claude-haiku-4-5@{snapshot:snapshot}",
+            ],
+        ),
+        "claude-opus-4-5": SpecificModelConfig(
+            version_default="4.5",
+            variant_default="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_pdf=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=64000,
+                context_window=200000,
+            ),
+            patterns=[
+                "claude-opus-4-5-{snapshot:snapshot}",
+                "claude-opus-4-5",
+                "claude-opus-4-5@{snapshot:snapshot}",
+            ],
         ),
         "claude-opus-4-1": SpecificModelConfig(
             version_default="4.1",
@@ -131,7 +200,7 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=32000,
                 context_window=200000,
             ),
-            patterns=["claude-opus-4-1-{snapshot:8d}", "claude-opus-4-1", "claude-opus-4-1@{snapshot:8d}"],
+            patterns=["claude-opus-4-1-{snapshot:snapshot}", "claude-opus-4-1", "claude-opus-4-1@{snapshot:snapshot}"],
         ),
         "claude-sonnet-4-0": SpecificModelConfig(
             version_default="4.0",
@@ -148,7 +217,11 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=64000,
                 context_window=200000,
             ),
-            patterns=["claude-sonnet-4-{snapshot:8d}", "claude-sonnet-4-0", "claude-sonnet-4-0@{snapshot:8d}"],
+            patterns=[
+                "claude-sonnet-4-{snapshot:snapshot}",
+                "claude-sonnet-4-0",
+                "claude-sonnet-4-0@{snapshot:snapshot}",
+            ],
         ),
         "claude-3-7-sonnet": SpecificModelConfig(
             version_default="3.7",
@@ -165,7 +238,7 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=64000,
                 context_window=200000,
             ),
-            patterns=["claude-3-7-sonnet-{snapshot:8d}", "claude-3-7-sonnet-latest", "claude-3-7-sonnet"],
+            patterns=["claude-3-7-sonnet-{snapshot:snapshot}", "claude-3-7-sonnet-latest", "claude-3-7-sonnet"],
         ),
         "claude-opus-4-0": SpecificModelConfig(
             version_default="4.0",
@@ -182,7 +255,7 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=32000,
                 context_window=200000,
             ),
-            patterns=["claude-opus-4-{snapshot:8d}", "claude-opus-4-0", "claude-opus-4-0@{snapshot:8d}"],
+            patterns=["claude-opus-4-{snapshot:snapshot}", "claude-opus-4-0", "claude-opus-4-0@{snapshot:snapshot}"],
         ),
         "claude-3-5-haiku": SpecificModelConfig(
             version_default="3.5",
@@ -198,7 +271,7 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=8000,
                 context_window=200000,
             ),
-            patterns=["claude-3-5-haiku-{snapshot:8d}", "claude-3-5-haiku-latest", "claude-3-5-haiku"],
+            patterns=["claude-3-5-haiku-{snapshot:snapshot}", "claude-3-5-haiku-latest", "claude-3-5-haiku"],
         ),
         "claude-3-haiku": SpecificModelConfig(
             version_default="3.0",
@@ -213,7 +286,7 @@ CLAUDE = ModelFamilyConfig(
                 max_tokens=4096,
                 context_window=200000,
             ),
-            patterns=["claude-3-haiku-{snapshot:8d}"],
+            patterns=["claude-3-haiku-{snapshot:snapshot}"],
         ),
     },
 )

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.3] - Unreleased
+
+### Added
+- 新增 Claude Opus 4.x 模型配置（官方规格核实）：`claude-opus-4-8`、`claude-opus-4-7`（1M 上下文，128K 最大输出，结构化输出 + computer use）、`claude-opus-4-5`（200K 上下文，64K 最大输出）
+
+### Fixed
+- 修复 Claude 4.x 别名版本解析回退 bug：`claude-opus-4-5` / `4-7` / `4-8` 等**无日期别名**此前被 `claude-opus-4-{snapshot:8d}` 模式的"最大宽度"语义把单个数字 minor 误吞为 snapshot，导致版本回退为 `4.0`。改用精确 8 位的 `{snapshot:snapshot}` 自定义类型（`patterns._convert_snapshot`）后，单字段 snapshot 不再吞掉 minor，现存与未来未注册别名均能解析出正确版本（如 `4.8`），版本比较稳定可用
+
 ## [0.2.2] - 2026-04-24
 
 ### Added

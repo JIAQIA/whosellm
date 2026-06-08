@@ -189,6 +189,11 @@ class ModelFamilyConfig:
             else:
                 type_spec = ""
 
+            # 自定义 snapshot 类型要求精确 8 位（见 patterns._convert_snapshot）
+            # Custom snapshot type requires exactly 8 digits (see patterns._convert_snapshot)
+            if type_spec == "snapshot":
+                return "20240101"
+
             if type_spec.endswith("d"):
                 width_str = type_spec[:-1].strip()
                 width = int(width_str) if width_str.isdigit() else 1
