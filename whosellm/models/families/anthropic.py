@@ -27,6 +27,7 @@ CLAUDE = ModelFamilyConfig(
         "claude-{variant:variant}-{major:d}-{minor:d}-{snapshot:snapshot}",
         "claude-{variant:variant}-{major:d}-{minor:d}",
         "claude-{variant:variant}-{major:d}-{snapshot:snapshot}",
+        "claude-{variant:variant}-{major:d}@{snapshot:snapshot}",
         "claude-{variant:variant}-{major:d}",
         "claude-{major:d}-{minor:d}-{variant:variant}-{snapshot:snapshot}",
         "claude-{major:d}-{minor:d}-{variant:variant}",
@@ -42,6 +43,49 @@ CLAUDE = ModelFamilyConfig(
         context_window=200000,
     ),
     specific_models={
+        # Mythos-class（2026-06-09 发布）：全新顶级层级，优先级高于 opus
+        # Mythos-class (released 2026-06-09): new top tier, ranks above opus
+        # Fable 5 为公开版，Mythos 5 为 Glasswing 受邀版（能力相同，去掉安全分类器）
+        "claude-fable-5": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="fable",
+            variant_priority=(6,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-fable-5-{snapshot:snapshot}",
+                "claude-fable-5",
+                "claude-fable-5@{snapshot:snapshot}",
+            ],
+        ),
+        "claude-mythos-5": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="mythos",
+            variant_priority=(7,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-mythos-5-{snapshot:snapshot}",
+                "claude-mythos-5",
+                "claude-mythos-5@{snapshot:snapshot}",
+            ],
+        ),
         "claude-opus-4-8": SpecificModelConfig(
             version_default="4.8",
             variant_default="opus",

@@ -5,6 +5,7 @@ Anthropic Claude 模型家族测试 / Anthropic Claude model family tests
 
 import pytest
 
+from whosellm.model_version import LLMeta
 from whosellm.models.base import ModelFamily
 from whosellm.models.registry import get_default_capabilities, get_specific_model_config, match_model_pattern
 from whosellm.provider import Provider
@@ -106,6 +107,93 @@ class TestClaudeSonnet46:
         assert matched["family"] == ModelFamily.CLAUDE
         assert matched["variant"] == "sonnet"
         assert matched["_from_specific_model"] == "claude-sonnet-4-6"
+
+
+class TestClaudeFable5:
+    """Claude Fable 5 测试（Mythos-class，2026-06-09 GA） / Claude Fable 5 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-fable-5 配置 / Validate claude-fable-5 config"""
+        config = get_specific_model_config("claude-fable-5")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.0"
+        assert variant == "fable"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_function_calling is True
+        assert capabilities.supports_streaming is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-fable-5 模式匹配 / Validate claude-fable-5 pattern match"""
+        matched = match_model_pattern("claude-fable-5")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "fable"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+    @pytest.mark.parametrize("model_name", ["claude-fable-5-20260609", "claude-fable-5@20260609"])
+    def test_pattern_with_snapshot(self, model_name: str):
+        """验证带 snapshot 的解析（- 与 @ 两种格式，版本号不被吞） / Validate snapshot forms keep version 5.0"""
+        meta = LLMeta(model_name)
+        assert meta.family == ModelFamily.CLAUDE
+        assert meta.version == "5.0"
+        assert meta.variant == "fable"
+
+
+class TestClaudeMythos5:
+    """Claude Mythos 5 测试（Glasswing 受邀版） / Claude Mythos 5 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-mythos-5 配置 / Validate claude-mythos-5 config"""
+        config = get_specific_model_config("claude-mythos-5")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.0"
+        assert variant == "mythos"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-mythos-5 模式匹配 / Validate claude-mythos-5 pattern match"""
+        matched = match_model_pattern("claude-mythos-5")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "mythos"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+
+class TestClaudeMythosClassOrdering:
+    """Mythos-class 版本比较：mythos > fable > opus > sonnet / Mythos-class ordering"""
+
+    def test_fable5_outranks_opus48(self):
+        """fable-5 (v5.0) 高于 opus-4-8 (v4.8) / fable-5 outranks opus-4-8 by version"""
+        assert LLMeta("claude-fable-5") > LLMeta("claude-opus-4-8")
+
+    def test_mythos5_outranks_fable5(self):
+        """同版本下 mythos 变体优先级高于 fable / mythos outranks fable on variant priority"""
+        assert LLMeta("claude-mythos-5") > LLMeta("claude-fable-5")
+
+    def test_mythos5_is_top(self):
+        """mythos-5 为当前最高 / mythos-5 is the highest among current Claude models"""
+        models = [
+            LLMeta("claude-mythos-5"),
+            LLMeta("claude-fable-5"),
+            LLMeta("claude-opus-4-8"),
+            LLMeta("claude-sonnet-4-6"),
+            LLMeta("claude-haiku-4-5"),
+        ]
+        assert max(models).variant == "mythos"
 
 
 class TestClaudeExistingModels:

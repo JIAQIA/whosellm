@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [0.2.3] - Unreleased
 
 ### Added
+- 新增 Claude Mythos-class 模型配置（2026-06-09 发布，官方规格核实）：`claude-fable-5`（公开版）、`claude-mythos-5`（Project Glasswing 受邀版，能力同 Fable 5）。均为 1M 上下文、128K 最大输出、结构化输出 + computer use，自适应思考常开。引入全新顶级变体层级，优先级高于 opus（`haiku=0 < sonnet=3 < opus=5 < fable=6 < mythos=7`），因此 `claude-fable-5 > claude-opus-4-8`（版本 5.0 > 4.8）。新增父模式 `claude-{variant}-{major}@{snapshot}` 以支持单版本号模型的 `@` 日期快照形式
 - 新增 Claude Opus 4.x 模型配置（官方规格核实）：`claude-opus-4-8`、`claude-opus-4-7`（1M 上下文，128K 最大输出，结构化输出 + computer use）、`claude-opus-4-5`（200K 上下文，64K 最大输出）
 
 ### Fixed
