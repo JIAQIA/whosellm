@@ -45,6 +45,12 @@ filename = "whosellm/__init__.py"
 search = "__version__ = \"{current_version}\""
 replace = "__version__ = \"{new_version}\""
 
+# uv.lock 中项目自身的版本号（锚定到 whosellm 包块，避免误改其他依赖的 version）
+[[tool.bumpversion.files]]
+filename = "uv.lock"
+search = "name = \"whosellm\"\nversion = \"{current_version}\""
+replace = "name = \"whosellm\"\nversion = \"{new_version}\""
+
 [tool.bumpversion.parts.pre_l]
 values = ["a", "b", "rc"]
 
