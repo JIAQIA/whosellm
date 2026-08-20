@@ -63,3 +63,12 @@ description: Google Gemini 模型信息采集指南
 - `supports_file_search` 和 `supports_code_interpreter` 并非所有变体都支持，flash-lite 和 2.0 系列通常不支持 code_interpreter
 - 大部分 Gemini 模型的 `context_window` 为 `1048576`（1M tokens），但特殊变体例外
 - `supports_web_search` 在 2.0 flash 及以上版本可用，2.0 flash-lite 不支持
+
+## 采集经验（2026-08-20 更新）
+
+- **3.1 及以后的官方 ID 一律用点号**：`gemini-3.1-pro-preview`、`gemini-3.5-flash` 等。曾误注册短横线 `gemini-3-1-pro-preview`，导致真实 ID 走泛型 pattern、variant 解析错误
+- **弃用时间线看 `deprecations` 页**：`https://ai.google.dev/gemini-api/docs/deprecations` 有每个模型的发布日期、关停日期、推荐替代品，比模型列表页信息更全
+- **部分模型详情页没有规格卡**（如 gemini-3.1-flash-lite、gemini-3.1-flash-live-preview）。Live API 模型的上下文上限在 `live-api/capabilities` 页（原生音频输出模型 128k）；其余可参照官方指定的迁移源模型规格，并在配置注释中说明数据来源
+- **模型详情页与总览页的 model code 可能不一致**（如 gemini-omni-flash vs gemini-omni-flash-preview），两个都收录进 patterns
+- `capabilities.py` 的默认值中 `supports_structured_outputs/Json_outputs/streaming` 默认 True，受限模型（image/TTS/live 特化版）必须显式置 False
+- 特化端点别名也应收录：如 `gemini-3.1-pro-preview-customtools`

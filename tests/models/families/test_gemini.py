@@ -130,18 +130,56 @@ class TestGemini3x:
         assert capabilities.context_window == 65_536
 
     def test_gemini_3_1_pro_preview(self):
-        config = get_specific_model_config("gemini-3-1-pro-preview")
+        config = get_specific_model_config("gemini-3.1-pro-preview")
         assert config is not None
-        version, variant, capabilities = config
+        version, variant, _ = config
         assert version == "3.1"
         assert variant == "pro"
 
     def test_gemini_3_1_flash_lite_preview(self):
-        config = get_specific_model_config("gemini-3-1-flash-lite-preview")
+        config = get_specific_model_config("gemini-3.1-flash-lite-preview")
         assert config is not None
-        version, variant, capabilities = config
+        version, variant, _ = config
         assert version == "3.1"
         assert variant == "flash-lite"
+
+
+class TestGemini35to37Flash:
+    """Gemini 3.5/3.6/3.7 Flash 系列（GA）测试 / Gemini 3.5/3.6/3.7 Flash (GA) tests"""
+
+    @pytest.mark.parametrize(
+        "model_name,expected_version,expected_variant",
+        [
+            ("gemini-3.5-flash", "3.5", "flash"),
+            ("gemini-3.6-flash", "3.6", "flash"),
+            ("gemini-3.7-flash", "3.7", "flash"),
+            ("gemini-3.5-flash-lite", "3.5", "flash-lite"),
+        ],
+    )
+    def test_specific_model_config(self, model_name: str, expected_version: str, expected_variant: str):
+        config = get_specific_model_config(model_name)
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == expected_version
+        assert variant == expected_variant
+        assert capabilities is not None
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_audio is True
+        assert capabilities.supports_video is True
+        assert capabilities.supports_pdf is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_code_interpreter is True
+        assert capabilities.supports_file_search is True
+        assert capabilities.supports_web_search is True
+        assert capabilities.max_tokens == 65_536
+        assert capabilities.context_window == 1_048_576
+
+    def test_ga_flash_ordering(self):
+        """验证 3.1 < 3.5 < 3.6 < 3.7 / Validate 3.1 < 3.5 < 3.6 < 3.7"""
+        assert LLMeta("gemini-3.1-flash-lite") < LLMeta("gemini-3.5-flash")
+        assert LLMeta("gemini-3.5-flash") < LLMeta("gemini-3.6-flash")
+        assert LLMeta("gemini-3.6-flash") < LLMeta("gemini-3.7-flash")
 
 
 class TestGemini20:
@@ -191,14 +229,15 @@ class TestGeminiVersionComparison:
     """Gemini 版本比较测试 / Gemini version comparison tests"""
 
     def test_version_ordering(self):
-        """验证 2.5 < 3.0 < 3.1 / Validate 2.5 < 3.0 < 3.1"""
+        """验证 2.5 < 3.0 < 3.1 < 3.7 / Validate 2.5 < 3.0 < 3.1 < 3.7"""
         gemini_25 = LLMeta("gemini-2.5-flash")
         gemini_30 = LLMeta("gemini-3-pro-preview")
-        gemini_31 = LLMeta("gemini-3-1-pro-preview")
+        gemini_31 = LLMeta("gemini-3.1-pro-preview")
 
         assert gemini_25 < gemini_30
         assert gemini_30 < gemini_31
         assert gemini_25 < gemini_31
+        assert gemini_31 < LLMeta("gemini-3.7-flash")
 
 
 class TestGeminiLLMeta:
@@ -219,7 +258,7 @@ class TestGeminiLLMeta:
         assert meta.variant == "flash"
 
     def test_gemini_3_1_pro_preview_resolution(self):
-        meta = LLMeta("gemini-3-1-pro-preview")
+        meta = LLMeta("gemini-3.1-pro-preview")
         assert meta.provider == Provider.GOOGLE
         assert meta.family == ModelFamily.GEMINI
         assert meta.version == "3.1"
@@ -236,8 +275,21 @@ class TestGeminiParametrized:
             ("gemini-2.5-flash", "2.5", "flash"),
             ("gemini-2.5-flash-lite", "2.5", "flash-lite"),
             ("gemini-3-pro-preview", "3.0", "pro"),
-            ("gemini-3-1-pro-preview", "3.1", "pro"),
-            ("gemini-3-1-flash-lite-preview", "3.1", "flash-lite"),
+            ("gemini-3.1-pro-preview", "3.1", "pro"),
+            ("gemini-3.1-flash-lite-preview", "3.1", "flash-lite"),
+            ("gemini-3.5-flash", "3.5", "flash"),
+            ("gemini-3.6-flash", "3.6", "flash"),
+            ("gemini-3.7-flash", "3.7", "flash"),
+            ("gemini-3.5-flash-lite", "3.5", "flash-lite"),
+            ("gemini-3.1-flash-lite", "3.1", "flash-lite"),
+            ("gemini-3.1-flash-image", "3.1", "flash-image"),
+            ("gemini-3.1-flash-lite-image", "3.1", "flash-lite-image"),
+            ("gemini-3-pro-image", "3.0", "pro-image"),
+            ("gemini-3.1-flash-live-preview", "3.1", "flash-live"),
+            ("gemini-3.1-flash-tts-preview", "3.1", "flash-tts"),
+            ("gemini-3.5-live-translate-preview", "3.5", "live-translate"),
+            ("gemini-omni-flash", "3.0", "omni-flash"),
+            ("gemini-omni-flash-preview", "3.0", "omni-flash"),
         ],
     )
     def test_all_specific_models(self, model_name: str, expected_version: str, expected_variant: str):
@@ -252,6 +304,18 @@ class TestGeminiParametrized:
         [
             ("gemini-3-pro-preview", 65_536, 1_048_576),
             ("gemini-3-pro-image-preview", 32_768, 65_536),
+            ("gemini-3-pro-image", 32_768, 65_536),
+            ("gemini-3.5-flash", 65_536, 1_048_576),
+            ("gemini-3.6-flash", 65_536, 1_048_576),
+            ("gemini-3.7-flash", 65_536, 1_048_576),
+            ("gemini-3.5-flash-lite", 65_536, 1_048_576),
+            ("gemini-3.1-flash-lite", 65_536, 1_048_576),
+            ("gemini-3.1-flash-image", 32_768, 131_072),
+            ("gemini-3.1-flash-lite-image", 4_096, 65_536),
+            ("gemini-2.5-flash-native-audio-preview-12-2025", 8_192, 131_072),
+            ("gemini-3.1-flash-live-preview", 8_192, 131_072),
+            ("gemini-3.1-flash-tts-preview", 16_384, 8_192),
+            ("gemini-3.5-live-translate-preview", 65_536, 131_072),
             ("gemini-2.5-flash", 65_536, 1_048_576),
             ("gemini-2.5-flash-lite", 65_536, 1_048_576),
             ("gemini-2.5-pro", 65_536, 1_048_576),
@@ -263,5 +327,7 @@ class TestGeminiParametrized:
         """参数化测试 Gemini 各型号的 max_tokens 和 context_window"""
         config = get_specific_model_config(model_name)
         assert config is not None
-        assert config[2].max_tokens == expected_tokens
-        assert config[2].context_window == expected_context
+        _, _, capabilities = config
+        assert capabilities is not None
+        assert capabilities.max_tokens == expected_tokens
+        assert capabilities.context_window == expected_context
