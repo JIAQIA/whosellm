@@ -11,8 +11,9 @@ from whosellm import ModelFamily, Provider
 from .conftest import assert_model_metadata
 
 # ============================================================================
-# GPT Family (latest: 5.4)
-# 来源: https://developers.openai.com/api/docs/models/gpt-5.4
+# GPT Family (latest: 5.6)
+# 来源: https://developers.openai.com/api/docs/models/gpt-5.4（2026-04-12 采集）
+#       https://developers.openai.com/api/docs/models/gpt-5.6-sol（2026-08-20 采集 5.5/5.6）
 # ============================================================================
 
 GPT_MODELS = [
@@ -80,6 +81,119 @@ GPT_MODELS = [
             "supports_function_calling": True,
             "supports_structured_outputs": False,
             "supports_code_interpreter": False,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    # ------------------------------------------------------------------
+    # GPT-5.5 系列（2026-08-20 采集）
+    # 来源: https://developers.openai.com/api/docs/models/gpt-5.5
+    # ------------------------------------------------------------------
+    (
+        "gpt-5.5",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.5",
+            "variant": "base",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-5.5-pro",
+        {
+            # 仅 Responses API（含 Batch），不支持 Chat Completions 与 streaming
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.5",
+            "variant": "pro",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": False,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_code_interpreter": True,
+            "supports_computer_use": False,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    # ------------------------------------------------------------------
+    # GPT-5.6 天体档位系列（2026-08-20 采集）
+    # sol≈无后缀档 / terra≈mini / luna≈nano，三档能力一致
+    # 来源: https://developers.openai.com/api/docs/models/gpt-5.6-sol
+    # ------------------------------------------------------------------
+    (
+        "gpt-5.6",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.6",
+            "variant": "base",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-5.6-sol",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.6",
+            "variant": "sol",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-5.6-terra",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.6",
+            "variant": "terra",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-5.6-luna",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.6",
+            "variant": "luna",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
             "supports_computer_use": True,
             "context_window": 1_050_000,
             "max_tokens": 128_000,

@@ -32,13 +32,17 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
     },
     ModelFamily.GPT: {
         "turbo": ["gpt-3.5-turbo", "gpt-4.1-turbo", "gpt-5-turbo"],
-        "base": ["gpt-4", "gpt-4.1", "gpt-5"],
+        "base": ["gpt-4", "gpt-4.1", "gpt-5", "gpt-5.5", "gpt-5.6"],
         "mini": ["gpt-4.1-mini", "gpt-5-mini"],
         "nano": ["gpt-4.1-nano", "gpt-5-nano"],
         "plus": ["gpt-4.1-plus", "gpt-5-plus"],
-        "pro": ["gpt-4.1-pro", "gpt-5-pro"],
+        "pro": ["gpt-4.1-pro", "gpt-5-pro", "gpt-5.5-pro"],
         "ultra": ["gpt-4.1-ultra", "gpt-5-ultra"],
         "omni": ["gpt-4.1-omni", "gpt-5-omni"],
+        # GPT-5.6 天体档位 / GPT-5.6 celestial tiers
+        "sol": ["gpt-5.6-sol"],
+        "terra": ["gpt-5.6-terra"],
+        "luna": ["gpt-5.6-luna"],
     },
     ModelFamily.O: {
         "mini": ["o1-mini", "o3-mini", "o4-mini"],

@@ -275,6 +275,137 @@ def test_gpt5_4_nano_with_date_suffix():
 
 
 # ============================================================================
+# GPT-5.5 系列测试 / GPT-5.5 Series Tests
+# ============================================================================
+
+
+def test_gpt5_5_model():
+    """测试GPT-5.5模型 / Test GPT-5.5 model"""
+    m = LLMeta("gpt-5.5")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.5"
+    assert m.variant == "base"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_streaming is True
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_web_search is True
+    assert m.capabilities.supports_computer_use is True
+    assert m.capabilities.supports_fine_tuning is False
+
+
+def test_gpt5_5_snapshot():
+    """测试GPT-5.5官方快照 / Test GPT-5.5 official snapshot"""
+    m = LLMeta("gpt-5.5-2026-04-23")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.5"
+    assert m.variant == "base"
+    assert m.release_date == date(2026, 4, 23)
+
+
+def test_gpt5_5_pro_model():
+    """测试GPT-5.5-pro模型 / Test GPT-5.5-pro model
+
+    仅 Responses API（含 Batch），不支持 Chat Completions、streaming 与 computer_use
+    Responses API only (incl. Batch); no Chat Completions, streaming, or computer_use
+    """
+    m = LLMeta("gpt-5.5-pro")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.5"
+    assert m.variant == "pro"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_streaming is False
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_code_interpreter is True
+    assert m.capabilities.supports_computer_use is False
+
+
+def test_gpt5_5_pro_snapshot():
+    """测试GPT-5.5-pro官方快照 / Test GPT-5.5-pro official snapshot"""
+    m = LLMeta("gpt-5.5-pro-2026-04-23")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.5"
+    assert m.variant == "pro"
+    assert m.release_date == date(2026, 4, 23)
+
+
+# ============================================================================
+# GPT-5.6 系列测试 / GPT-5.6 Series Tests
+#
+# 天体三档命名，官方对应关系：sol≈无后缀档、terra≈mini、luna≈nano
+# Celestial tier naming, official mapping: sol≈unsuffixed, terra≈mini, luna≈nano
+# ============================================================================
+
+
+def test_gpt5_6_alias_model():
+    """测试gpt-5.6别名（路由到sol） / Test gpt-5.6 alias (routes to sol)"""
+    m = LLMeta("gpt-5.6")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "base"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_streaming is True
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_web_search is True
+    assert m.capabilities.supports_computer_use is True
+
+
+def test_gpt5_6_sol_model():
+    """测试gpt-5.6-sol模型 / Test gpt-5.6-sol model"""
+    m = LLMeta("gpt-5.6-sol")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "sol"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_function_calling is True
+    assert m.capabilities.supports_streaming is True
+    assert m.capabilities.supports_computer_use is True
+
+
+def test_gpt5_6_terra_model():
+    """测试gpt-5.6-terra模型 / Test gpt-5.6-terra model"""
+    m = LLMeta("gpt-5.6-terra")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "terra"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_streaming is True
+
+
+def test_gpt5_6_luna_model():
+    """测试gpt-5.6-luna模型 / Test gpt-5.6-luna model"""
+    m = LLMeta("gpt-5.6-luna")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "luna"
+    assert m.capabilities.context_window == 1_050_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_streaming is True
+
+
+def test_gpt5_6_with_date_suffix():
+    """测试带日期后缀的GPT-5.6模型 / Test GPT-5.6 with date suffix"""
+    m = LLMeta("gpt-5.6-sol-2026-08-06")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "sol"
+    assert m.release_date == date(2026, 8, 6)
+
+
+# ============================================================================
 # GPT-5 Codex 系列测试 / GPT-5 Codex Series Tests
 # ============================================================================
 
@@ -354,6 +485,41 @@ def test_gpt5_4_variant_priority():
     assert base < pro
 
 
+def test_gpt5_5_variant_priority():
+    """测试GPT-5.5变体优先级 / Test GPT-5.5 variant priority"""
+    base = LLMeta("gpt-5.5")
+    pro = LLMeta("gpt-5.5-pro")
+
+    assert base < pro
+
+
+def test_gpt5_6_variant_priority():
+    """测试GPT-5.6天体档位优先级 / Test GPT-5.6 celestial tier priority
+
+    官方映射：luna≈nano(0) < terra≈mini(0) < sol≈base(1)
+    Official mapping: luna≈nano(0) < terra≈mini(0) < sol≈base(1)
+    """
+    luna = LLMeta("gpt-5.6-luna")
+    terra = LLMeta("gpt-5.6-terra")
+    sol = LLMeta("gpt-5.6-sol")
+    alias = LLMeta("gpt-5.6")
+
+    assert luna < sol
+    assert terra < sol
+    # terra 与 luna 同为 0 档，排序上不可比 / terra and luna share tier 0, unordered
+    assert not terra < luna
+    assert not luna < terra
+    # gpt-5.6 别名路由到 sol，排序等价 / alias routes to sol, ordering-equivalent
+    assert not alias < sol
+    assert not sol < alias
+
+
+def test_gpt5_cross_version_ordering():
+    """测试GPT-5.x跨版本排序 / Test GPT-5.x cross-version ordering"""
+    assert LLMeta("gpt-5.4-pro") < LLMeta("gpt-5.5")
+    assert LLMeta("gpt-5.5-pro") < LLMeta("gpt-5.6-luna")
+
+
 # ============================================================================
 # 参数化测试 / Parametrized Tests
 # ============================================================================
@@ -377,6 +543,12 @@ def test_gpt5_4_variant_priority():
         ("gpt-5.4-pro", ModelFamily.GPT, "5.4", "pro"),
         ("gpt-5.4-mini", ModelFamily.GPT, "5.4", "mini"),
         ("gpt-5.4-nano", ModelFamily.GPT, "5.4", "nano"),
+        ("gpt-5.5", ModelFamily.GPT, "5.5", "base"),
+        ("gpt-5.5-pro", ModelFamily.GPT, "5.5", "pro"),
+        ("gpt-5.6", ModelFamily.GPT, "5.6", "base"),
+        ("gpt-5.6-sol", ModelFamily.GPT, "5.6", "sol"),
+        ("gpt-5.6-terra", ModelFamily.GPT, "5.6", "terra"),
+        ("gpt-5.6-luna", ModelFamily.GPT, "5.6", "luna"),
     ],
 )
 def test_gpt5_family_version_variant(model_name, expected_family, expected_version, expected_variant):
@@ -400,6 +572,12 @@ def test_gpt5_family_version_variant(model_name, expected_family, expected_versi
         ("gpt-5.4", 1_050_000),
         ("gpt-5.4-mini", 400_000),
         ("gpt-5.4-nano", 400_000),
+        ("gpt-5.5", 1_050_000),
+        ("gpt-5.5-pro", 1_050_000),
+        ("gpt-5.6", 1_050_000),
+        ("gpt-5.6-sol", 1_050_000),
+        ("gpt-5.6-terra", 1_050_000),
+        ("gpt-5.6-luna", 1_050_000),
     ],
 )
 def test_gpt5_context_window(model_name, expected_ctx):
