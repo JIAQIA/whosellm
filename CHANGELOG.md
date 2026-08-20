@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.4] - Unreleased
+
+### Added
+- 新增 Claude 5 代模型配置（官方规格核实）：`claude-sonnet-5`（2026-06-30 GA，$2/$10）、`claude-opus-5`（2026-07-24 GA，$5/$25）。两者均 1M 上下文（默认且最大）、128K 最大输出、自适应思考默认开启（映射 `supports_thinking=True`），支持结构化输出 + computer use。版本 5.0 高于 4.8/4.6（如 `claude-opus-5 > claude-opus-4-8`），同版本下变体优先级维持 `mythos > fable > opus > sonnet`
+
 ## [0.2.3] - Unreleased
 
 ### Added

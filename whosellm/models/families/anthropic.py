@@ -86,6 +86,50 @@ CLAUDE = ModelFamilyConfig(
                 "claude-mythos-5@{snapshot:snapshot}",
             ],
         ),
+        # Claude 5 代（2026-06-30 Sonnet 5 / 2026-07-24 Opus 5 GA）：
+        # adaptive thinking 默认开启，1M 上下文（默认且最大）/ 128K 最大输出
+        # Claude 5 generation (Sonnet 5 GA 2026-06-30 / Opus 5 GA 2026-07-24):
+        # adaptive thinking on by default, 1M context (default & max) / 128K max output
+        "claude-opus-5": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 思考默认开启（adaptive）/ thinking on by default (adaptive)
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-opus-5-{snapshot:snapshot}",
+                "claude-opus-5",
+                "claude-opus-5@{snapshot:snapshot}",
+            ],
+        ),
+        "claude-sonnet-5": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="sonnet",
+            variant_priority=(3,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 自适应思考默认开启 / adaptive thinking on by default
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-sonnet-5-{snapshot:snapshot}",
+                "claude-sonnet-5",
+                "claude-sonnet-5@{snapshot:snapshot}",
+            ],
+        ),
         "claude-opus-4-8": SpecificModelConfig(
             version_default="4.8",
             variant_default="opus",

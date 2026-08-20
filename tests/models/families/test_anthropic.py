@@ -196,6 +196,111 @@ class TestClaudeMythosClassOrdering:
         assert max(models).variant == "mythos"
 
 
+class TestClaudeOpus5:
+    """Claude Opus 5 测试（2026-07-24 GA） / Claude Opus 5 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-opus-5 配置 / Validate claude-opus-5 config"""
+        config = get_specific_model_config("claude-opus-5")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.0"
+        assert variant == "opus"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_function_calling is True
+        assert capabilities.supports_streaming is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-opus-5 模式匹配 / Validate claude-opus-5 pattern match"""
+        matched = match_model_pattern("claude-opus-5")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "opus"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+    @pytest.mark.parametrize("model_name", ["claude-opus-5-20260724", "claude-opus-5@20260724"])
+    def test_pattern_with_snapshot(self, model_name: str):
+        """验证带 snapshot 的解析（- 与 @ 两种格式，版本号不被吞） / Validate snapshot forms keep version 5.0"""
+        meta = LLMeta(model_name)
+        assert meta.family == ModelFamily.CLAUDE
+        assert meta.version == "5.0"
+        assert meta.variant == "opus"
+
+
+class TestClaudeSonnet5:
+    """Claude Sonnet 5 测试（2026-06-30 GA） / Claude Sonnet 5 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-sonnet-5 配置 / Validate claude-sonnet-5 config"""
+        config = get_specific_model_config("claude-sonnet-5")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.0"
+        assert variant == "sonnet"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_function_calling is True
+        assert capabilities.supports_streaming is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-sonnet-5 模式匹配 / Validate claude-sonnet-5 pattern match"""
+        matched = match_model_pattern("claude-sonnet-5")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "sonnet"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+    @pytest.mark.parametrize("model_name", ["claude-sonnet-5-20260630", "claude-sonnet-5@20260630"])
+    def test_pattern_with_snapshot(self, model_name: str):
+        """验证带 snapshot 的解析（- 与 @ 两种格式，版本号不被吞） / Validate snapshot forms keep version 5.0"""
+        meta = LLMeta(model_name)
+        assert meta.family == ModelFamily.CLAUDE
+        assert meta.version == "5.0"
+        assert meta.variant == "sonnet"
+
+
+class TestClaude5Ordering:
+    """Claude 5 代版本比较：5.0 > 4.8 > 4.6；同版本 fable > opus > sonnet / Claude 5 generation ordering"""
+
+    def test_opus5_outranks_opus48(self):
+        """opus-5 (v5.0) 高于 opus-4-8 (v4.8) / opus-5 outranks opus-4-8 by version"""
+        assert LLMeta("claude-opus-5") > LLMeta("claude-opus-4-8")
+
+    def test_sonnet5_outranks_sonnet46(self):
+        """sonnet-5 (v5.0) 高于 sonnet-4-6 (v4.6) / sonnet-5 outranks sonnet-4-6 by version"""
+        assert LLMeta("claude-sonnet-5") > LLMeta("claude-sonnet-4-6")
+
+    def test_opus5_outranks_sonnet5(self):
+        """同版本 5.0 下 opus 变体优先级高于 sonnet / opus outranks sonnet on variant priority"""
+        assert LLMeta("claude-opus-5") > LLMeta("claude-sonnet-5")
+
+    def test_fable5_outranks_opus5(self):
+        """同版本 5.0 下 fable（Mythos-class）仍高于 opus / fable still outranks opus on variant priority"""
+        assert LLMeta("claude-fable-5") > LLMeta("claude-opus-5")
+
+    def test_mythos5_is_top(self):
+        """mythos-5 仍为当前最高 / mythos-5 remains the highest among current Claude models"""
+        models = [
+            LLMeta("claude-mythos-5"),
+            LLMeta("claude-fable-5"),
+            LLMeta("claude-opus-5"),
+            LLMeta("claude-sonnet-5"),
+            LLMeta("claude-opus-4-8"),
+        ]
+        assert max(models).variant == "mythos"
+
+
 class TestClaudeExistingModels:
     """验证现有模型未受影响 / Validate existing models are not affected"""
 
