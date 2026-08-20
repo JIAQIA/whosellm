@@ -77,6 +77,30 @@ GLM_VISION = ModelFamilyConfig(
     ),
     # 特定模型的精确配置 / Precise configuration for specific models
     specific_models={
+        # GLM-5V 系列 / GLM-5V Series
+        "glm-5v-turbo": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="turbo",
+            variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                # 多模态 Coding 基座，输入含图片/视频/文件 / Multimodal coding base
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_structured_outputs=False,
+                supports_json_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+            patterns=[
+                "glm-5v-turbo-{year:4d}-{month:2d}-{day:2d}",
+                "glm-5v-turbo-{mmdd:4d}",
+                "glm-5v-turbo",
+            ],
+        ),
         # GLM-4V 系列特定模型
         "glm-4v-plus-0111": SpecificModelConfig(
             version_default="4.0",
@@ -210,6 +234,67 @@ GLM_VISION = ModelFamilyConfig(
                 "glm-4.6v-flash",
             ],
         ),
+        # GLM-4.1V-Thinking 系列（内置思考的视觉推理模型）
+        # GLM-4.1V-Thinking series (vision reasoning models with built-in thinking)
+        "glm-4.1v-thinking": SpecificModelConfig(
+            version_default="4.1",
+            variant_default="thinking",
+            variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                # 内置深度思考，默认开启 / Built-in deep thinking, on by default
+                supports_thinking=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_structured_outputs=False,
+                supports_json_outputs=False,
+                supports_streaming=True,
+                context_window=64000,
+            ),
+            patterns=[
+                "glm-4.1v-thinking-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.1v-thinking-{mmdd:4d}",
+                "glm-4.1v-thinking",
+            ],
+        ),
+        "glm-4.1v-thinking-flash": SpecificModelConfig(
+            version_default="4.1",
+            variant_default="thinking-flash",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_structured_outputs=False,
+                supports_json_outputs=False,
+                supports_streaming=True,
+                context_window=64000,
+            ),
+            patterns=[
+                "glm-4.1v-thinking-flash-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.1v-thinking-flash-{mmdd:4d}",
+                "glm-4.1v-thinking-flash",
+            ],
+        ),
+        "glm-4.1v-thinking-flashx": SpecificModelConfig(
+            version_default="4.1",
+            variant_default="thinking-flashx",
+            variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                # 高并发版 / High-concurrency variant
+                supports_thinking=True,
+                supports_vision=True,
+                supports_video=True,
+                supports_structured_outputs=False,
+                supports_json_outputs=False,
+                supports_streaming=True,
+                context_window=64000,
+            ),
+            patterns=[
+                "glm-4.1v-thinking-flashx-{year:4d}-{month:2d}-{day:2d}",
+                "glm-4.1v-thinking-flashx-{mmdd:4d}",
+                "glm-4.1v-thinking-flashx",
+            ],
+        ),
     },
 )
 
@@ -251,6 +336,68 @@ GLM_TEXT = ModelFamilyConfig(
     ),
     specific_models={
         # GLM-5 系列特定模型 / GLM-5 Series specific models
+        "glm-5.3": SpecificModelConfig(
+            version_default="5.3",
+            variant_default="base",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                # 思考常开（reasoning_effort: low/high/max），不支持禁用 / Always-on thinking, cannot be disabled
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=1000000,  # 1M 上下文 / 1M context
+            ),
+        ),
+        "glm-5.2": SpecificModelConfig(
+            version_default="5.2",
+            variant_default="base",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=1000000,  # 1M 上下文 / 1M context
+            ),
+        ),
+        "glm-5.1": SpecificModelConfig(
+            version_default="5.1",
+            variant_default="base",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+        ),
+        "glm-5-turbo": SpecificModelConfig(
+            version_default="5.0",
+            variant_default="turbo",
+            variant_priority=(2,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=200000,
+            ),
+            patterns=[
+                "glm-5-turbo-{year:4d}-{month:2d}-{day:2d}",
+                "glm-5-turbo-{mmdd:4d}",
+                "glm-5-turbo",
+            ],
+        ),
         "glm-5": SpecificModelConfig(
             version_default="5.0",
             variant_default="base",
@@ -258,6 +405,7 @@ GLM_TEXT = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
                 supports_structured_outputs=False,
                 supports_streaming=True,
                 max_tokens=128000,
@@ -272,6 +420,7 @@ GLM_TEXT = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
                 supports_structured_outputs=False,
                 supports_streaming=True,
                 max_tokens=128000,
@@ -323,6 +472,7 @@ GLM_TEXT = ModelFamilyConfig(
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
+                supports_json_outputs=True,  # response_format: json_object
                 supports_structured_outputs=False,
                 supports_web_search=True,
                 max_tokens=128000,
@@ -337,6 +487,7 @@ GLM_TEXT = ModelFamilyConfig(
             capabilities=ModelCapabilities(
                 supports_thinking=True,
                 supports_function_calling=True,
+                supports_json_outputs=True,  # response_format: json_object
                 supports_structured_outputs=False,
                 supports_streaming=True,
                 max_tokens=96000,
