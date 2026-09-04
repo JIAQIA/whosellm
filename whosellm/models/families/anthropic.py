@@ -86,6 +86,52 @@ CLAUDE = ModelFamilyConfig(
                 "claude-mythos-5@{snapshot:snapshot}",
             ],
         ),
+        # Claude Fable 5.1（2026-09-01 发布，当前最新）：Fable 5 的扩展版，价格不变
+        # Claude Fable 5.1 (released 2026-09-01, latest): extends Fable 5 at same prices
+        # 规格同 Fable 5：1M ctx / 128K out，adaptive thinking 常开，default effort=high
+        # 来源 / Source: https://platform.claude.com/docs/en/models/fable-5-1/overview
+        "claude-fable-5-1": SpecificModelConfig(
+            version_default="5.1",
+            variant_default="fable",
+            variant_priority=(6,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-fable-5-1-{snapshot:snapshot}",
+                "claude-fable-5-1",
+                "claude-fable-5-1@{snapshot:snapshot}",
+            ],
+        ),
+        # Claude Mythos 5.1（2026-09-01 发布，Glasswing 受邀版）：与 Fable 5.1 同规格同价格
+        # Claude Mythos 5.1 (released 2026-09-01, Glasswing invite-only): same specs & pricing as Fable 5.1
+        "claude-mythos-5-1": SpecificModelConfig(
+            version_default="5.1",
+            variant_default="mythos",
+            variant_priority=(7,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+            ),
+            patterns=[
+                "claude-mythos-5-1-{snapshot:snapshot}",
+                "claude-mythos-5-1",
+                "claude-mythos-5-1@{snapshot:snapshot}",
+            ],
+        ),
         # Claude 5 代（2026-06-30 Sonnet 5 / 2026-07-24 Opus 5 GA）：
         # adaptive thinking 默认开启，1M 上下文（默认且最大）/ 128K 最大输出
         # Claude 5 generation (Sonnet 5 GA 2026-06-30 / Opus 5 GA 2026-07-24):

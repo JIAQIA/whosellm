@@ -173,6 +173,74 @@ class TestClaudeMythos5:
         assert matched["provider"] == Provider.ANTHROPIC
 
 
+class TestClaudeFable51:
+    """Claude Fable 5.1 测试（2026-09-01 发布，当前最新） / Claude Fable 5.1 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-fable-5-1 配置 / Validate claude-fable-5-1 config"""
+        config = get_specific_model_config("claude-fable-5-1")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.1"
+        assert variant == "fable"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_function_calling is True
+        assert capabilities.supports_streaming is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-fable-5-1 模式匹配 / Validate claude-fable-5-1 pattern match"""
+        matched = match_model_pattern("claude-fable-5-1")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "fable"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+    @pytest.mark.parametrize("model_name", ["claude-fable-5-1-20260901", "claude-fable-5-1@20260901"])
+    def test_pattern_with_snapshot(self, model_name: str):
+        """验证带 snapshot 的解析（版本号不被吞） / Validate snapshot forms keep version 5.1"""
+        meta = LLMeta(model_name)
+        assert meta.family == ModelFamily.CLAUDE
+        assert meta.version == "5.1"
+        assert meta.variant == "fable"
+
+    def test_version_ordering(self):
+        """验证 5.0 < 5.1 / Validate Fable 5.0 < Fable 5.1"""
+        assert LLMeta("claude-fable-5") < LLMeta("claude-fable-5-1")
+
+
+class TestClaudeMythos51:
+    """Claude Mythos 5.1 测试（Glasswing 受邀版） / Claude Mythos 5.1 tests"""
+
+    def test_specific_model_config(self):
+        """验证 claude-mythos-5-1 配置 / Validate claude-mythos-5-1 config"""
+        config = get_specific_model_config("claude-mythos-5-1")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.1"
+        assert variant == "mythos"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-mythos-5-1 模式匹配 / Validate claude-mythos-5-1 pattern match"""
+        matched = match_model_pattern("claude-mythos-5-1")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "mythos"
+        assert matched["provider"] == Provider.ANTHROPIC
+
+
 class TestClaudeMythosClassOrdering:
     """Mythos-class 版本比较：mythos > fable > opus > sonnet / Mythos-class ordering"""
 

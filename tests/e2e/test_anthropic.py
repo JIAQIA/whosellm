@@ -1,7 +1,7 @@
 """Anthropic E2E 元数据测试。
 
 来源: https://platform.claude.com/docs/en/docs/about-claude/models
-采集日期: 2026-04-12
+采集日期: 2026-04-12（2026-09-04 增补 Fable 5.1 / Mythos 5.1）
 """
 
 import pytest
@@ -11,7 +11,50 @@ from whosellm import ModelFamily, Provider
 from .conftest import assert_model_metadata
 
 # ============================================================================
-# Claude Family — Latest (version 4.6)
+# Claude Family — Version 5.1 (2026-09-01 发布 / Released 2026-09-01)
+# 来源: https://platform.claude.com/docs/en/models/fable-5-1/overview
+# ============================================================================
+
+CLAUDE_51_MODELS = [
+    (
+        "claude-fable-5-1",
+        {
+            "provider": Provider.ANTHROPIC,
+            "family": ModelFamily.CLAUDE,
+            "version": "5.1",
+            "variant": "fable",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_000_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "claude-mythos-5-1",
+        {
+            # Glasswing 受邀版，与 Fable 5.1 同规格 / Glasswing invite-only, same specs as Fable 5.1
+            "provider": Provider.ANTHROPIC,
+            "family": ModelFamily.CLAUDE,
+            "version": "5.1",
+            "variant": "mythos",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_000_000,
+            "max_tokens": 128_000,
+        },
+    ),
+]
+
+# ============================================================================
+# Claude Family — Version 4.6
 # 来源: https://platform.claude.com/docs/en/docs/about-claude/models/overview
 # ============================================================================
 
@@ -190,7 +233,7 @@ CLAUDE_30_MODELS = [
 # 聚合 + 参数化
 # ============================================================================
 
-ALL_MODELS = CLAUDE_LATEST_MODELS + CLAUDE_45_MODELS + CLAUDE_41_MODELS + CLAUDE_40_MODELS + CLAUDE_30_MODELS
+ALL_MODELS = CLAUDE_51_MODELS + CLAUDE_LATEST_MODELS + CLAUDE_45_MODELS + CLAUDE_41_MODELS + CLAUDE_40_MODELS + CLAUDE_30_MODELS
 
 
 @pytest.mark.e2e
