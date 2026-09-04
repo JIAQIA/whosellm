@@ -16,8 +16,9 @@ from whosellm import ModelFamily, Provider
 from .conftest import assert_model_metadata
 
 # ============================================================================
-# GLM Family — Version 5.0
+# GLM Family — Version 5.0-5.3
 # 来源: https://docs.bigmodel.cn/cn/guide/models/text/glm-5.md
+#       https://docs.bigmodel.cn/cn/guide/models/text/glm-5.3.md（2026-09-04 采集 5.x）
 # ============================================================================
 
 GLM_50_MODELS = [
@@ -35,6 +36,74 @@ GLM_50_MODELS = [
             "supports_structured_outputs": False,
             "supports_json_outputs": True,
             "context_window": 200_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "glm-5-turbo",
+        {
+            "provider": Provider.ZHIPU,
+            "family": ModelFamily.GLM,
+            "version": "5.0",
+            "variant": "turbo",
+            "supports_thinking": True,
+            "supports_vision": False,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": False,
+            "supports_json_outputs": True,
+            "context_window": 200_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "glm-5.1",
+        {
+            "provider": Provider.ZHIPU,
+            "family": ModelFamily.GLM,
+            "version": "5.1",
+            "variant": "base",
+            "supports_thinking": True,
+            "supports_vision": False,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": False,
+            "supports_json_outputs": True,
+            "context_window": 200_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "glm-5.2",
+        {
+            "provider": Provider.ZHIPU,
+            "family": ModelFamily.GLM,
+            "version": "5.2",
+            "variant": "base",
+            "supports_thinking": True,
+            "supports_vision": False,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": False,
+            "supports_json_outputs": True,
+            "context_window": 1_000_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "glm-5.3",
+        {
+            "provider": Provider.ZHIPU,
+            "family": ModelFamily.GLM,
+            "version": "5.3",
+            "variant": "base",
+            "supports_thinking": True,
+            "supports_vision": False,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": False,
+            "supports_json_outputs": True,
+            "context_window": 1_000_000,
             "max_tokens": 128_000,
         },
     ),
