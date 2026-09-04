@@ -174,3 +174,38 @@ def test_deepseek_versioned_pattern_matches_official_family() -> None:
     assert model_v32.provider == Provider.DEEPSEEK
     assert model_v32.version == "3.2"
     assert model_v32.variant == "exp"
+
+
+def test_deepseek_v4_flash_vision_exp_specific_model() -> None:
+    """验证 deepseek-v4-flash-vision-exp 配置（多模态实验版）"""
+    config = get_specific_model_config("deepseek-v4-flash-vision-exp")
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "4.0"
+    assert variant == "flash-vision-exp"
+    assert capabilities is not None
+    # 图像输入 / image input
+    assert capabilities.supports_vision is True
+    # 双模式，默认思考 / dual mode, thinking by default
+    assert capabilities.supports_thinking is True
+    assert capabilities.supports_function_calling is True
+    assert capabilities.supports_streaming is True
+    assert capabilities.supports_json_outputs is True
+    assert capabilities.supports_structured_outputs is False
+    # 不支持视频输入 / no video input
+    assert capabilities.supports_video is False
+    assert capabilities.max_tokens == 384_000
+    assert capabilities.context_window == 1_000_000
+
+
+def test_deepseek_v4_flash_vision_exp_llmeta() -> None:
+    """验证 deepseek-v4-flash-vision-exp LLMeta 解析"""
+    from whosellm import LLMeta
+
+    model = LLMeta("deepseek-v4-flash-vision-exp")
+    assert model.provider == Provider.DEEPSEEK
+    assert model.family == ModelFamily.DEEPSEEK
+    assert model.version == "4.0"
+    assert model.variant == "flash-vision-exp"
+    assert model.capabilities.context_window == 1_000_000
+    assert model.capabilities.supports_vision is True

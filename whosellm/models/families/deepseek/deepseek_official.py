@@ -4,10 +4,11 @@
 """
 DeepSeek 官方模型家族配置 / DeepSeek official model family configuration
 
-当前主力：deepseek-v4-flash / deepseek-v4-pro（1M 上下文，384K 最大输出，
-支持思考与非思考双模式）。
-Current primary models: deepseek-v4-flash / deepseek-v4-pro (1M context, 384K max output,
-both thinking and non-thinking modes supported).
+当前主力：deepseek-v4-flash / deepseek-v4-pro / deepseek-v4-flash-vision-exp
+（1M 上下文，384K 最大输出，支持思考与非思考双模式；vision-exp 为多模态实验版）。
+Current primary models: deepseek-v4-flash / deepseek-v4-pro / deepseek-v4-flash-vision-exp
+(1M context, 384K max output, both thinking and non-thinking modes supported;
+vision-exp is the multimodal experimental edition).
 
 兼容别名：deepseek-chat / deepseek-reasoner（官方宣布未来将废弃，当前分别对应
 deepseek-v4-flash 的非思考与思考模式）。
@@ -71,6 +72,30 @@ DEEPSEEK = ModelFamilyConfig(
             capabilities=_V4_CAPABILITIES,
             patterns=[
                 "deepseek-v4-pro",
+            ],
+        ),
+        # 多模态实验版：deepseek-v4-flash-vision-exp（2026-09 上线）
+        # Multimodal experimental: DeepSeek-V4-Flash-Vision-Exp
+        # 官方规格：图像输入（JPEG/PNG/GIF/WebP），文本输出；非思考/思考双模式（默认思考）；
+        # 1M ctx / 384K out；Json Output / Tool Calls / Responses API / Anthropic API ✓；FIM ✗；
+        # 价格与 v4-flash 相同；不支持视频输入
+        # Sources: https://api-docs.deepseek.com/quick_start/pricing + /guides/vision
+        "deepseek-v4-flash-vision-exp": SpecificModelConfig(
+            version_default="4.0",
+            variant_default="flash-vision-exp",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,  # 双模式，默认思考 / dual mode, thinking by default
+                supports_vision=True,  # 图像输入 / image input
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_json_outputs=True,
+                supports_structured_outputs=False,
+                max_tokens=384_000,
+                context_window=1_000_000,
+            ),
+            patterns=[
+                "deepseek-v4-flash-vision-exp",
             ],
         ),
         # 兼容别名：deepseek-chat → v4-flash 非思考模式
