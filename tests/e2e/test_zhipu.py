@@ -38,6 +38,25 @@ GLM_50_MODELS = [
             "max_tokens": 128_000,
         },
     ),
+    (
+        # 2026-09 新发布：GLM-5 系列首个原生多模态（输入 视频/图像/文本/文件）
+        "glm-5.3-flash",
+        {
+            "provider": Provider.ZHIPU,
+            "family": ModelFamily.GLM,
+            "version": "5.3",
+            "variant": "flash",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_video": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": False,
+            "supports_json_outputs": True,
+            "context_window": 1_000_000,
+            "max_tokens": 128_000,
+        },
+    ),
 ]
 
 # ============================================================================

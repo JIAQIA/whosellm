@@ -351,6 +351,33 @@ GLM_TEXT = ModelFamilyConfig(
                 context_window=1000000,  # 1M 上下文 / 1M context
             ),
         ),
+        # GLM-5.3-Flash：GLM-5 系列首个原生多模态模型（New），2026-09 正式上线
+        # GLM-5.3-Flash: first native multimodal model in GLM-5 series (New)
+        # 官方规格：输入 视频/图像/文本/文件，输出 文本；1M ctx / 128K out；
+        # thinking.type 仅支持 enabled（不可关闭）；价格约为 GLM-5.3 的 1/10
+        # 来源 / Source: https://docs.bigmodel.cn/cn/guide/models/vlm/glm-5.3-flash
+        "glm-5.3-flash": SpecificModelConfig(
+            version_default="5.3",
+            variant_default="flash",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_thinking=True,  # thinking.type 仅支持 enabled / enabled only
+                supports_function_calling=True,
+                supports_vision=True,  # 原生多模态：图像 / native multimodal: image
+                supports_video=True,  # 原生多模态：视频 / native multimodal: video
+                supports_pdf=True,  # 文件输入 / file input
+                supports_json_outputs=True,
+                supports_structured_outputs=False,
+                supports_streaming=True,
+                max_tokens=128000,
+                context_window=1000000,  # 1M 上下文 / 1M context
+            ),
+            patterns=[
+                "glm-5.3-flash-{year:4d}-{month:2d}-{day:2d}",
+                "glm-5.3-flash-{mmdd:4d}",
+                "glm-5.3-flash",
+            ],
+        ),
         "glm-5.2": SpecificModelConfig(
             version_default="5.2",
             variant_default="base",

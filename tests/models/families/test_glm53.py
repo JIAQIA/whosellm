@@ -167,3 +167,51 @@ class TestGLM5xLLMetaIntegration:
         assert model.family == ModelFamily.GLM
         assert model.version == "5.0"
         assert model.variant == "turbo"
+
+
+class TestGLM53Flash:
+    """GLM-5.3-Flash 测试（2026-09 原生多模态） / GLM-5.3-Flash tests"""
+
+    def test_specific_config_exists(self) -> None:
+        """验证 glm-5.3-flash specific_model 配置存在 / Validate glm-5.3-flash config exists"""
+        config = get_specific_model_config("glm-5.3-flash")
+        assert config is not None
+
+        version, variant, capabilities = config
+        assert version == "5.3"
+        assert variant == "flash"
+        assert capabilities is not None
+
+    def test_specific_capabilities(self) -> None:
+        """验证 glm-5.3-flash 能力与官方文档一致（原生多模态） / Validate capabilities match official docs"""
+        config = get_specific_model_config("glm-5.3-flash")
+        assert config is not None
+        _, _, capabilities = config
+        assert capabilities is not None
+
+        # 思考常开（thinking.type 仅支持 enabled）/ Always-on thinking
+        assert capabilities.supports_thinking is True
+        assert capabilities.supports_function_calling is True
+        # 原生多模态：图像/视频/文件输入 / Native multimodal input
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_video is True
+        assert capabilities.supports_pdf is True
+        assert capabilities.supports_json_outputs is True
+        assert capabilities.supports_structured_outputs is False
+        assert capabilities.supports_streaming is True
+
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000  # 1M 上下文 / 1M context
+
+    def test_llmeta_basic(self) -> None:
+        model = LLMeta("glm-5.3-flash")
+
+        assert model.provider == Provider.ZHIPU
+        assert model.family == ModelFamily.GLM
+        assert model.version == "5.3"
+        assert model.variant == "flash"
+        assert model.capabilities.context_window == 1000000
+
+    def test_flash_below_base(self) -> None:
+        """同版本内 flash 优先级低于 base： glm-5.3-flash < glm-5.3"""
+        assert LLMeta("glm-5.3-flash") < LLMeta("glm-5.3")

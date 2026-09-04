@@ -68,7 +68,7 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
     },
     ModelFamily.GLM: {
         "mini": ["glm-4-mini", "glm-3-mini"],
-        "flash": ["glm-4-flash", "glm-4.5-flash", "glm-3-flash"],
+        "flash": ["glm-4-flash", "glm-4.5-flash", "glm-3-flash", "glm-5.3-flash"],
         "preview": ["glm-4-preview"],
         "air": ["glm-4.5-air"],
         "airx": ["glm-4.5-airx"],
