@@ -405,6 +405,24 @@ def test_gpt5_6_with_date_suffix():
     assert m.release_date == date(2026, 8, 6)
 
 
+def test_gpt5_6_cyber_model():
+    """测试gpt-5.6-cyber模型（网络安全，仅Responses API，400K上下文）
+    Test gpt-5.6-cyber model (cybersecurity, Responses API only, 400K context)
+    """
+    m = LLMeta("gpt-5.6-cyber")
+    assert m.family == ModelFamily.GPT
+    assert m.version == "5.6"
+    assert m.variant == "cyber"
+    assert m.capabilities.context_window == 400_000
+    assert m.capabilities.max_tokens == 128_000
+    assert m.capabilities.supports_thinking is True
+    assert m.capabilities.supports_vision is True
+    assert m.capabilities.supports_function_calling is True
+    assert m.capabilities.supports_structured_outputs is True
+    assert m.capabilities.supports_computer_use is True
+    assert m.capabilities.supports_fine_tuning is False
+
+
 # ============================================================================
 # GPT-5 Codex 系列测试 / GPT-5 Codex Series Tests
 # ============================================================================

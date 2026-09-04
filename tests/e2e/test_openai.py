@@ -11,9 +11,10 @@ from whosellm import ModelFamily, Provider
 from .conftest import assert_model_metadata
 
 # ============================================================================
-# GPT Family (latest: 5.6)
+# GPT Family (latest: 6.0)
 # 来源: https://developers.openai.com/api/docs/models/gpt-5.4（2026-04-12 采集）
 #       https://developers.openai.com/api/docs/models/gpt-5.6-sol（2026-08-20 采集 5.5/5.6）
+#       https://developers.openai.com/api/docs/models/gpt-6-astra（2026-09-04 采集 6-astra/5.6-cyber）
 # ============================================================================
 
 GPT_MODELS = [
@@ -189,6 +190,45 @@ GPT_MODELS = [
             "family": ModelFamily.GPT,
             "version": "5.6",
             "variant": "luna",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-5.6-cyber",
+        {
+            # 仅 Responses API（不含 Batch），400K 上下文，需单独审批
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "5.6",
+            "variant": "cyber",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 400_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    # ------------------------------------------------------------------
+    # GPT-6 Astra 系列（2026-09-04 采集）
+    # 来源: https://developers.openai.com/api/docs/models/gpt-6-astra
+    # ------------------------------------------------------------------
+    (
+        "gpt-6-astra",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "6.0",
+            "variant": "astra",
             "supports_thinking": True,
             "supports_vision": True,
             "supports_streaming": True,

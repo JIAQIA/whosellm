@@ -49,6 +49,7 @@ class ModelFamily(str, Enum, metaclass=DynamicEnumMeta):
 
     # 保留旧枚举作为别名，用于向后兼容 / Keep old enums as aliases for backward compatibility
     # OpenAI GPT 别名 / OpenAI GPT aliases
+    GPT_6 = "gpt"  # 别名 -> GPT
     GPT_5_4 = "gpt"  # 别名 -> GPT
     GPT_5_3 = "gpt"  # 别名 -> GPT
     GPT_5_2 = "gpt"  # 别名 -> GPT

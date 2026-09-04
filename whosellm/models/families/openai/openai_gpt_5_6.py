@@ -13,6 +13,8 @@ from whosellm.provider import Provider
 #   luna  ≈ nano 档 / nano tier
 # 三档能力完全一致，仅价格与速率限制不同。
 # All three tiers share identical capabilities; only pricing/rate limits differ.
+# 另有特种模型 gpt-5.6-cyber（网络安全，400K 上下文，仅 Responses API）
+# Specialized model gpt-5.6-cyber (cybersecurity, 400K context, Responses API only)
 # 来源 / Source: https://developers.openai.com/api/docs/models/gpt-5.6-sol
 # ============================================================================
 
@@ -79,6 +81,33 @@ GPT_5_6 = ModelFamilyConfig(
             patterns=[
                 "gpt-5.6-luna-{year:4d}-{month:2d}-{day:2d}",
                 "gpt-5.6-luna",
+            ],
+        ),
+        "gpt-5.6-cyber": SpecificModelConfig(
+            version_default="5.6",
+            variant_default="cyber",
+            variant_priority=(1,),  # 特种用途模型 / special-purpose model
+            # 仅 Responses API（不含 Batch），400K 上下文，需单独审批
+            # Responses API only (no Batch); 400K context; requires separate approval
+            capabilities=ModelCapabilities(
+                supports_thinking=True,  # reasoning.effort: none/low/medium(默认)/high/xhigh/max
+                supports_vision=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_fine_tuning=False,
+                supports_distillation=False,
+                supports_web_search=True,
+                supports_file_search=True,
+                supports_image_generation=True,
+                supports_code_interpreter=True,
+                supports_computer_use=True,
+                max_tokens=128_000,
+                context_window=400_000,
+            ),
+            patterns=[
+                "gpt-5.6-cyber-{year:4d}-{month:2d}-{day:2d}",
+                "gpt-5.6-cyber",
             ],
         ),
     },

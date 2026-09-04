@@ -43,6 +43,10 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "sol": ["gpt-5.6-sol"],
         "terra": ["gpt-5.6-terra"],
         "luna": ["gpt-5.6-luna"],
+        # GPT-5.6 特种模型 / GPT-5.6 specialized model
+        "cyber": ["gpt-5.6-cyber"],
+        # GPT-6 专用变体 / GPT-6 dedicated variant
+        "astra": ["gpt-6-astra"],
     },
     ModelFamily.O: {
         "mini": ["o1-mini", "o3-mini", "o4-mini"],
