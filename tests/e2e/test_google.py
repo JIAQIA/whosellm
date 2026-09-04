@@ -94,11 +94,30 @@ GEMINI_3X_MODELS = [
 ]
 
 # ============================================================================
-# Gemini Family — 2026-08 新增（GA Flash 主线 / Nano Banana 2 / Live / TTS）
+# Gemini Family — 2026-08/09 新增（GA Flash 主线 / Nano Banana 2 / Live / TTS / Transcribe）
 # 来源: https://ai.google.dev/gemini-api/docs/models/gemini-3.7-flash 等（2026-08-20 采集）
+#       https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash（2026-09-04 采集 3.8/transcribe/omni-1.1）
 # ============================================================================
 
 GEMINI_2026_NEW_MODELS = [
+    (
+        "gemini-3.8-flash",
+        {
+            "provider": Provider.GOOGLE,
+            "family": ModelFamily.GEMINI,
+            "version": "3.8",
+            "variant": "flash",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_audio": True,
+            "supports_video": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "context_window": 1_048_576,
+            "max_tokens": 65_536,
+        },
+    ),
     (
         "gemini-3.7-flash",
         {
@@ -278,6 +297,36 @@ GEMINI_2026_NEW_MODELS = [
             "supports_audio_generation": True,
             "context_window": 8_192,
             "max_tokens": 16_384,
+        },
+    ),
+    (
+        # 官方无 token 上限说明（按音频时长限制）；live 端点走 Live API
+        "gemini-3.5-transcribe",
+        {
+            "provider": Provider.GOOGLE,
+            "family": ModelFamily.GEMINI,
+            "version": "3.5",
+            "variant": "transcribe",
+            "supports_audio": True,
+            "supports_thinking": False,
+            "supports_function_calling": False,
+            "supports_streaming": True,
+            "supports_structured_outputs": False,
+        },
+    ),
+    (
+        "gemini-omni-1.1-flash",
+        {
+            "provider": Provider.GOOGLE,
+            "family": ModelFamily.GEMINI,
+            "version": "3.0",
+            "variant": "omni-flash",
+            "supports_vision": True,
+            "supports_video": True,
+            "supports_thinking": False,
+            "supports_streaming": True,
+            "supports_structured_outputs": False,
+            "context_window": 1_048_576,
         },
     ),
 ]

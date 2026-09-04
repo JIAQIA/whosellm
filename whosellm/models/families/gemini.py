@@ -416,7 +416,7 @@ GEMINI = ModelFamilyConfig(
             ),
             patterns=["gemini-3.6-flash"],
         ),
-        # gemini-3.7-flash：2026-08 GA，当前最新 Flash；thinking 仅支持 low/medium/high（不支持 minimal）
+        # gemini-3.7-flash：2026-08 GA；thinking 仅支持 low/medium/high（不支持 minimal）
         "gemini-3.7-flash": SpecificModelConfig(
             version_default="3.7",
             variant_default="flash",
@@ -438,6 +438,30 @@ GEMINI = ModelFamilyConfig(
                 context_window=1048576,
             ),
             patterns=["gemini-3.7-flash"],
+        ),
+        # gemini-3.8-flash：2026-09 GA，当前最新 Flash；thinking 仅 low/medium/high（不支持 minimal）
+        # 文档标注 Computer use "Supported (Preview)"（与该系列 3.5-3.7 处理一致，未计入）
+        "gemini-3.8-flash": SpecificModelConfig(
+            version_default="3.8",
+            variant_default="flash",
+            variant_priority=(1,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_audio=True,
+                supports_video=True,
+                supports_pdf=True,
+                supports_thinking=True,
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_json_outputs=True,
+                supports_web_search=True,
+                supports_file_search=True,
+                supports_code_interpreter=True,
+                max_tokens=65536,
+                context_window=1048576,
+            ),
+            patterns=["gemini-3.8-flash"],
         ),
         # gemini-3.5-flash-lite：2026-07-21 GA，面向高吞吐子智能体与文档解析
         "gemini-3.5-flash-lite": SpecificModelConfig(
@@ -639,11 +663,30 @@ GEMINI = ModelFamilyConfig(
             ),
             patterns=["gemini-3.5-live-translate-preview"],
         ),
-        # Gemini Omni Flash：对话式视频生成/编辑模型（Preview，走 Interactions API）
-        # 官方规格：输入 Text/Image/Video（编辑 ≤10s），输出 Video（3-10s 720p 24FPS）；
-        # ctx 1048576；输出为视频无 token 上限数据。官方文档 model code 存在
-        # gemini-omni-flash（总览页）与 gemini-omni-flash-preview（详情页）两种写法，均收录。
-        # 注：官方未标注版本号，按家族默认 3.0 处理
+        # Gemini 3.5 Transcribe：2026-08 新发布的语音转写模型（85+ 语言，2026-09-04 采集）
+        # 官方规格：输入 Audio（Unary ≤1h，启用 diarization/时间戳时 ≤30min；live ≤10min/次），
+        # 输出 Text + Word annotations；官方无 token 上限说明，仅按音频时长限制；
+        # thinking / function calling / structured outputs / caching / code execution 均不支持
+        "gemini-3.5-transcribe": SpecificModelConfig(
+            version_default="3.5",
+            variant_default="transcribe",
+            variant_priority=(0,),
+            capabilities=ModelCapabilities(
+                supports_audio=True,
+                supports_thinking=False,
+                supports_function_calling=False,
+                supports_streaming=True,  # gemini-3.5-transcribe-live 走 Live API / live endpoint
+                supports_structured_outputs=False,
+                supports_json_outputs=False,
+                max_audio_duration_seconds=3600,  # Unary 上限 1 小时 / Unary up to 1 hour
+            ),
+            patterns=["gemini-3.5-transcribe-live", "gemini-3.5-transcribe"],
+        ),
+        # Gemini Omni Flash：对话式视频生成/编辑模型（走 Interactions API）
+        # 官方规格：输入 Text/Image/Video（编辑/扩展 ≤10s），输出 Video（3-10s 360p/720p/1080p/4K 24FPS）；
+        # ctx 1048576；输出为视频无 token 上限数据。
+        # 官方版本说明（2026-09-04 采集）：Stable = gemini-omni-1.1-flash；Preview = gemini-omni-flash-preview；
+        # gemini-omni-flash（总览页旧写法）也保留收录。注：官方未标注版本号，按家族默认 3.0 处理
         "gemini-omni-flash": SpecificModelConfig(
             version_default="3.0",
             variant_default="omni-flash",
@@ -657,7 +700,7 @@ GEMINI = ModelFamilyConfig(
                 supports_json_outputs=False,
                 context_window=1048576,
             ),
-            patterns=["gemini-omni-flash", "gemini-omni-flash-preview"],
+            patterns=["gemini-omni-1.1-flash", "gemini-omni-flash", "gemini-omni-flash-preview"],
         ),
         # Gemini 2.0 Flash 系列 - 第二代主力模型
         # ⚠️ gemini-2.0-flash 已于 2026-06-01 关停，官方建议迁移至 gemini-3.6-flash

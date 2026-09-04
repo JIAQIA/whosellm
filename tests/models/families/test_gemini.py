@@ -144,8 +144,8 @@ class TestGemini3x:
         assert variant == "flash-lite"
 
 
-class TestGemini35to37Flash:
-    """Gemini 3.5/3.6/3.7 Flash 系列（GA）测试 / Gemini 3.5/3.6/3.7 Flash (GA) tests"""
+class TestGemini35to38Flash:
+    """Gemini 3.5-3.8 Flash 系列（GA）测试 / Gemini 3.5-3.8 Flash (GA) tests"""
 
     @pytest.mark.parametrize(
         "model_name,expected_version,expected_variant",
@@ -153,6 +153,7 @@ class TestGemini35to37Flash:
             ("gemini-3.5-flash", "3.5", "flash"),
             ("gemini-3.6-flash", "3.6", "flash"),
             ("gemini-3.7-flash", "3.7", "flash"),
+            ("gemini-3.8-flash", "3.8", "flash"),
             ("gemini-3.5-flash-lite", "3.5", "flash-lite"),
         ],
     )
@@ -176,10 +177,36 @@ class TestGemini35to37Flash:
         assert capabilities.context_window == 1_048_576
 
     def test_ga_flash_ordering(self):
-        """验证 3.1 < 3.5 < 3.6 < 3.7 / Validate 3.1 < 3.5 < 3.6 < 3.7"""
+        """验证 3.1 < 3.5 < 3.6 < 3.7 < 3.8 / Validate 3.1 < 3.5 < 3.6 < 3.7 < 3.8"""
         assert LLMeta("gemini-3.1-flash-lite") < LLMeta("gemini-3.5-flash")
         assert LLMeta("gemini-3.5-flash") < LLMeta("gemini-3.6-flash")
         assert LLMeta("gemini-3.6-flash") < LLMeta("gemini-3.7-flash")
+        assert LLMeta("gemini-3.7-flash") < LLMeta("gemini-3.8-flash")
+
+
+def test_gemini_3_5_transcribe():
+    """测试 gemini-3.5-transcribe 转写模型（仅音频输入，无 token 上限，按音频时长限制）
+    Test Gemini 3.5 Transcribe (audio-only, no token limits, audio-duration capped)
+    """
+    config = get_specific_model_config("gemini-3.5-transcribe")
+    assert config is not None
+    version, variant, capabilities = config
+    assert version == "3.5"
+    assert variant == "transcribe"
+    assert capabilities is not None
+    assert capabilities.supports_audio is True
+    assert capabilities.supports_thinking is False
+    assert capabilities.supports_function_calling is False
+    assert capabilities.supports_structured_outputs is False
+    assert capabilities.supports_streaming is True
+    assert capabilities.max_audio_duration_seconds == 3600
+
+    # Live 端点共用同一配置 / live endpoint shares the same config
+    config_live = get_specific_model_config("gemini-3.5-transcribe-live")
+    assert config_live is not None
+    version_live, variant_live, _ = config_live
+    assert version_live == "3.5"
+    assert variant_live == "transcribe"
 
 
 class TestGemini20:
@@ -280,6 +307,7 @@ class TestGeminiParametrized:
             ("gemini-3.5-flash", "3.5", "flash"),
             ("gemini-3.6-flash", "3.6", "flash"),
             ("gemini-3.7-flash", "3.7", "flash"),
+            ("gemini-3.8-flash", "3.8", "flash"),
             ("gemini-3.5-flash-lite", "3.5", "flash-lite"),
             ("gemini-3.1-flash-lite", "3.1", "flash-lite"),
             ("gemini-3.1-flash-image", "3.1", "flash-image"),
@@ -288,6 +316,9 @@ class TestGeminiParametrized:
             ("gemini-3.1-flash-live-preview", "3.1", "flash-live"),
             ("gemini-3.1-flash-tts-preview", "3.1", "flash-tts"),
             ("gemini-3.5-live-translate-preview", "3.5", "live-translate"),
+            ("gemini-3.5-transcribe", "3.5", "transcribe"),
+            ("gemini-3.5-transcribe-live", "3.5", "transcribe"),
+            ("gemini-omni-1.1-flash", "3.0", "omni-flash"),
             ("gemini-omni-flash", "3.0", "omni-flash"),
             ("gemini-omni-flash-preview", "3.0", "omni-flash"),
         ],
@@ -308,6 +339,7 @@ class TestGeminiParametrized:
             ("gemini-3.5-flash", 65_536, 1_048_576),
             ("gemini-3.6-flash", 65_536, 1_048_576),
             ("gemini-3.7-flash", 65_536, 1_048_576),
+            ("gemini-3.8-flash", 65_536, 1_048_576),
             ("gemini-3.5-flash-lite", 65_536, 1_048_576),
             ("gemini-3.1-flash-lite", 65_536, 1_048_576),
             ("gemini-3.1-flash-image", 32_768, 131_072),
