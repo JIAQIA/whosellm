@@ -9,13 +9,15 @@ LLMeta - 统一的大语言模型版本和能力管理库 / A unified LLM model 
 
 __version__ = "0.2.7"
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import UNLIMITED, MediaCountLimit, ModelCapabilities
 from whosellm.model_version import LLMeta
 from whosellm.models.base import ModelFamily
 from whosellm.provider import Provider
 
 __all__ = [
+    "UNLIMITED",
     "LLMeta",
+    "MediaCountLimit",
     "ModelCapabilities",
     "ModelFamily",
     "Provider",

@@ -16,7 +16,7 @@ Legacy aliases: deepseek-chat / deepseek-reasoner (announced to be deprecated;
 currently map to deepseek-v4-flash non-thinking and thinking modes respectively).
 """
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -93,6 +93,9 @@ DEEPSEEK = ModelFamilyConfig(
                 supports_structured_outputs=False,
                 max_tokens=384_000,
                 context_window=1_000_000,
+                # 官方文档：单请求最多 600 张图片；≥15 张时单图长边降至 4096px（api-docs.deepseek.com/guides/vision）
+                # Per docs: up to 600 images per request; per-image long edge drops to 4096px with 15+ images
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "deepseek-v4-flash-vision-exp",

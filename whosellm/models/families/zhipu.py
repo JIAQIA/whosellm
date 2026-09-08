@@ -7,7 +7,7 @@
 智谱 AI 模型家族配置 / Zhipu AI model family configurations
 """
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import UNLIMITED, MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -94,6 +94,9 @@ GLM_VISION = ModelFamilyConfig(
                 supports_streaming=True,
                 max_tokens=128000,
                 context_window=200000,
+                # 官方文档未公开单次请求图片数量上限，仅受 1M 上下文 token 预算约束
+                # No documented per-request image cap (only the context-window token budget)
+                media_count_limit=MediaCountLimit(per_type={"image": UNLIMITED}),
             ),
             patterns=[
                 "glm-5v-turbo-{year:4d}-{month:2d}-{day:2d}",
@@ -210,6 +213,9 @@ GLM_VISION = ModelFamilyConfig(
                 supports_streaming=True,
                 max_tokens=128000,
                 context_window=128000,
+                # 官方：单请求最多 50 张图片（zai-org/GLM-skills，图片+视频等素材总量上限）
+                # Per official GLM-skills: up to 50 images per request (combined with other media)
+                media_count_limit=MediaCountLimit(per_type={"image": 50}, count_mode="combined", combined=50),
             ),
         ),
         "glm-4.6v-flash": SpecificModelConfig(
@@ -227,6 +233,9 @@ GLM_VISION = ModelFamilyConfig(
                 supports_streaming=True,
                 max_tokens=128000,
                 context_window=128000,
+                # 官方：单请求最多 50 张图片（zai-org/GLM-skills，图片+视频等素材总量上限）
+                # Per official GLM-skills: up to 50 images per request (combined with other media)
+                media_count_limit=MediaCountLimit(per_type={"image": 50}, count_mode="combined", combined=50),
             ),
             patterns=[
                 "glm-4.6v-flash-{year:4d}-{month:2d}-{day:2d}",

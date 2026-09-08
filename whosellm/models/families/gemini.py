@@ -7,7 +7,7 @@
 Google Gemini 模型家族配置 / Google Gemini model family configurations
 """
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -436,6 +436,9 @@ GEMINI = ModelFamilyConfig(
                 supports_code_interpreter=True,
                 max_tokens=65536,
                 context_window=1048576,
+                # 官方文档：单请求最多 3600 张图片（https://ai.google.dev/gemini-api/docs/image-understanding）
+                # Per docs: up to 3,600 image files per request
+                media_count_limit=MediaCountLimit(per_type={"image": 3600}),
             ),
             patterns=["gemini-3.7-flash"],
         ),
@@ -460,6 +463,9 @@ GEMINI = ModelFamilyConfig(
                 supports_code_interpreter=True,
                 max_tokens=65536,
                 context_window=1048576,
+                # 官方文档：单请求最多 3600 张图片（https://ai.google.dev/gemini-api/docs/image-understanding）
+                # Per docs: up to 3,600 image files per request
+                media_count_limit=MediaCountLimit(per_type={"image": 3600}),
             ),
             patterns=["gemini-3.8-flash"],
         ),

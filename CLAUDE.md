@@ -112,6 +112,7 @@ LLMeta("gpt-4o-mini")
 - **`Provider`**（`provider.py`）：动态字符串枚举（OpenAI、Anthropic、Zhipu 等），运行时可通过 `add_member()` 扩展。
 - **`ModelFamily`**（`models/base.py`）：动态字符串枚举，运行时可通过 `add_member()` 扩展。
 - **`ModelCapabilities`**（`capabilities.py`）：冻结 dataclass，描述模型功能（thinking、vision、audio、video、function_calling 等）和限制（context_window、max_tokens 等）。
+  - `media_count_limit`（`MediaCountLimit`）：单次请求的媒体数量上限。值域：`0`（确认不支持）、正整数（文档化上限）、`math.inf`（`UNLIMITED`，无文档化上限，仅受 token 预算约束）；键缺失视同不支持（`limit > 0` 判断支持性，`UNLIMITED` 为 truthy）。`count_mode` 区分 `"per_type"`（各类型独立计数）与 `"combined"`（共享总池，如 GLM 系列）。
   - `supports_json_outputs`：模型能否将输出限制为合法 JSON（`response_format: {type: "json_object"}`），但**不约束 JSON 结构**。
   - `supports_structured_outputs`：模型能否按调用方提供的 **JSON Schema** 生成严格符合结构的输出（`response_format: {type: "json_schema", ...}`）。这是更强的能力，蕴含 `supports_json_outputs`。
 - **`ModelFamilyConfig`**（`models/config.py`）：配置 dataclass，定义模式、默认值和特定模型覆盖。创建时自动注册到全局注册表。

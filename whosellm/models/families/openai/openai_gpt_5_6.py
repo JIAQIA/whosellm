@@ -1,4 +1,4 @@
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -40,6 +40,9 @@ GPT_5_6 = ModelFamilyConfig(
         supports_computer_use=True,
         max_tokens=128_000,
         context_window=1_050_000,
+        # 官方文档：单请求最多 1500 张图片（https://developers.openai.com/api/docs/guides/images-vision）
+        # Per docs: up to 1,500 images per request
+        media_count_limit=MediaCountLimit(per_type={"image": 1500}),
     ),
     specific_models={
         "gpt-5.6": SpecificModelConfig(

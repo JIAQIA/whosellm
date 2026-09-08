@@ -7,7 +7,7 @@
 阿里巴巴模型家族配置 / Alibaba model family configurations
 """
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -142,6 +142,9 @@ QWEN = ModelFamilyConfig(
                 supports_structured_outputs=True,
                 max_tokens=32000,
                 context_window=256000,
+                # 官方：公网 URL/本地路径最多 256 张；Base64 250 张（help.aliyun.com/zh/model-studio/vision）
+                # Per docs: 256 images via URL/local path; 250 via base64
+                media_count_limit=MediaCountLimit(per_type={"image": 256}),
             ),
             patterns=[
                 "qwen3-vl-plus-{year:4d}-{month:2d}-{day:2d}",
@@ -213,6 +216,9 @@ QWEN = ModelFamilyConfig(
                 supports_structured_outputs=True,
                 max_tokens=32000,
                 context_window=256000,
+                # 官方：公网 URL/本地路径最多 256 张；Base64 250 张（help.aliyun.com/zh/model-studio/vision）
+                # Per docs: 256 images via URL/local path; 250 via base64
+                media_count_limit=MediaCountLimit(per_type={"image": 256}),
             ),
             patterns=[
                 "qwen3-vl-flash-{year:4d}-{month:2d}-{day:2d}",

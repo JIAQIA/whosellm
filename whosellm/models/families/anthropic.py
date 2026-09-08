@@ -7,7 +7,7 @@
 Anthropic 模型家族配置 / Anthropic model family configurations
 """
 
-from whosellm.capabilities import ModelCapabilities
+from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -41,6 +41,9 @@ CLAUDE = ModelFamilyConfig(
         supports_streaming=True,
         max_tokens=64000,
         context_window=200000,
+        # 200k 上下文模型：官方上限 100 张/请求；1M 模型为 600（见各 specific_models）
+        # 200k-context models: 100 images/request per docs; 1M models: 600 (see specific_models)
+        media_count_limit=MediaCountLimit(per_type={"image": 100}),
     ),
     specific_models={
         # Mythos-class（2026-06-09 发布）：全新顶级层级，优先级高于 opus
@@ -59,6 +62,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-fable-5-{snapshot:snapshot}",
@@ -79,6 +85,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-mythos-5-{snapshot:snapshot}",
@@ -103,6 +112,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-fable-5-1-{snapshot:snapshot}",
@@ -125,6 +137,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-mythos-5-1-{snapshot:snapshot}",
@@ -149,6 +164,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-opus-5-{snapshot:snapshot}",
@@ -169,6 +187,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-sonnet-5-{snapshot:snapshot}",
@@ -189,6 +210,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-opus-4-8-{snapshot:snapshot}",
@@ -209,6 +233,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-opus-4-7-{snapshot:snapshot}",
@@ -229,6 +256,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=128000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-opus-4-6-{snapshot:snapshot}",
@@ -249,6 +279,9 @@ CLAUDE = ModelFamilyConfig(
                 supports_computer_use=True,
                 max_tokens=64000,
                 context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
             ),
             patterns=[
                 "claude-sonnet-4-6-{snapshot:snapshot}",
