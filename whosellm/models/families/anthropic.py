@@ -46,6 +46,36 @@ CLAUDE = ModelFamilyConfig(
         media_count_limit=MediaCountLimit(per_type={"image": 100}),
     ),
     specific_models={
+        # Claude Opus 5.5（2026-09-22 发布，当前最新）：Fable 5.1 级性能，成本低约 40%
+        # Claude Opus 5.5 (released 2026-09-22, latest): Fable 5.1-class work at ~40% lower cost
+        # 规格：1M ctx（默认且最大）/ 128K out；adaptive thinking 常开且不可关闭，
+        # effort 可配 low/medium/high/xhigh/max（默认 medium，低于 Opus 5 的 high）
+        # Specs: 1M ctx (default & max) / 128K out; adaptive thinking always on and
+        # cannot be disabled; effort low→max (default medium, down from Opus 5's high)
+        # 来源 / Source: https://platform.claude.com/docs/en/release-notes/overview
+        "claude-opus-5-5": SpecificModelConfig(
+            version_default="5.5",
+            variant_default="opus",
+            variant_priority=(5,),
+            capabilities=ModelCapabilities(
+                supports_vision=True,
+                supports_thinking=True,  # 思考默认开启且不可关闭 / thinking on by default, cannot be disabled
+                supports_function_calling=True,
+                supports_streaming=True,
+                supports_structured_outputs=True,
+                supports_computer_use=True,
+                max_tokens=128000,
+                context_window=1000000,
+                # 官方上限：1M 上下文模型最多 600 张图片/请求（https://docs.anthropic.com/en/docs/build-with-claude/vision）
+                # Per docs: up to 600 images per request for 1M-context models
+                media_count_limit=MediaCountLimit(per_type={"image": 600}),
+            ),
+            patterns=[
+                "claude-opus-5-5-{snapshot:snapshot}",
+                "claude-opus-5-5",
+                "claude-opus-5-5@{snapshot:snapshot}",
+            ],
+        ),
         # Mythos-class（2026-06-09 发布）：全新顶级层级，优先级高于 opus
         # Mythos-class (released 2026-06-09): new top tier, ranks above opus
         # Fable 5 为公开版，Mythos 5 为 Glasswing 受邀版（能力相同，去掉安全分类器）

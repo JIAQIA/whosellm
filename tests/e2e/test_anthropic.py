@@ -2,6 +2,7 @@
 
 来源: https://platform.claude.com/docs/en/docs/about-claude/models
 采集日期: 2026-04-12（2026-09-04 增补 Fable 5.1 / Mythos 5.1）
+          2026-09-23 增补 Opus 5.5
 """
 
 import pytest
@@ -9,6 +10,33 @@ import pytest
 from whosellm import ModelFamily, Provider
 
 from .conftest import assert_model_metadata
+
+# ============================================================================
+# Claude Family — Version 5.5 (2026-09-22 发布 / Released 2026-09-22)
+# 来源: https://platform.claude.com/docs/en/release-notes/overview
+# ============================================================================
+
+CLAUDE_55_MODELS = [
+    (
+        "claude-opus-5-5",
+        {
+            # 1M ctx (默认且最大) / 128K out；adaptive thinking 常开且不可关闭
+            # 1M ctx (default & max) / 128K out; adaptive thinking always on, cannot be disabled
+            "provider": Provider.ANTHROPIC,
+            "family": ModelFamily.CLAUDE,
+            "version": "5.5",
+            "variant": "opus",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_000_000,
+            "max_tokens": 128_000,
+        },
+    ),
+]
 
 # ============================================================================
 # Claude Family — Version 5.1 (2026-09-01 发布 / Released 2026-09-01)
@@ -234,7 +262,13 @@ CLAUDE_30_MODELS = [
 # ============================================================================
 
 ALL_MODELS = (
-    CLAUDE_51_MODELS + CLAUDE_LATEST_MODELS + CLAUDE_45_MODELS + CLAUDE_41_MODELS + CLAUDE_40_MODELS + CLAUDE_30_MODELS
+    CLAUDE_55_MODELS
+    + CLAUDE_51_MODELS
+    + CLAUDE_LATEST_MODELS
+    + CLAUDE_45_MODELS
+    + CLAUDE_41_MODELS
+    + CLAUDE_40_MODELS
+    + CLAUDE_30_MODELS
 )
 
 

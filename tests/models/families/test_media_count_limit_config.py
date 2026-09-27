@@ -18,6 +18,7 @@ OFFICIAL = (
     # Zhipu:     docs.bigmodel.cn（GLM-5.3-Flash 未公开上限）/ zai-org/GLM-skills（GLM-4.6v ≤50）
     # DeepSeek:  api-docs.deepseek.com/guides/vision (600)
     # Alibaba:   help.aliyun.com/zh/model-studio/vision (256 URL / 250 base64)
+    ("claude-opus-5-5", 600, "per_type"),
     ("claude-fable-5-1", 600, "per_type"),
     ("claude-mythos-5-1", 600, "per_type"),
     ("claude-opus-5", 600, "per_type"),

@@ -253,7 +253,7 @@ class TestClaudeMythosClassOrdering:
         assert LLMeta("claude-mythos-5") > LLMeta("claude-fable-5")
 
     def test_mythos5_is_top(self):
-        """mythos-5 为当前最高 / mythos-5 is the highest among current Claude models"""
+        """mythos-5 在所列模型中最高 / mythos-5 is the highest among the models listed"""
         models = [
             LLMeta("claude-mythos-5"),
             LLMeta("claude-fable-5"),
@@ -262,6 +262,57 @@ class TestClaudeMythosClassOrdering:
             LLMeta("claude-haiku-4-5"),
         ]
         assert max(models).variant == "mythos"
+
+
+class TestClaudeOpus55:
+    """Claude Opus 5.5 测试（2026-09-22 发布，当前最新） / Claude Opus 5.5 tests (released 2026-09-22)"""
+
+    def test_specific_model_config(self):
+        """验证 claude-opus-5-5 配置 / Validate claude-opus-5-5 config"""
+        config = get_specific_model_config("claude-opus-5-5")
+        assert config is not None
+        version, variant, capabilities = config
+        assert version == "5.5"
+        assert variant == "opus"
+        assert capabilities is not None
+        assert capabilities.supports_vision is True
+        assert capabilities.supports_thinking is True  # 自适应思考常开且不可关闭 / always on, cannot be disabled
+        assert capabilities.supports_function_calling is True
+        assert capabilities.supports_streaming is True
+        assert capabilities.supports_structured_outputs is True
+        assert capabilities.supports_computer_use is True
+        assert capabilities.max_tokens == 128000
+        assert capabilities.context_window == 1000000
+
+    def test_pattern_match(self):
+        """验证 claude-opus-5-5 模式匹配 / Validate claude-opus-5-5 pattern match"""
+        matched = match_model_pattern("claude-opus-5-5")
+        assert matched is not None
+        assert matched["family"] == ModelFamily.CLAUDE
+        assert matched["variant"] == "opus"
+        assert matched["provider"] == Provider.ANTHROPIC
+        assert matched["_from_specific_model"] == "claude-opus-5-5"
+
+    @pytest.mark.parametrize("model_name", ["claude-opus-5-5-20260921", "claude-opus-5-5@20260921"])
+    def test_pattern_with_snapshot(self, model_name: str):
+        """验证带 snapshot 的解析（- 与 @ 两种格式，版本号不被吞） / Validate snapshot forms keep version 5.5"""
+        meta = LLMeta(model_name)
+        assert meta.family == ModelFamily.CLAUDE
+        assert meta.version == "5.5"
+        assert meta.variant == "opus"
+
+    def test_not_swallowed_by_opus5(self):
+        """claude-opus-5-5 不得被 claude-opus-5 的配置吞掉 / opus-5-5 must not be captured by opus-5
+
+        回归保护：opus-5 的子模式在 opus-5-5 之前注册，若 snapshot 宽度匹配不当会退化为 5.0
+        Regression guard: opus-5's sub-patterns register before opus-5-5's; a loose snapshot
+        width would silently degrade opus-5-5 to version 5.0
+        """
+        meta = LLMeta("claude-opus-5-5")
+        assert meta.version == "5.5"
+        assert meta.variant == "opus"
+        assert meta.capabilities.context_window == 1000000
+        assert meta.capabilities.max_tokens == 128000
 
 
 class TestClaudeOpus5:
@@ -345,6 +396,19 @@ class TestClaude5Ordering:
         """opus-5 (v5.0) 高于 opus-4-8 (v4.8) / opus-5 outranks opus-4-8 by version"""
         assert LLMeta("claude-opus-5") > LLMeta("claude-opus-4-8")
 
+    def test_opus55_outranks_opus5(self):
+        """opus-5-5 (v5.5) 高于 opus-5 (v5.0) / opus-5-5 outranks opus-5 by version"""
+        assert LLMeta("claude-opus-5-5") > LLMeta("claude-opus-5")
+        assert LLMeta("claude-opus-5-5") > LLMeta("claude-fable-5-1")
+
+    def test_opus55_outranks_mythos5_by_version(self):
+        """版本优先于档位：opus-5-5 (v5.5) 高于 mythos-5 (v5.0)，尽管 mythos 变体档更高
+        Version precedes tier: opus-5-5 outranks mythos-5 despite mythos's higher variant tier
+        """
+        assert LLMeta("claude-opus-5-5") > LLMeta("claude-mythos-5")
+        # 同版本 5.0 内档位排序不受影响 / tier ordering within v5.0 is unaffected
+        assert LLMeta("claude-mythos-5") > LLMeta("claude-fable-5")
+
     def test_sonnet5_outranks_sonnet46(self):
         """sonnet-5 (v5.0) 高于 sonnet-4-6 (v4.6) / sonnet-5 outranks sonnet-4-6 by version"""
         assert LLMeta("claude-sonnet-5") > LLMeta("claude-sonnet-4-6")
@@ -358,7 +422,9 @@ class TestClaude5Ordering:
         assert LLMeta("claude-fable-5") > LLMeta("claude-opus-5")
 
     def test_mythos5_is_top(self):
-        """mythos-5 仍为当前最高 / mythos-5 remains the highest among current Claude models"""
+        """同代 v5.0 内 mythos 档最高（v5.1/v5.5 按版本另行比较）
+        mythos is the top tier within the v5.0 generation (v5.1/v5.5 compare by version)
+        """
         models = [
             LLMeta("claude-mythos-5"),
             LLMeta("claude-fable-5"),
