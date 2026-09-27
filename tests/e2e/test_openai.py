@@ -15,6 +15,7 @@ from .conftest import assert_model_metadata
 # 来源: https://developers.openai.com/api/docs/models/gpt-5.4（2026-04-12 采集）
 #       https://developers.openai.com/api/docs/models/gpt-5.6-sol（2026-08-20 采集 5.5/5.6）
 #       https://developers.openai.com/api/docs/models/gpt-6-astra（2026-09-04 采集 6-astra/5.6-cyber）
+#       https://developers.openai.com/api/docs/models/gpt-6-sol（2026-09-23 采集 6-sol/6-luna）
 # ============================================================================
 
 GPT_MODELS = [
@@ -219,7 +220,7 @@ GPT_MODELS = [
         },
     ),
     # ------------------------------------------------------------------
-    # GPT-6 Astra 系列（2026-09-04 采集）
+    # GPT-6 天体档位系列（2026-09-04 采集 astra）
     # 来源: https://developers.openai.com/api/docs/models/gpt-6-astra
     # ------------------------------------------------------------------
     (
@@ -229,6 +230,45 @@ GPT_MODELS = [
             "family": ModelFamily.GPT,
             "version": "6.0",
             "variant": "astra",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    # ------------------------------------------------------------------
+    # GPT-6 Sol / Luna（2026-09-22 发布，2026-09-23 采集）
+    # 与 astra 同窗口同工具面；sol 中档主力、luna 低成本档，GPT-6 无 terra 档
+    # 来源: https://developers.openai.com/api/docs/models/gpt-6-sol
+    # ------------------------------------------------------------------
+    (
+        "gpt-6-sol",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "6.0",
+            "variant": "sol",
+            "supports_thinking": True,
+            "supports_vision": True,
+            "supports_streaming": True,
+            "supports_function_calling": True,
+            "supports_structured_outputs": True,
+            "supports_computer_use": True,
+            "context_window": 1_050_000,
+            "max_tokens": 128_000,
+        },
+    ),
+    (
+        "gpt-6-luna",
+        {
+            "provider": Provider.OPENAI,
+            "family": ModelFamily.GPT,
+            "version": "6.0",
+            "variant": "luna",
             "supports_thinking": True,
             "supports_vision": True,
             "supports_streaming": True,

@@ -39,13 +39,13 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
         "pro": ["gpt-4.1-pro", "gpt-5-pro", "gpt-5.5-pro"],
         "ultra": ["gpt-4.1-ultra", "gpt-5-ultra"],
         "omni": ["gpt-4.1-omni", "gpt-5-omni"],
-        # GPT-5.6 天体档位 / GPT-5.6 celestial tiers
-        "sol": ["gpt-5.6-sol"],
-        "terra": ["gpt-5.6-terra"],
-        "luna": ["gpt-5.6-luna"],
+        # GPT-5.6 / GPT-6 天体档位 / GPT-5.6 & GPT-6 celestial tiers
+        "sol": ["gpt-5.6-sol", "gpt-6-sol"],
+        "terra": ["gpt-5.6-terra"],  # GPT-6 无 terra 档 / no GPT-6 terra tier
+        "luna": ["gpt-5.6-luna", "gpt-6-luna"],
         # GPT-5.6 特种模型 / GPT-5.6 specialized model
         "cyber": ["gpt-5.6-cyber"],
-        # GPT-6 专用变体 / GPT-6 dedicated variant
+        # GPT-6 旗舰档 / GPT-6 flagship tier
         "astra": ["gpt-6-astra"],
     },
     ModelFamily.O: {
