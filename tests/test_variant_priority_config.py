@@ -144,7 +144,10 @@ MODEL_VARIANT_SAMPLES: dict[ModelFamily, dict[str, list[str]]] = {
     ModelFamily.DEEPSEEK: {
         "chat": ["deepseek-chat", "deepseek-chat-beta", "deepseek-chat-v3.2-exp"],
         "reasoner": ["deepseek-reasoner"],
-        # 多模态实验版 / multimodal experimental edition
+        # flash 档：V4.1 正式名与当前路由到它的 4.0 旧名 / flash tier: V4.1 canonical name + routed 4.0 legacy names
+        "flash": ["deepseek-flash", "deepseek-v4-flash"],
+        "pro": ["deepseek-v4-pro"],
+        # 多模态实验版（已下线，路由到 deepseek-flash）/ multimodal experimental (offline, routed to deepseek-flash)
         "flash-vision-exp": ["deepseek-v4-flash-vision-exp"],
     },
     ModelFamily.ABAB: {

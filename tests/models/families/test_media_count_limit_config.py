@@ -16,7 +16,7 @@ OFFICIAL = (
     # OpenAI:    developers.openai.com/api/docs/guides/images-vision (1,500)
     # Gemini:    ai.google.dev/gemini-api/docs/image-understanding (3,600)
     # Zhipu:     docs.bigmodel.cn（GLM-5.3-Flash 未公开上限）/ zai-org/GLM-skills（GLM-4.6v ≤50）
-    # DeepSeek:  api-docs.deepseek.com/guides/vision (600)
+    # DeepSeek:  api-docs.deepseek.com/guides/vision (600；deepseek-flash 及其路由旧名共用)
     # Alibaba:   help.aliyun.com/zh/model-studio/vision (256 URL / 250 base64)
     ("claude-opus-5-5", 600, "per_type"),
     ("claude-fable-5-1", 600, "per_type"),
@@ -34,7 +34,11 @@ OFFICIAL = (
     ("gemini-3.7-flash", 3600, "per_type"),
     ("glm-4.6v", 50, "combined"),
     ("glm-4.6v-flash", 50, "combined"),
+    ("deepseek-flash", 600, "per_type"),
+    ("deepseek-v4-flash", 600, "per_type"),
     ("deepseek-v4-flash-vision-exp", 600, "per_type"),
+    ("deepseek-chat", 600, "per_type"),
+    ("deepseek-reasoner", 600, "per_type"),
     ("qwen3-vl-plus", 256, "per_type"),
     ("qwen3-vl-flash", 256, "per_type"),
 )
@@ -74,5 +78,7 @@ class TestUnmeasuredModels:
         assert bool(mcl.get("image")) is False
 
     def test_text_only_model(self):
-        mcl = LLMeta("deepseek-v4-flash").capabilities.media_count_limit
+        """deepseek-v4-pro 确认为纯文本（实探 2026-09-28：带图静默忽略并编造答案）"""
+        mcl = LLMeta("deepseek-v4-pro").capabilities.media_count_limit
         assert mcl.get("image") == 0
+        assert bool(mcl.get("image")) is False

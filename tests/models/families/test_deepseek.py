@@ -209,3 +209,102 @@ def test_deepseek_v4_flash_vision_exp_llmeta() -> None:
     assert model.variant == "flash-vision-exp"
     assert model.capabilities.context_window == 1_000_000
     assert model.capabilities.supports_vision is True
+
+
+class TestDeepSeekRouting:
+    """DeepSeek 旧模型名的路由实况 / Routing reality of DeepSeek legacy names.
+
+    官方原文（2026-09-10 changelog）："旧版本模型 V4 Flash 与 V4 Flash Vision Exp 现已下线，
+    出于兼容考虑，模型名 deepseek-v4-flash、deepseek-v4-flash-vision-exp 将被暂时路由到 V4.1 Flash。"
+    Official: legacy V4 Flash / V4 Flash Vision Exp are offline; their model names are
+    *temporarily* routed to V4.1 Flash.
+
+    实探证据（2026-09-28，api.deepseek.com，见 /tmp/probe_deepseek.py）：
+      - GET /models 仅返回 deepseek-flash 与 deepseek-v4-pro
+      - deepseek-v4-flash / deepseek-v4-flash-vision-exp / deepseek-chat / deepseek-reasoner
+        的响应 model 字段均回显 deepseek-flash，且能正确读出白底红方块
+      - deepseek-v4-pro 回显自身，带图不报错但静默忽略并编造答案
+
+    ⚠️ 路由是"暂时"的：官方撤销后本类测试会失败，届时需重新探针并回改配置
+    （能力轴跟端点现状，版本轴跟名字血统）。/ The routing is temporary: when the vendor
+    removes it these tests fail on purpose, prompting a re-probe and a config rollback.
+    """
+
+    def test_deepseek_flash_canonical_name(self) -> None:
+        """deepseek-flash 为官方正式名（无版本号），对应 DeepSeek-V4.1-Flash"""
+        from whosellm import LLMeta
+
+        model = LLMeta("deepseek-flash")
+        assert model.provider == Provider.DEEPSEEK
+        assert model.family == ModelFamily.DEEPSEEK
+        # 名字无版本号 → 按官方模型版本标注 4.1
+        assert model.version == "4.1"
+        assert model.variant == "flash"
+
+        caps = model.capabilities
+        assert caps.supports_vision is True
+        assert caps.supports_thinking is True  # 默认开启 / on by default
+        assert caps.media_count_limit.get("image") == 600
+        assert caps.context_window == 1_000_000
+        assert caps.max_tokens == 384_000
+
+    def test_v4_flash_routed_to_v41_flash(self) -> None:
+        """deepseek-v4-flash 已被路由到 V4.1 Flash，视觉能力随之可用"""
+        from whosellm import LLMeta
+
+        model = LLMeta("deepseek-v4-flash")
+        # 版本轴仍按名字解析为 4.0 / version still parses from the name (4.0)
+        assert model.version == "4.0"
+        assert model.variant == "flash"
+        # 能力轴跟随实际服务模型 / capabilities follow the serving model
+        assert model.capabilities.supports_vision is True
+        assert model.capabilities.media_count_limit.get("image") == 600
+
+    def test_vision_exp_routed_to_v41_flash(self) -> None:
+        """deepseek-v4-flash-vision-exp 同样被路由到 V4.1 Flash"""
+        from whosellm import LLMeta
+
+        model = LLMeta("deepseek-v4-flash-vision-exp")
+        assert model.version == "4.0"
+        assert model.capabilities.supports_vision is True
+        assert model.capabilities.media_count_limit.get("image") == 600
+
+    def test_chat_and_reasoner_routed_have_vision(self) -> None:
+        """deepseek-chat / deepseek-reasoner 路由到 flash，同样可读图
+
+        两者保留各自的默认思考模式语义（chat 非思考、reasoner 思考），
+        但视觉能力跟随实际服务模型。
+        """
+        from whosellm import LLMeta
+
+        chat = LLMeta("deepseek-chat")
+        assert chat.capabilities.supports_thinking is False  # 默认非思考 / non-thinking by default
+        assert chat.capabilities.supports_vision is True
+        assert chat.capabilities.media_count_limit.get("image") == 600
+
+        reasoner = LLMeta("deepseek-reasoner")
+        assert reasoner.capabilities.supports_thinking is True
+        assert reasoner.capabilities.supports_vision is True
+        assert reasoner.capabilities.media_count_limit.get("image") == 600
+
+    def test_v4_pro_not_routed_stays_text_only(self) -> None:
+        """deepseek-v4-pro 未被路由，保持纯文本（带图会静默幻觉，绝不能标 True）
+
+        实探：带图请求返回 200，图片被静默忽略，答案系编造；无图对照亦编造；
+        直接追问时模型承认"看不到图片 / [Unsupported Image]"。
+        来源：https://api-docs.deepseek.com/zh-cn/quick_start/pricing（图像理解 不支持）
+        """
+        from whosellm import LLMeta
+
+        model = LLMeta("deepseek-v4-pro")
+        assert model.version == "4.0"
+        assert model.variant == "pro"
+        assert model.capabilities.supports_vision is False
+        assert model.capabilities.media_count_limit.get("image") == 0  # 键缺失视同不支持
+
+    def test_version_axis_orders_flash_above_pro(self) -> None:
+        """版本优先于档位：V4.1 Flash > V4 Pro（与官方"全面超越 V4 Pro"表述一致）"""
+        from whosellm import LLMeta
+
+        assert LLMeta("deepseek-flash") > LLMeta("deepseek-v4-pro")
+        assert LLMeta("deepseek-v4-pro") > LLMeta("deepseek-v4-flash")
