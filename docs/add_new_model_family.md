@@ -199,6 +199,7 @@ __all__ = [
 | `max_video_duration_seconds` | `int \| None` | 最大视频时长(秒) / Max video duration in seconds |
 | `media_count_limit` | `MediaCountLimit` | 单请求媒体数量上限 / Per-request media count caps |
 | `max_inline_media_bytes` | `int \| None` | 单请求内联媒体字节总预算 / Per-request inline-media byte budget |
+| `max_inline_file_bytes` | `int \| None` | 单请求文件类媒体字节合计上限 / Combined per-request file-type media byte cap |
 | `max_pdf_size_mb` | `float \| None` | PDF 大小上限(MB) / Max PDF size in MB |
 | `max_pdf_pages` | `int \| None` | PDF 页数上限 / Max PDF pages per request |
 | `max_document_size_mb` | `float \| None` | 非 PDF 文档大小上限(MB，预留) / Max non-PDF document size |

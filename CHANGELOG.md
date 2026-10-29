@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - **工具结果多模态能力（TFROB-856）**：新增 `LLMApiSurface`（str 枚举：`claude_messages` / `openai_chat_completions` / `openai_responses` / `gemini` / `dashscope` / `glm` / `deepseek` / `deepseek_responses`）与 `ToolResultSurfaceCapability`（`modalities` / `max_inline_bytes` / `mime_types`）。`ModelCapabilities.tool_result_surfaces` 以 surface 为键登记工具结果的原生媒体能力：缺键 = 未声明，空元组 = 明确不支持。
 - 新增文档上限字段：`max_pdf_size_mb`、`max_pdf_pages`、`max_document_size_mb`（预留）、`supported_document_mime_type`。`None` 表示未声明（未知），不代表“不限”；单文件与请求级上限分层登记。
-- 新增单请求内联媒体总预算 `max_inline_media_bytes`（媒体计数字段继续复用 `media_count_limit`）。
+- 新增单请求内联媒体总预算 `max_inline_media_bytes` 与文件类媒体合计上限 `max_inline_file_bytes`（媒体计数字段继续复用 `media_count_limit`）。
 - 预留 `FileApiCapability` / `ModelCapabilities.file_api`，本版本不消费。
 - 数据登记（官方文档核实 + 2026-10-29 抓取日期；未逐模型 API 实测的已显式标注）：Claude 4.x/5 工具结果支持 image + PDF；OpenAI Chat Completions tool 消息 text-only、Responses `function_call_output` 支持 image/file；Gemini 3 系支持 image，Gemini 2.x 显式标为不支持；DeepSeek Chat Completions tool 消息 text-only，Responses `function_call_output` 支持 image，PDF `input_file` 经 2026-10-29 实测为静默不投递（登记为不支持）。DashScope / GLM 的官方 API 参考将 tool 消息 content 定义为字符串，登记为显式不支持（空元组）。
 - 修正 OpenAI gpt-5.1 及更新视觉模型缺失的 `supports_pdf=True`（官方 PDF 解析要求视觉模型，gpt-4o 及更新）。

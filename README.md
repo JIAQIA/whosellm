@@ -146,9 +146,9 @@ print(LLMeta("deepseek-flash").capabilities.tool_result_surfaces[LLMApiSurface.D
 print(LLMeta("deepseek-flash").capabilities.tool_result_surfaces[LLMApiSurface.DEEPSEEK_RESPONSES].modalities)  # ("image",)
 ```
 
-用户消息能力仍由 `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf` 表示，工具结果能力只走 `tool_result_surfaces`。文档上限见 `max_pdf_size_mb`、`max_pdf_pages`、`supported_document_mime_type`；单请求内联媒体预算见 `max_inline_media_bytes`。
+用户消息能力仍由 `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf` 表示，工具结果能力只走 `tool_result_surfaces`。文档上限见 `max_pdf_size_mb`、`max_pdf_pages`、`supported_document_mime_type`；单请求内联媒体预算见 `max_inline_media_bytes`，文件类媒体的请求级合计上限见 `max_inline_file_bytes`。
 
-User-message capability remains on `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf`; tool-result capability lives only in `tool_result_surfaces`. Document limits are exposed via `max_pdf_size_mb`, `max_pdf_pages`, and `supported_document_mime_type`; the per-request inline-media budget is `max_inline_media_bytes`.
+User-message capability remains on `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf`; tool-result capability lives only in `tool_result_surfaces`. Document limits are exposed via `max_pdf_size_mb`, `max_pdf_pages`, and `supported_document_mime_type`; the per-request inline-media budget is `max_inline_media_bytes`, and the request-level combined cap for file-type media is `max_inline_file_bytes`.
 
 ### 非法名称也不会炸 / Lenient on Unknown Names
 

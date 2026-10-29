@@ -68,6 +68,7 @@ class TestDefaults:
         caps = ModelCapabilities()
         assert caps.tool_result_surfaces == {}
         assert caps.max_inline_media_bytes is None
+        assert caps.max_inline_file_bytes is None
         assert caps.max_pdf_size_mb is None
         assert caps.max_pdf_pages is None
         assert caps.max_document_size_mb is None
@@ -123,6 +124,7 @@ class TestClaudeToolResults:
         assert caps.max_pdf_pages == expected_pages
         assert caps.supported_document_mime_type == ["application/pdf"]
         assert caps.max_inline_media_bytes == 128_000_000
+        assert caps.max_inline_file_bytes is None  # 官方无文件合计上限 / no combined file cap
 
     def test_claude_3x_is_undeclared(self) -> None:
         """Claude 3.x 未登记工具结果 surface 数据 / Claude 3.x leaves surfaces undeclared"""
@@ -154,6 +156,7 @@ class TestOpenAIToolResults:
         assert caps.max_pdf_pages is None  # 官方未公布页数上限 / no documented page cap
         assert caps.supported_document_mime_type == ["application/pdf"]
         assert caps.max_inline_media_bytes == 512_000_000
+        assert caps.max_inline_file_bytes == 50_000_000  # 所有文件合计 <50 MB / combined files
 
     @pytest.mark.parametrize("model_name", ["o3-mini", "gpt-4o-audio-preview"])
     def test_non_vision_chat_only(self, model_name: str) -> None:
@@ -186,7 +189,8 @@ class TestGeminiToolResults:
         assert caps.max_pdf_size_mb is None
         assert caps.max_pdf_pages == 1000
         assert caps.supported_document_mime_type == ["application/pdf"]
-        assert caps.max_inline_media_bytes == 50_000_000
+        assert caps.max_inline_media_bytes == 100_000_000
+        assert caps.max_inline_file_bytes == 50_000_000
 
     @pytest.mark.parametrize(
         "model_name",
@@ -206,6 +210,7 @@ class TestGeminiToolResults:
         assert caps.supports_pdf is True
         assert caps.max_pdf_pages == 1000
         assert caps.max_pdf_size_mb is None
+        assert caps.max_inline_file_bytes == 50_000_000
 
     def test_image_only_model_has_no_surface(self) -> None:
         """无 function calling 的模型不登记 surface / Models without function calling declare no surface"""
@@ -231,6 +236,7 @@ class TestDeepSeekToolResults:
         assert caps.supported_document_mime_type == []
         assert caps.max_pdf_size_mb is None
         assert caps.max_pdf_pages is None
+        assert caps.max_inline_file_bytes is None
 
     @pytest.mark.parametrize(
         "model_name",

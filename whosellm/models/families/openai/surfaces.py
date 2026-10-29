@@ -65,4 +65,6 @@ OPENAI_PDF_KWARGS: dict[str, Any] = {
     "supported_document_mime_type": ["application/pdf"],
     "max_document_size_mb": 50.0,
     "max_inline_media_bytes": 512_000_000,
+    # 官方：单个请求内所有文件合计 < 50 MB / all files combined under 50 MB per request
+    "max_inline_file_bytes": 50_000_000,
 }

@@ -194,6 +194,12 @@ class ModelCapabilities:
     # here too (media is necessarily bounded by it).
     max_inline_media_bytes: int | None = None
 
+    # 单请求内所有文件类媒体（PDF/文档）的字节合计上限；None = 未声明。
+    # 与 max_inline_media_bytes 的区别：后者覆盖图片/音视频/文件全部媒体，本字段只约束文件类。
+    # Combined byte cap for all file-type media (PDF/documents) in one request; None = undeclared.
+    # Unlike max_inline_media_bytes (all media), this field constrains file-type media only.
+    max_inline_file_bytes: int | None = None
+
     # 文档相关限制 / Document-related limitations
     # None = 未声明（未知），不代表“不限”；调用方应套用自己的保守默认。
     # None = undeclared (unknown), NOT "unlimited"; callers apply their own conservative default.

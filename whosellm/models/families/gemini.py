@@ -72,20 +72,19 @@ _GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceC
     LLMApiSurface.GEMINI: ToolResultSurfaceCapability(modalities=()),
 }
 _GEMINI_PDF_KWARGS: dict[str, Any] = {
-    # 官方只公布“每请求 inline payload 100 MB（PDF 为 50 MB）”，没有单文件大小上限；
-    # 因此 max_pdf_size_mb 留 None（未知），请求级数字登记到 max_inline_media_bytes。
-    # The docs publish a per-request inline payload cap (100 MB; 50 MB for PDFs), not a
-    # per-file cap, so max_pdf_size_mb stays None (unknown) and the request-level number
-    # goes to max_inline_media_bytes.
+    # 官方只公布“每请求 inline payload 100 MB（PDF 合计 50 MB）”，没有单文件大小上限；
+    # 因此 max_pdf_size_mb 留 None（未知）。通用媒体上限登记到 max_inline_media_bytes，
+    # PDF 合计上限登记到 max_inline_file_bytes。
+    # The docs publish a per-request inline payload cap (100 MB; 50 MB combined for PDFs),
+    # not a per-file cap, so max_pdf_size_mb stays None (unknown). The general media cap
+    # goes to max_inline_media_bytes; the combined PDF cap goes to max_inline_file_bytes.
     "max_pdf_pages": 1000,  # 单请求最多 1000 页 / up to 1,000 pages per request
     "supported_document_mime_type": ["application/pdf"],
+    "max_inline_file_bytes": 50_000_000,  # 请求内 PDF 合计 50 MB / combined PDFs per request
 }
-# 单请求内联媒体总预算。官方：通用 inline payload 100 MB，PDF 为 50 MB；
-# 这里取更严格的 PDF 值作为共享预算（保守），避免 PDF 超限。
-# Per-request inline media budget. Official: 100 MB general inline payload, 50 MB for
-# PDFs. The stricter PDF value is used as the shared budget (conservative) so PDFs
-# cannot exceed the documented sub-cap.
-_GEMINI_MAX_INLINE_MEDIA_BYTES = 50_000_000
+# 单请求内联媒体总预算（官方通用 inline payload 上限 100 MB）
+# Per-request inline media budget (official general inline payload cap: 100 MB)
+_GEMINI_MAX_INLINE_MEDIA_BYTES = 100_000_000
 
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,

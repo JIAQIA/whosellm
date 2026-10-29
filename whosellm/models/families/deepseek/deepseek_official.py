@@ -49,6 +49,12 @@ from whosellm.provider import Provider
 # - https://api-docs.deepseek.com/zh-cn/guides/responses_api
 # - https://api-docs.deepseek.com/zh-cn/guides/vision
 #
+# DEEPSEEK_RESPONSES 的 image 登记为**文档依据**（官方 Responses 指南明确 input_image 可出现在
+# function_call_output），未做 function_call_output 探针；2026-10-29 探针只覆盖 user 消息。
+# The DEEPSEEK_RESPONSES image entry is DOCUMENTATION-BASED (the official Responses guide
+# explicitly allows input_image in function_call_output); it was not probed via
+# function_call_output -- the 2026-10-29 probe covered user messages only.
+#
 # PDF / document：明确不支持。实测 2026-10-29（TFROB-990 探针，owner 授权）：
 #   Responses input_file 传 PDF（data URL）时请求被接受（无 4xx），但 PDF 内容未进入模型
 #   （input_tokens=23，模型回复看不到 PDF）——静默不支持。内核应先转成图片再发送。
