@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.4.1] - Unreleased
+
+### Changed
+- 依据 2026-10-29 真实 API 实测（`gemini-3-flash-preview`，owner 授权，共 10 次调用）扩展 Gemini 3.x 工具结果模态：`image` / `document` / `audio` / `video`。`mime_types` 仅登记实测覆盖的格式（`image/png`、`application/pdf`、`audio/wav`、`video/mp4`）；其他 3.x 型号按 Gemini 3 系列官方能力登记，未逐一实测。
+- Gemini 2.x 的工具结果备注由「会 400」更正为「HTTP 200 但静默忽略媒体（实测 `gemini-2.5-flash`）」；`supports_vision=True` 保持不变，用户消息视觉能力不受影响。
+
+## [0.4.0] - 2026-10-29
 
 ### Added
 - **工具结果多模态能力（TFROB-856）**：新增 `LLMApiSurface`（str 枚举：`claude_messages` / `openai_chat_completions` / `openai_responses` / `gemini` / `dashscope` / `glm` / `deepseek` / `deepseek_responses`）与 `ToolResultSurfaceCapability`（`modalities` / `max_inline_bytes` / `mime_types`）。`ModelCapabilities.tool_result_surfaces` 以 surface 为键登记工具结果的原生媒体能力：缺键 = 未声明，空元组 = 明确不支持。

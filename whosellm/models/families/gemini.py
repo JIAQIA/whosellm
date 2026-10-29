@@ -28,30 +28,41 @@ from whosellm.provider import Provider
 # --------------------------------------------------------------------------
 # 工具结果能力 / Tool-result capability（按 API surface 登记）
 #
-# 官方：仅 Gemini 3 系模型允许在 function response 中携带多模态内容；
-# 2.x 系会拒绝（内核实测 400），因此 2.x 必须显式标为不支持，不得按型号前缀推断。
-# Official: only Gemini 3 series accepts multimodal content in function responses;
-# 2.x rejects it (400), so 2.x is explicitly marked unsupported rather than inferred
-# from a model-name prefix.
+# 官方：Gemini 3 系模型允许在 function response 中携带多模态内容。
+# 2026-10-29 实测（owner 授权，共 10 次调用；实测模型 gemini-3-flash-preview）：
+#   functionResponse.parts 用 inlineData 分别带 image/png、application/pdf、
+#   audio/wav、video/mp4，四次请求均正常完成，模型回答分别为「红色」「红色」「有声音」「红色」。
+#   实测报告：/Users/jqq/.turingfocus/reports/gemini-function-response-media-probe-20261029-230532.json
+# 其他 3.x 型号（pro 等）未逐一实测；官方把多模态 function response 定义为 Gemini 3 系列能力，
+# 因此按系列一致性登记，并在此保留实测覆盖范围。
+# mime_types 只登记实测覆盖的格式；其他格式保持未声明，由调用方保守处理。
 #
-# Interactions API 的 FunctionResultStep.result 只接受 ImageContent / TextContent，
-# 因此工具结果的原生模态保守登记为 image。
-# Interactions API FunctionResultStep.result only accepts ImageContent / TextContent,
-# so the only natively supported tool-result modality is image.
+# Gemini 2.x：实测 gemini-2.5-flash 在 function response 带 image/png 时返回 HTTP 200、
+# 请求正常完成，但模型回答「无法看到或分析图片内容」——属于静默忽略，不是 400。
+# 因此 2.x 仍显式标为不支持（空元组）；supports_vision 保持 True（用户消息能力不受影响）。
+#
+# 注意：本登记以 legacy GenerateContent 的 functionResponse.parts 实测为准。
+# Interactions API 的 FunctionResultStep.result 官方 schema 仍只列 ImageContent / TextContent；
+# 若内核走 Interactions API 的 function_result，需要另行实测/裁决。
+# This entry is based on the legacy GenerateContent functionResponse.parts probe. The
+# Interactions API FunctionResultStep.result schema still lists only ImageContent/TextContent;
+# a separate probe is needed if the kernel uses Interactions function_result.
 #
 # 来源 / Sources（抓取日期 / fetched 2026-10-29）:
 # - Multimodal function responses (Gemini 3 series):
 #   https://ai.google.dev/gemini-api/docs/function-calling
-# - FunctionResultStep.result: ImageContent or TextContent:
-#   https://ai.google.dev/api/interactions-api#functionresultstep
+# - Probe report (2026-10-29, owner-approved, 10 calls):
+#   /Users/jqq/.turingfocus/reports/gemini-function-response-media-probe-20261029-230532.json
 # - PDF: up to 1,000 pages; inline 50 MB for PDFs, 100 MB per payload:
 #   https://ai.google.dev/gemini-api/docs/document-processing
 #   https://ai.google.dev/gemini-api/docs/generate-content/file-input-methods
-# 数据性质 / Data status: 官方文档核实，未逐模型调用 API 实测（保守登记）。
-# Verified against official docs; not API-probed per model (conservative).
+# 数据性质 / Data status: Gemini 3 image/document/audio/video 为实测 + 官方文档；
+# 其他 3.x 型号按系列文档登记、未逐一实测。2.x 静默忽略为实测。
+# Gemini 3 modalities are probe-backed + official-doc-backed; other 3.x models are
+# registered by series consistency, not individually probed. Gemini 2.x silent-drop is probed.
 _GEMINI_3_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
     LLMApiSurface.GEMINI: ToolResultSurfaceCapability(
-        modalities=("image",),
+        modalities=("image", "document", "audio", "video"),
         mime_types={
             "image": [
                 "image/png",
@@ -63,12 +74,17 @@ _GEMINI_3_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability]
                 "image/bmp",
                 "image/tiff",
             ],
+            "document": ["application/pdf"],
+            # 仅登记实测覆盖的格式；其余格式未声明 / only probed formats are declared
+            "audio": ["audio/wav"],
+            "video": ["video/mp4"],
         },
     ),
 }
 _GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
-    # 空元组 = 明确不支持（Gemini 2.x function response 不接受媒体）
-    # Empty tuple = explicitly unsupported (Gemini 2.x rejects media in function responses)
+    # 空元组 = 明确不支持。实测 2.x 请求 HTTP 200 但静默忽略媒体（2026-10-29, gemini-2.5-flash）。
+    # Empty tuple = explicitly unsupported. Probe: 2.x returns HTTP 200 but silently ignores
+    # media (2026-10-29, gemini-2.5-flash).
     LLMApiSurface.GEMINI: ToolResultSurfaceCapability(modalities=()),
 }
 _GEMINI_PDF_KWARGS: dict[str, Any] = {

@@ -177,12 +177,18 @@ class TestGeminiToolResults:
         "model_name",
         ["gemini-3.8-flash", "gemini-3.1-pro-preview", "gemini-3-flash-preview", "gemini-3-pro"],
     )
-    def test_gemini_3_supports_image(self, model_name: str) -> None:
+    def test_gemini_3_supports_multimodal(self, model_name: str) -> None:
         caps = LLMeta(model_name).capabilities
         surface = caps.tool_result_surfaces[LLMApiSurface.GEMINI]
-        assert surface.modalities == ("image",)
-        assert surface.supports("image") is True
-        assert surface.supports("document") is False  # 官方 FunctionResult 仅登记 image / only image is documented
+        # 2026-10-29 实测 gemini-3-flash-preview：image/pdf/audio/video 均被读取
+        # Probe on gemini-3-flash-preview: image/pdf/audio/video are all consumed
+        assert surface.modalities == ("image", "document", "audio", "video")
+        for modality in ("image", "document", "audio", "video"):
+            assert surface.supports(modality) is True  # type: ignore[arg-type]
+        assert surface.mime_types is not None
+        assert surface.mime_types["document"] == ["application/pdf"]
+        assert surface.mime_types["audio"] == ["audio/wav"]
+        assert surface.mime_types["video"] == ["video/mp4"]
 
         # 官方未公布单文件 PDF 上限（inline payload 100 MB / PDF 50 MB 均为请求级）
         # No per-file PDF cap is documented; the inline payload caps are request-level
@@ -202,6 +208,8 @@ class TestGeminiToolResults:
         surface = caps.tool_result_surfaces[LLMApiSurface.GEMINI]
         assert surface.modalities == ()
         assert surface.supports("image") is False
+        # 用户消息仍可看图；工具结果不支持是独立维度 / User-message vision is unaffected
+        assert caps.supports_vision is True
 
     @pytest.mark.parametrize("model_name", ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"])
     def test_gemini_2_5_pdf_limits(self, model_name: str) -> None:

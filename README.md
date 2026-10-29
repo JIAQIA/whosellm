@@ -135,8 +135,8 @@ surface = caps.tool_result_surfaces.get(LLMApiSurface.CLAUDE_MESSAGES)
 print(surface.modalities)          # ("image", "document")
 print(surface.supports("document"))  # True
 
-# Gemini 3 系支持；2.5 系明确不支持（会返回 400）
-print(LLMeta("gemini-3.8-flash").capabilities.tool_result_surfaces[LLMApiSurface.GEMINI].modalities)  # ("image",)
+# Gemini 3 系支持 image/document/audio/video；2.5 系请求成功但静默忽略媒体（实测）
+print(LLMeta("gemini-3.8-flash").capabilities.tool_result_surfaces[LLMApiSurface.GEMINI].modalities)  # ("image", "document", "audio", "video")
 print(LLMeta("gemini-2.5-pro").capabilities.tool_result_surfaces[LLMApiSurface.GEMINI].modalities)    # ()
 
 # DeepSeek 的 Chat Completions 与 Responses 是两个 surface：
