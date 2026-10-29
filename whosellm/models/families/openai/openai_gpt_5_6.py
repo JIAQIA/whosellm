@@ -1,6 +1,10 @@
 from whosellm.capabilities import MediaCountLimit, ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -26,6 +30,9 @@ GPT_5_6 = ModelFamilyConfig(
     patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     # 父 patterns provided by gpt_5_4.py via Registry Merge
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
+        supports_pdf=True,
         supports_thinking=True,  # reasoning.effort: none/low/medium(默认)/high/xhigh/max
         supports_vision=True,
         supports_function_calling=True,
@@ -93,6 +100,9 @@ GPT_5_6 = ModelFamilyConfig(
             # 仅 Responses API（不含 Batch），400K 上下文，需单独审批
             # Responses API only (no Batch); 400K context; requires separate approval
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
+                supports_pdf=True,
                 supports_thinking=True,  # reasoning.effort: none/low/medium(默认)/high/xhigh/max
                 supports_vision=True,
                 supports_function_calling=True,

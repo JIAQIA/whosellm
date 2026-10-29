@@ -7,10 +7,24 @@
 阿里巴巴模型家族配置 / Alibaba model family configurations
 """
 
-from whosellm.capabilities import MediaCountLimit, ModelCapabilities
+from whosellm.capabilities import (
+    LLMApiSurface,
+    MediaCountLimit,
+    ModelCapabilities,
+    ToolResultSurfaceCapability,
+)
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
+
+# 官方 API 参考将 tool 消息 content 定义为字符串，工具结果不能携带媒体。
+# The official API reference defines tool-message content as a string, so tool
+# results cannot carry media.
+# 来源 / Source（抓取日期 / fetched 2026-10-29）:
+# - Aliyun: https://help.aliyun.com/zh/model-studio/qwen-api-via-openai-chat-completions
+_DASHSCOPE_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.DASHSCOPE: ToolResultSurfaceCapability(modalities=()),
+}
 
 # ============================================================================
 # Qwen 系列 / Qwen Series
@@ -32,6 +46,7 @@ QWEN = ModelFamilyConfig(
         "qwen{version:d}",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
         supports_function_calling=True,
         supports_streaming=True,
         supports_vision=False,  # 默认关闭多模态能力 / Default multimodal capabilities disabled
@@ -43,6 +58,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="max",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
@@ -58,6 +74,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="max-preview",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -74,6 +91,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="coder-plus",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_function_calling=True,
                 supports_structured_outputs=True,
                 supports_streaming=True,
@@ -90,6 +108,7 @@ QWEN = ModelFamilyConfig(
             version_default="1.0",
             variant_default="image-plus",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_streaming=False,
                 supports_structured_outputs=False,
                 supports_function_calling=False,
@@ -112,6 +131,7 @@ QWEN = ModelFamilyConfig(
             version_default="1.0",
             variant_default="image",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_streaming=False,
                 supports_structured_outputs=False,
                 supports_function_calling=False,
@@ -134,6 +154,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-plus",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -155,6 +176,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-235b-a22b-thinking",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -173,6 +195,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-32b-thinking",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -191,6 +214,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-32b-instruct",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_video=True,
                 supports_function_calling=True,
@@ -208,6 +232,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-flash",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -229,6 +254,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-30b-a3b-instruct",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_video=True,
                 supports_function_calling=True,
@@ -246,6 +272,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-8b-thinking",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -264,6 +291,7 @@ QWEN = ModelFamilyConfig(
             version_default="3",
             variant_default="vl-8b-instruct",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_video=True,
                 supports_function_calling=True,
@@ -281,6 +309,7 @@ QWEN = ModelFamilyConfig(
             version_default="1.0",
             variant_default="plus",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,
@@ -297,6 +326,7 @@ QWEN = ModelFamilyConfig(
             version_default="1.0",
             variant_default="flash",
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DASHSCOPE_TOOL_RESULT_SURFACES,
                 supports_function_calling=True,
                 supports_streaming=True,
                 supports_structured_outputs=True,

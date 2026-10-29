@@ -1,6 +1,11 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_CHAT_ONLY_SURFACES,
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -14,6 +19,9 @@ GPT_5_1 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
+        supports_pdf=True,
         supports_thinking=True,
         supports_vision=True,
         supports_function_calling=True,
@@ -44,6 +52,7 @@ GPT_5_1 = ModelFamilyConfig(
             variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -63,6 +72,7 @@ GPT_5_1 = ModelFamilyConfig(
             variant_default="codex-mini",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -82,6 +92,7 @@ GPT_5_1 = ModelFamilyConfig(
             variant_default="codex-max",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,

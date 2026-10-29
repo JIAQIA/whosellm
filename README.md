@@ -121,6 +121,35 @@ print(model.capabilities.max_video_size_mb)  # 20.0
 validated_params = model.validate_params(your_params)
 ```
 
+### 工具结果的多模态能力 / Multimodal Tool Results
+
+工具结果能否原生承载图片/文档，取决于 **provider × API surface**，而不是模型名字前缀。能力数据以 `LLMApiSurface` 为键，缺键表示「未声明」，空元组表示「明确不支持」——两者都应按不支持处理。
+
+Whether a tool result can natively carry images/documents depends on **provider × API surface**, not on a model-name prefix. Capability data is keyed by `LLMApiSurface`; a missing key means "undeclared" and an empty tuple means "explicitly unsupported" — treat both as unsupported.
+
+```python
+from whosellm import LLMApiSurface, LLMeta
+
+caps = LLMeta("claude-opus-5-5").capabilities
+surface = caps.tool_result_surfaces.get(LLMApiSurface.CLAUDE_MESSAGES)
+print(surface.modalities)          # ("image", "document")
+print(surface.supports("document"))  # True
+
+# Gemini 3 系支持；2.5 系明确不支持（会返回 400）
+print(LLMeta("gemini-3.8-flash").capabilities.tool_result_surfaces[LLMApiSurface.GEMINI].modalities)  # ("image",)
+print(LLMeta("gemini-2.5-pro").capabilities.tool_result_surfaces[LLMApiSurface.GEMINI].modalities)    # ()
+
+# DeepSeek 的 Chat Completions 与 Responses 是两个 surface：
+# Chat Completions tool 消息只能放文本；Responses 的 function_call_output 支持图片，
+# 但 PDF input_file 实测被静默丢弃（2026-10-29 探针）
+print(LLMeta("deepseek-flash").capabilities.tool_result_surfaces[LLMApiSurface.DEEPSEEK].modalities)           # ()
+print(LLMeta("deepseek-flash").capabilities.tool_result_surfaces[LLMApiSurface.DEEPSEEK_RESPONSES].modalities)  # ("image",)
+```
+
+用户消息能力仍由 `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf` 表示，工具结果能力只走 `tool_result_surfaces`。文档上限见 `max_pdf_size_mb`、`max_pdf_pages`、`supported_document_mime_type`；单请求内联媒体预算见 `max_inline_media_bytes`。
+
+User-message capability remains on `supports_vision` / `supports_audio` / `supports_video` / `supports_pdf`; tool-result capability lives only in `tool_result_surfaces`. Document limits are exposed via `max_pdf_size_mb`, `max_pdf_pages`, and `supported_document_mime_type`; the per-request inline-media budget is `max_inline_media_bytes`.
+
 ### 非法名称也不会炸 / Lenient on Unknown Names
 
 我们不想打断你的流程，即便名称不在我们的数据库里也能返回一个「未知模型占位符」。

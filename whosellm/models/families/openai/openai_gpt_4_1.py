@@ -6,6 +6,10 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -19,6 +23,8 @@ GPT_4_1 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
         supports_vision=True,
         supports_pdf=True,
         supports_function_calling=True,
@@ -50,6 +56,8 @@ GPT_4_1 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_function_calling=True,
@@ -72,6 +80,8 @@ GPT_4_1 = ModelFamilyConfig(
             variant_default="nano",
             variant_priority=(0,),  # nano 的优先级 (< mini) / nano priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_function_calling=True,

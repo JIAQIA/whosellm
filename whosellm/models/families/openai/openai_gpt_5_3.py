@@ -1,6 +1,9 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_CHAT_ONLY_SURFACES,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -17,6 +20,7 @@ GPT_5_3 = ModelFamilyConfig(
     variant_priority_default=(1,),
     patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
         supports_thinking=True,
         supports_function_calling=True,
         supports_streaming=True,

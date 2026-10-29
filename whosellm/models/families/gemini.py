@@ -7,7 +7,14 @@
 Google Gemini 模型家族配置 / Google Gemini model family configurations
 """
 
-from whosellm.capabilities import MediaCountLimit, ModelCapabilities
+from typing import Any
+
+from whosellm.capabilities import (
+    LLMApiSurface,
+    MediaCountLimit,
+    ModelCapabilities,
+    ToolResultSurfaceCapability,
+)
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -17,6 +24,68 @@ from whosellm.provider import Provider
 # 注意Image系列模型。当前虽然标记为不支持thinking，在实际调试中发现 image 系列也会有思考内容产生，但需要注意接口并不支持配置thinking行为，
 # 因此权当不支持处理
 # ==========================================================================
+
+# --------------------------------------------------------------------------
+# 工具结果能力 / Tool-result capability（按 API surface 登记）
+#
+# 官方：仅 Gemini 3 系模型允许在 function response 中携带多模态内容；
+# 2.x 系会拒绝（内核实测 400），因此 2.x 必须显式标为不支持，不得按型号前缀推断。
+# Official: only Gemini 3 series accepts multimodal content in function responses;
+# 2.x rejects it (400), so 2.x is explicitly marked unsupported rather than inferred
+# from a model-name prefix.
+#
+# Interactions API 的 FunctionResultStep.result 只接受 ImageContent / TextContent，
+# 因此工具结果的原生模态保守登记为 image。
+# Interactions API FunctionResultStep.result only accepts ImageContent / TextContent,
+# so the only natively supported tool-result modality is image.
+#
+# 来源 / Sources（抓取日期 / fetched 2026-10-29）:
+# - Multimodal function responses (Gemini 3 series):
+#   https://ai.google.dev/gemini-api/docs/function-calling
+# - FunctionResultStep.result: ImageContent or TextContent:
+#   https://ai.google.dev/api/interactions-api#functionresultstep
+# - PDF: up to 1,000 pages; inline 50 MB for PDFs, 100 MB per payload:
+#   https://ai.google.dev/gemini-api/docs/document-processing
+#   https://ai.google.dev/gemini-api/docs/generate-content/file-input-methods
+# 数据性质 / Data status: 官方文档核实，未逐模型调用 API 实测（保守登记）。
+# Verified against official docs; not API-probed per model (conservative).
+_GEMINI_3_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.GEMINI: ToolResultSurfaceCapability(
+        modalities=("image",),
+        mime_types={
+            "image": [
+                "image/png",
+                "image/jpeg",
+                "image/webp",
+                "image/heic",
+                "image/heif",
+                "image/gif",
+                "image/bmp",
+                "image/tiff",
+            ],
+        },
+    ),
+}
+_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    # 空元组 = 明确不支持（Gemini 2.x function response 不接受媒体）
+    # Empty tuple = explicitly unsupported (Gemini 2.x rejects media in function responses)
+    LLMApiSurface.GEMINI: ToolResultSurfaceCapability(modalities=()),
+}
+_GEMINI_PDF_KWARGS: dict[str, Any] = {
+    # 官方只公布“每请求 inline payload 100 MB（PDF 为 50 MB）”，没有单文件大小上限；
+    # 因此 max_pdf_size_mb 留 None（未知），请求级数字登记到 max_inline_media_bytes。
+    # The docs publish a per-request inline payload cap (100 MB; 50 MB for PDFs), not a
+    # per-file cap, so max_pdf_size_mb stays None (unknown) and the request-level number
+    # goes to max_inline_media_bytes.
+    "max_pdf_pages": 1000,  # 单请求最多 1000 页 / up to 1,000 pages per request
+    "supported_document_mime_type": ["application/pdf"],
+}
+# 单请求内联媒体总预算。官方：通用 inline payload 100 MB，PDF 为 50 MB；
+# 这里取更严格的 PDF 值作为共享预算（保守），避免 PDF 超限。
+# Per-request inline media budget. Official: 100 MB general inline payload, 50 MB for
+# PDFs. The stricter PDF value is used as the shared budget (conservative) so PDFs
+# cannot exceed the documented sub-cap.
+_GEMINI_MAX_INLINE_MEDIA_BYTES = 50_000_000
 
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
@@ -65,6 +134,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -87,6 +159,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -110,6 +185,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro-image",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_image_generation=True,
                 supports_thinking=False,
@@ -131,6 +207,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro-image",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_image_generation=True,
                 supports_thinking=False,
@@ -150,6 +227,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -173,6 +253,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -196,6 +279,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-image",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_image_generation=True,
                 supports_thinking=False,
@@ -216,6 +300,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_video=True,
                 supports_pdf=False,
@@ -237,6 +323,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_video=True,
                 supports_pdf=False,
@@ -269,6 +357,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -292,6 +383,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -315,6 +409,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -350,6 +447,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -376,6 +476,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -399,6 +502,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -422,6 +528,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -449,6 +558,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -475,6 +587,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -499,6 +614,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_audio=True,
@@ -523,6 +641,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_audio=True,
@@ -547,6 +668,9 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -572,6 +696,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-image",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                **_GEMINI_PDF_KWARGS,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_image_generation=True,
@@ -594,6 +720,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite-image",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_image_generation=True,
                 supports_thinking=False,
@@ -619,6 +747,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_video=True,
                 supports_pdf=False,
@@ -658,6 +788,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="live-translate",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_audio_generation=True,
                 supports_thinking=False,
@@ -678,6 +809,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="transcribe",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_thinking=False,
                 supports_function_calling=False,
@@ -698,6 +830,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="omni-flash",
             variant_priority=(6,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_video=True,
                 supports_thinking=False,
@@ -715,6 +848,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,
@@ -735,6 +870,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-image",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_thinking=False,
                 supports_audio=False,
@@ -754,6 +890,8 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
+                max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
                 supports_audio=True,
                 supports_video=True,

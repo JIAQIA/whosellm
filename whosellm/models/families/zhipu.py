@@ -7,10 +7,25 @@
 智谱 AI 模型家族配置 / Zhipu AI model family configurations
 """
 
-from whosellm.capabilities import UNLIMITED, MediaCountLimit, ModelCapabilities
+from whosellm.capabilities import (
+    UNLIMITED,
+    LLMApiSurface,
+    MediaCountLimit,
+    ModelCapabilities,
+    ToolResultSurfaceCapability,
+)
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
+
+# 官方 API 参考将 tool 消息 content 定义为字符串，工具结果不能携带媒体。
+# The official API reference defines tool-message content as a string, so tool
+# results cannot carry media.
+# 来源 / Source（抓取日期 / fetched 2026-10-29）:
+# - Zhipu: https://docs.bigmodel.cn/api-reference/模型-api/对话补全
+_GLM_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.GLM: ToolResultSurfaceCapability(modalities=()),
+}
 
 # ============================================================================
 # GLM-3 系列 / GLM-3 Series
@@ -25,6 +40,7 @@ GLM_3 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[],  # 父 patterns 由 GLM_TEXT config 通过 Registry Merge 合并提供
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_function_calling=True,
         supports_streaming=True,
         max_tokens=8192,
@@ -65,6 +81,7 @@ GLM_VISION = ModelFamilyConfig(
         "glm-{version}v",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_thinking=True,
         supports_vision=True,
         supports_video=True,
@@ -83,6 +100,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="turbo",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 # 多模态 Coding 基座，输入含图片/视频/文件 / Multimodal coding base
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -110,6 +128,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="vision-plus",
             variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_video=True,
                 supports_structured_outputs=False,
@@ -132,6 +151,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="vision-plus",
             variant_priority=(3,),  # plus 的优先级 / plus priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_video=True,  # plus 支持视频
                 supports_structured_outputs=False,
@@ -155,6 +175,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="vision-flash",
             variant_priority=(0,),  # flash 的优先级 / flash priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_structured_outputs=False,
                 supports_json_outputs=False,
@@ -171,6 +192,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_vision=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -187,6 +209,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -203,6 +226,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_vision=True,
@@ -223,6 +247,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),  # flash 的优先级 / flash priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_vision=True,
@@ -250,6 +275,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="thinking",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 # 内置深度思考，默认开启 / Built-in deep thinking, on by default
                 supports_thinking=True,
                 supports_vision=True,
@@ -270,6 +296,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="thinking-flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_video=True,
@@ -289,6 +316,7 @@ GLM_VISION = ModelFamilyConfig(
             variant_default="thinking-flashx",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 # 高并发版 / High-concurrency variant
                 supports_thinking=True,
                 supports_vision=True,
@@ -335,6 +363,7 @@ GLM_TEXT = ModelFamilyConfig(
         "chatglm",  # 别名 / Alias
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_thinking=True,
         supports_function_calling=True,
         supports_structured_outputs=False,
@@ -350,6 +379,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 # 思考常开（reasoning_effort: low/high/max），不支持禁用 / Always-on thinking, cannot be disabled
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -370,6 +400,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,  # thinking.type 仅支持 enabled / enabled only
                 supports_function_calling=True,
                 supports_vision=True,  # 原生多模态：图像 / native multimodal: image
@@ -392,6 +423,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -406,6 +438,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -420,6 +453,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="turbo",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -439,6 +473,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -454,6 +489,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -468,6 +504,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="flashx",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -486,6 +523,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -505,6 +543,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,
@@ -521,6 +560,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_json_outputs=True,  # response_format: json_object
@@ -535,6 +575,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="air",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -553,6 +594,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="airx",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -571,6 +613,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="x",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -589,6 +632,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_structured_outputs=False,
@@ -608,6 +652,7 @@ GLM_TEXT = ModelFamilyConfig(
             variant_default="base",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
                 supports_function_calling=True,
                 supports_streaming=True,
                 max_tokens=8192,
@@ -632,6 +677,7 @@ COGVIEW_4 = ModelFamilyConfig(
         "cogview",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_streaming=False,
         supports_structured_outputs=False,
     ),
@@ -651,6 +697,7 @@ COGVIDEOX_3 = ModelFamilyConfig(
         "cogvideox-3",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_vision=True,
         supports_video=True,
         supports_streaming=False,
@@ -673,6 +720,7 @@ COGVIDEOX_2 = ModelFamilyConfig(
         "cogvideox-2",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=_GLM_TOOL_RESULT_SURFACES,
         supports_vision=True,
         supports_video=True,
         supports_streaming=False,

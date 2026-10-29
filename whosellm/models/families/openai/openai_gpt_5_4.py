@@ -1,6 +1,10 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -28,6 +32,9 @@ GPT_5_4 = ModelFamilyConfig(
         "gpt-{major:d}",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
+        supports_pdf=True,
         supports_thinking=True,
         supports_vision=True,
         supports_function_calling=True,
@@ -59,6 +66,9 @@ GPT_5_4 = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
+                supports_pdf=True,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_function_calling=True,
@@ -84,6 +94,9 @@ GPT_5_4 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
+                supports_pdf=True,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_function_calling=True,
@@ -109,6 +122,9 @@ GPT_5_4 = ModelFamilyConfig(
             variant_default="nano",
             variant_priority=(0,),  # nano 的优先级 / nano priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
+                supports_pdf=True,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_function_calling=True,

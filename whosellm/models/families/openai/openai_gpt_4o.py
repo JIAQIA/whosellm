@@ -6,6 +6,11 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_CHAT_ONLY_SURFACES,
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -25,6 +30,8 @@ GPT_4O = ModelFamilyConfig(
         "gpt-4o",
     ],
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
         supports_vision=True,
         supports_pdf=True,
         supports_streaming=True,
@@ -43,6 +50,8 @@ GPT_4O = ModelFamilyConfig(
             variant_default="audio-preview",
             variant_priority=(0,),  # preview 的优先级 / preview priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_vision=False,
                 supports_pdf=True,
                 supports_audio=True,
@@ -66,6 +75,8 @@ GPT_4O = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_streaming=True,
@@ -87,6 +98,8 @@ GPT_4O = ModelFamilyConfig(
             variant_default="mini-audio-preview",
             variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_vision=False,
                 supports_pdf=True,
                 supports_audio=True,
@@ -110,6 +123,7 @@ GPT_4O = ModelFamilyConfig(
             variant_default="mini-realtime-preview",
             variant_priority=(0,),  # mini-preview 的优先级 / mini-preview priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
                 supports_vision=False,
                 supports_audio=True,
                 supports_streaming=False,

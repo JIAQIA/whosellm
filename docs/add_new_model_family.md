@@ -197,6 +197,18 @@ __all__ = [
 | `max_image_pixels` | `tuple[int, int] \| None` | 最大图片像素(宽, 高) / Max image pixels (width, height) |
 | `max_video_size_mb` | `float \| None` | 最大视频大小(MB) / Max video size in MB |
 | `max_video_duration_seconds` | `int \| None` | 最大视频时长(秒) / Max video duration in seconds |
+| `media_count_limit` | `MediaCountLimit` | 单请求媒体数量上限 / Per-request media count caps |
+| `max_inline_media_bytes` | `int \| None` | 单请求内联媒体字节总预算 / Per-request inline-media byte budget |
+| `max_pdf_size_mb` | `float \| None` | PDF 大小上限(MB) / Max PDF size in MB |
+| `max_pdf_pages` | `int \| None` | PDF 页数上限 / Max PDF pages per request |
+| `max_document_size_mb` | `float \| None` | 非 PDF 文档大小上限(MB，预留) / Max non-PDF document size |
+| `supported_document_mime_type` | `list[str]` | 支持的文档 MIME / Supported document MIME types |
+| `tool_result_surfaces` | `dict[LLMApiSurface, ToolResultSurfaceCapability]` | 工具结果按 API surface 的原生媒体能力；缺键 = 未声明，空元组 = 明确不支持 / Native tool-result media capability per surface; missing = undeclared, empty tuple = unsupported |
+| `file_api` | `FileApiCapability \| None` | 文件 API 能力（预留）/ File API capability (reserved) |
+
+工具结果能力是 **provider × API surface** 维度，而不是模型维度。新增模型时应按官方文档登记 `tool_result_surfaces`，并注明来源与抓取日期；未查证的 surface 请保持缺键（内核按不支持处理），不要乐观填写。
+
+Tool-result capability is **provider × API surface**, not per-model. When adding models, register `tool_result_surfaces` from official docs with source and fetch date; leave unverified surfaces undeclared (consumers treat them as unsupported) instead of guessing.
 
 ---
 

@@ -25,10 +25,63 @@ DeepSeek 官方模型家族配置 / DeepSeek official model family configuration
   https://api-docs.deepseek.com/zh-cn/guides/vision（单请求最多 600 张图）
 """
 
-from whosellm.capabilities import MediaCountLimit, ModelCapabilities
+from whosellm.capabilities import (
+    LLMApiSurface,
+    MediaCountLimit,
+    ModelCapabilities,
+    ToolResultSurfaceCapability,
+)
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
+
+# DeepSeek 有两个相关 surface：
+# - DEEPSEEK（Chat Completions）：tool 消息 content 为字符串，不能携带媒体；
+# - DEEPSEEK_RESPONSES（Responses）：官方明确 input_image 可出现在
+#   function_call_output 的 output 中，deepseek-flash 会真正处理图片。
+# DeepSeek has two relevant surfaces:
+# - DEEPSEEK (Chat Completions): tool message content is a string, so no media;
+# - DEEPSEEK_RESPONSES: input_image may appear in function_call_output output, and
+#   deepseek-flash genuinely processes image blocks.
+#
+# 来源 / Sources（抓取日期 / fetched 2026-10-29）:
+# - https://api-docs.deepseek.com/api/create-chat-completion
+# - https://api-docs.deepseek.com/zh-cn/guides/responses_api
+# - https://api-docs.deepseek.com/zh-cn/guides/vision
+#
+# PDF / document：明确不支持。实测 2026-10-29（TFROB-990 探针，owner 授权）：
+#   Responses input_file 传 PDF（data URL）时请求被接受（无 4xx），但 PDF 内容未进入模型
+#   （input_tokens=23，模型回复看不到 PDF）——静默不支持。内核应先转成图片再发送。
+#   因此 supported_document_mime_type 保持空列表、max_pdf_* 保持 None，工具结果不登记 document。
+# PDF / document: explicitly unsupported. 2026-10-29 probe (TFROB-990, owner-approved):
+#   a Responses input_file PDF (data URL) was accepted without a 4xx, but the content never
+#   reached the model (input_tokens=23; the model replied it could not see the PDF) -- a
+#   silent drop. Convert PDFs to images before sending. supported_document_mime_type stays
+#   empty, max_pdf_* stay None, and document is not registered for tool results.
+# 可读图的 flash 系：Chat Completions 工具结果仍为 text-only，Responses 工具结果可原生承载 image
+# Vision-capable flash line: Chat Completions tool results stay text-only; Responses tool
+# results natively carry images
+_DEEPSEEK_VISION_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.DEEPSEEK: ToolResultSurfaceCapability(modalities=()),
+    LLMApiSurface.DEEPSEEK_RESPONSES: ToolResultSurfaceCapability(
+        modalities=("image",),
+        # 官方：内联单张图片最大 32 MiB（file_id 为 64 MiB）；这里取内联上限
+        # Official: 32 MiB per inline image (64 MiB via file_id); the inline cap is used here
+        max_inline_bytes=32 * 1024 * 1024,
+        mime_types={"image": ["image/jpeg", "image/png", "image/gif", "image/webp"]},
+    ),
+}
+
+# 纯文本模型 / 未知名字：两个 surface 都明确不支持媒体
+# Text-only models / unknown names: both surfaces explicitly support no media
+_DEEPSEEK_TEXT_ONLY_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.DEEPSEEK: ToolResultSurfaceCapability(modalities=()),
+    LLMApiSurface.DEEPSEEK_RESPONSES: ToolResultSurfaceCapability(modalities=()),
+}
+
+# 单请求请求体上限 48 MiB（官方响应/图像理解文档；内联图片计入该预算）
+# Per-request body cap: 48 MiB (official Responses/vision docs; inline images count toward it)
+_DEEPSEEK_MAX_INLINE_MEDIA_BYTES = 48 * 1024 * 1024
 
 # V4 系列保守基线 / Conservative baseline for the V4 series
 # 仅用于按命名模式自动注册、且无 specific_models 覆盖的名字（如 deepseek-v3.2-exp 或未来代号）。
@@ -38,6 +91,7 @@ from whosellm.provider import Provider
 # vision-less: v4-pro is text-only in this family (2026-09-28 probe: images silently
 # ignored and hallucinated), so unknown names must not be optimistically multimodal.
 _V4_CAPABILITIES = ModelCapabilities(
+    tool_result_surfaces=_DEEPSEEK_TEXT_ONLY_TOOL_RESULT_SURFACES,
     supports_thinking=True,
     supports_function_calling=True,
     supports_streaming=True,
@@ -52,6 +106,7 @@ _V4_CAPABILITIES = ModelCapabilities(
 # DeepSeek-V4.1-Flash 能力（deepseek-flash 与当前路由到它的旧名共用）
 # Capabilities of DeepSeek-V4.1-Flash (shared by deepseek-flash and the routed legacy names)
 _V4_1_FLASH_CAPABILITIES = ModelCapabilities(
+    tool_result_surfaces=_DEEPSEEK_VISION_TOOL_RESULT_SURFACES,
     supports_thinking=True,  # 默认开启（effort 默认 high）；thinking:{type:disabled} 可关闭
     supports_vision=True,  # 原生多模态视觉理解 / native multimodal vision
     supports_function_calling=True,
@@ -63,6 +118,7 @@ _V4_1_FLASH_CAPABILITIES = ModelCapabilities(
     # 官方文档：单请求最多 600 张图（api-docs.deepseek.com/zh-cn/guides/vision）
     # Per docs: up to 600 images per request
     media_count_limit=MediaCountLimit(per_type={"image": 600}),
+    max_inline_media_bytes=_DEEPSEEK_MAX_INLINE_MEDIA_BYTES,
 )
 
 DEEPSEEK = ModelFamilyConfig(
@@ -150,6 +206,7 @@ DEEPSEEK = ModelFamilyConfig(
             variant_default="chat",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DEEPSEEK_VISION_TOOL_RESULT_SURFACES,
                 supports_thinking=False,
                 supports_vision=True,  # 路由到 deepseek-flash，可读图 / routed to deepseek-flash, sees images
                 supports_function_calling=True,
@@ -159,6 +216,7 @@ DEEPSEEK = ModelFamilyConfig(
                 max_tokens=384_000,
                 context_window=1_000_000,
                 media_count_limit=MediaCountLimit(per_type={"image": 600}),
+                max_inline_media_bytes=_DEEPSEEK_MAX_INLINE_MEDIA_BYTES,
             ),
             patterns=[
                 "deepseek-chat-{suffix}",
@@ -172,6 +230,7 @@ DEEPSEEK = ModelFamilyConfig(
             variant_default="reasoner",
             variant_priority=(2,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_DEEPSEEK_VISION_TOOL_RESULT_SURFACES,
                 supports_thinking=True,
                 supports_vision=True,  # 路由到 deepseek-flash，可读图 / routed to deepseek-flash, sees images
                 supports_function_calling=True,
@@ -181,6 +240,7 @@ DEEPSEEK = ModelFamilyConfig(
                 max_tokens=384_000,
                 context_window=1_000_000,
                 media_count_limit=MediaCountLimit(per_type={"image": 600}),
+                max_inline_media_bytes=_DEEPSEEK_MAX_INLINE_MEDIA_BYTES,
             ),
             patterns=[
                 "deepseek-reasoner-{suffix}",

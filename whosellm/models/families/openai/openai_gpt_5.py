@@ -6,6 +6,11 @@
 from whosellm.capabilities import ModelCapabilities
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
+from whosellm.models.families.openai.surfaces import (
+    OPENAI_CHAT_ONLY_SURFACES,
+    OPENAI_MULTIMODAL_SURFACES,
+    OPENAI_PDF_KWARGS,
+)
 from whosellm.provider import Provider
 
 # ============================================================================
@@ -20,6 +25,8 @@ GPT_5 = ModelFamilyConfig(
     variant_priority_default=(1,),  # base 的优先级 / base priority
     patterns=[],  # 父 patterns 由 gpt_5_4.py 通过 Registry Merge 提供
     capabilities=ModelCapabilities(
+        tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+        **OPENAI_PDF_KWARGS,
         supports_thinking=True,
         supports_vision=True,
         supports_pdf=True,
@@ -52,6 +59,8 @@ GPT_5 = ModelFamilyConfig(
             variant_default="mini",
             variant_priority=(0,),  # mini 的优先级 / mini priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_pdf=True,
@@ -78,6 +87,8 @@ GPT_5 = ModelFamilyConfig(
             variant_default="nano",
             variant_priority=(0,),  # nano 的优先级 / nano priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_pdf=True,
@@ -104,6 +115,8 @@ GPT_5 = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),  # pro 的优先级 / pro priority
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_MULTIMODAL_SURFACES,
+                **OPENAI_PDF_KWARGS,
                 supports_thinking=True,
                 supports_vision=True,
                 supports_pdf=True,
@@ -131,6 +144,7 @@ GPT_5 = ModelFamilyConfig(
             variant_default="codex",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=OPENAI_CHAT_ONLY_SURFACES,
                 supports_thinking=True,
                 supports_function_calling=True,
                 supports_streaming=True,

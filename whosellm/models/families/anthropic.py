@@ -7,7 +7,14 @@
 Anthropic 模型家族配置 / Anthropic model family configurations
 """
 
-from whosellm.capabilities import MediaCountLimit, ModelCapabilities
+from typing import Any
+
+from whosellm.capabilities import (
+    LLMApiSurface,
+    MediaCountLimit,
+    ModelCapabilities,
+    ToolResultSurfaceCapability,
+)
 from whosellm.models.base import ModelFamily
 from whosellm.models.config import ModelFamilyConfig, SpecificModelConfig
 from whosellm.provider import Provider
@@ -15,6 +22,46 @@ from whosellm.provider import Provider
 # ==========================================================================
 # Claude 系列 / Claude Series
 # ==========================================================================
+
+# Claude Messages 的工具结果能力（Claude 4.x / 5 系）
+# Tool-result capability for the Claude Messages surface (Claude 4.x / 5)
+#
+# 来源 / Sources（抓取日期 / fetched 2026-10-29）:
+# - tool_result content blocks may use text / image / document / search_result:
+#   https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls
+# - PDF support (models, 128 MB request size, 600 pages / 100 pages under 1M ctx):
+#   https://platform.claude.com/docs/en/build-with-claude/pdf-support
+# - Image formats (JPEG / PNG / GIF / WebP):
+#   https://platform.claude.com/docs/en/build-with-claude/vision
+# 数据性质 / Data status: 官方文档核实，未逐模型调用 API 实测（保守登记）。
+# Verified against official docs; not API-probed per model (conservative).
+_CLAUDE_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] = {
+    LLMApiSurface.CLAUDE_MESSAGES: ToolResultSurfaceCapability(
+        modalities=("image", "document"),
+        mime_types={
+            "image": ["image/jpeg", "image/png", "image/gif", "image/webp"],
+            "document": ["application/pdf"],
+        },
+    ),
+}
+
+# PDF 上限（model 级）。官方只公布“整个请求 payload 128 MB”和“每请求 600/100 页”，
+# 没有单文件大小上限；因此 max_pdf_size_mb 留 None（未知），128 MB 登记到请求级的
+# max_inline_media_bytes。base64 膨胀由调用方按编码后大小自行计算。
+# PDF limits (model level). The docs publish a 128 MB ENTIRE-request payload cap and a
+# per-request page cap (600/100), but no per-file size cap. max_pdf_size_mb is therefore
+# None (unknown); 128 MB goes to the request-level max_inline_media_bytes. Callers
+# compute base64 expansion from the encoded size.
+_CLAUDE_PDF_LIMITS_1M: dict[str, Any] = {
+    "max_pdf_pages": 600,
+    "supported_document_mime_type": ["application/pdf"],
+    "max_inline_media_bytes": 128_000_000,
+}
+_CLAUDE_PDF_LIMITS_200K: dict[str, Any] = {
+    "max_pdf_pages": 100,
+    "supported_document_mime_type": ["application/pdf"],
+    "max_inline_media_bytes": 128_000_000,
+}
 
 CLAUDE = ModelFamilyConfig(
     family=ModelFamily.CLAUDE,
@@ -58,6 +105,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 思考默认开启且不可关闭 / thinking on by default, cannot be disabled
                 supports_function_calling=True,
@@ -84,6 +134,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="fable",
             variant_priority=(6,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
                 supports_function_calling=True,
@@ -107,6 +160,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="mythos",
             variant_priority=(7,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
                 supports_function_calling=True,
@@ -134,6 +190,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="fable",
             variant_priority=(6,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
                 supports_function_calling=True,
@@ -159,6 +218,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="mythos",
             variant_priority=(7,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 自适应思考常开 / adaptive thinking always on
                 supports_function_calling=True,
@@ -186,6 +248,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 思考默认开启（adaptive）/ thinking on by default (adaptive)
                 supports_function_calling=True,
@@ -209,6 +274,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="sonnet",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,  # 自适应思考默认开启 / adaptive thinking on by default
                 supports_function_calling=True,
@@ -232,6 +300,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -255,6 +326,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -278,6 +352,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -301,6 +378,9 @@ CLAUDE = ModelFamilyConfig(
             variant_default="sonnet",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_1M,
+                supports_pdf=True,
                 supports_vision=True,
                 supports_thinking=True,
                 supports_function_calling=True,
@@ -324,6 +404,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="sonnet",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
@@ -345,6 +427,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="haiku",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
@@ -366,6 +450,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
@@ -387,6 +473,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
@@ -404,6 +492,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="sonnet",
             variant_priority=(3,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
@@ -442,6 +532,8 @@ CLAUDE = ModelFamilyConfig(
             variant_default="opus",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                tool_result_surfaces=_CLAUDE_TOOL_RESULT_SURFACES,
+                **_CLAUDE_PDF_LIMITS_200K,
                 supports_vision=True,
                 supports_pdf=True,
                 supports_thinking=True,
