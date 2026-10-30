@@ -7,6 +7,9 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - 依据 2026-10-29 真实 API 实测（`gemini-3-flash-preview`，owner 授权，共 10 次调用）扩展 Gemini 3.x 工具结果模态：`image` / `document` / `audio` / `video`。`mime_types` 仅登记实测覆盖的格式（`image/png`、`application/pdf`、`audio/wav`、`video/mp4`）；其他 3.x 型号按 Gemini 3 系列官方能力登记，未逐一实测。
 - Gemini 2.x 的工具结果备注由「会 400」更正为「HTTP 200 但静默忽略媒体（实测 `gemini-2.5-flash`）」；`supports_vision=True` 保持不变，用户消息视觉能力不受影响。
+- 新增 Gemini `supported_audio_mime_type`（官方 2026-10-30 列表，共 13 种：wav/mp3/aiff/aac/ogg/flac/mpeg/m4a/l16/opus/alaw/mulaw/webm）。
+- 核对 Claude 请求体上限（官方 API overview#request-size-limits，2026-10-30）：第一方 Messages / Token Counting 为 128 MB，`max_inline_media_bytes=128MB` 正确；32 MB 属于 Sessions/Agents/Environments 及部分合作平台，不是 Messages API 上限。第一方未公布单图字节上限，`max_image_size_mb` 保持 None。
+- 核对 DeepSeek 请求体上限：官方为 48 MiB，`max_inline_media_bytes=48MiB` 保持；内核部署网关约 10 MB 断开属于网关限制，不是 DeepSeek API 上限，未写入元数据，内核继续使用网关超限映射。
 
 ## [0.4.0] - 2026-10-29
 

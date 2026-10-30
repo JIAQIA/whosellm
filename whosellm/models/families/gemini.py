@@ -102,6 +102,25 @@ _GEMINI_PDF_KWARGS: dict[str, Any] = {
 # Per-request inline media budget (official general inline payload cap: 100 MB)
 _GEMINI_MAX_INLINE_MEDIA_BYTES = 100_000_000
 
+# Gemini 官方支持的音频输入 MIME 类型（2026-10-30 抓取）
+# Officially supported audio input MIME types (fetched 2026-10-30)
+# 来源 / Source: https://ai.google.dev/gemini-api/docs/audio#supported-audio-formats
+_GEMINI_AUDIO_MIME_TYPES: list[str] = [
+    "audio/wav",
+    "audio/mp3",
+    "audio/aiff",
+    "audio/aac",
+    "audio/ogg",
+    "audio/flac",
+    "audio/mpeg",
+    "audio/m4a",
+    "audio/l16",
+    "audio/opus",
+    "audio/alaw",
+    "audio/mulaw",
+    "audio/webm",
+]
+
 GEMINI = ModelFamilyConfig(
     family=ModelFamily.GEMINI,
     provider=Provider.GOOGLE,
@@ -126,6 +145,7 @@ GEMINI = ModelFamilyConfig(
         "gemini-{variant}-latest",
     ],
     capabilities=ModelCapabilities(
+        supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
         supports_vision=True,
         supports_audio=True,
         supports_video=True,
@@ -149,6 +169,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -174,6 +195,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(5,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -242,6 +264,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -268,6 +291,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -315,6 +339,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
@@ -338,6 +363,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
@@ -372,6 +398,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -398,6 +425,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -424,6 +452,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -462,6 +491,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -491,6 +521,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -517,6 +548,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -543,6 +575,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -573,6 +606,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -602,6 +636,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -629,6 +664,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="pro",
             variant_priority=(4,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -656,6 +692,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -683,6 +720,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 **_GEMINI_PDF_KWARGS,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
@@ -762,6 +800,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-live",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_3_TOOL_RESULT_SURFACES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
@@ -803,6 +842,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="live-translate",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_audio_generation=True,
@@ -824,6 +864,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="transcribe",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_audio=True,
                 supports_thinking=False,
@@ -863,6 +904,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash",
             variant_priority=(1,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,
@@ -905,6 +947,7 @@ GEMINI = ModelFamilyConfig(
             variant_default="flash-lite",
             variant_priority=(0,),
             capabilities=ModelCapabilities(
+                supported_audio_mime_type=_GEMINI_AUDIO_MIME_TYPES,
                 tool_result_surfaces=_GEMINI_UNSUPPORTED_TOOL_RESULT_SURFACES,
                 max_inline_media_bytes=_GEMINI_MAX_INLINE_MEDIA_BYTES,
                 supports_vision=True,

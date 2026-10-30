@@ -45,6 +45,25 @@ _CLAUDE_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceCapability] =
     ),
 }
 
+# 请求体上限核对（2026-10-30，官方 API overview#request-size-limits）：
+#   第一方 Claude API 的 Messages / Token Counting = 128 MB；
+#   Sessions / Agents / Environments = 32 MB；
+#   Partner：Bedrock 20 MB、Google Cloud（Google managed）30 MB、
+#   Claude Platform on AWS / Google Cloud（Anthropic managed）/ Microsoft Foundry 32 MB。
+#   本库 Provider.ANTHROPIC 指第一方 API，因此 128 MB 正确；32 MB 不是 Messages API 的上限。
+# Request-size verification (2026-10-30, official API overview#request-size-limits):
+#   first-party Messages / Token Counting = 128 MB; Sessions/Agents/Environments = 32 MB;
+#   partners: Bedrock 20 MB, Google Cloud (Google managed) 30 MB, AWS/Anthropic-managed
+#   Google Cloud/Foundry 32 MB. Provider.ANTHROPIC is the first-party API, so 128 MB is
+#   correct; 32 MB is NOT the Messages API limit.
+#
+# 单张图片：第一方文档未公布按字节的单图上限，只公布单图 8000×8000 px 与
+# 100/600 张每请求；Bedrock / Google Cloud（Google managed）注明单图 5 MB（base64）。
+# 因此 max_image_size_mb 保持 None（未声明）。
+# Per-image bytes: first-party docs publish no byte cap, only 8000x8000 px and the
+# 100/600 images-per-request limits; Bedrock / Google-managed Google Cloud note 5 MB
+# per base64 image. max_image_size_mb therefore stays None (undeclared).
+#
 # PDF 上限（model 级）。官方只公布“整个请求 payload 128 MB”和“每请求 600/100 页”，
 # 没有单文件大小上限；因此 max_pdf_size_mb 留 None（未知），128 MB 登记到请求级的
 # max_inline_media_bytes。base64 膨胀由调用方按编码后大小自行计算。

@@ -85,8 +85,13 @@ _DEEPSEEK_TEXT_ONLY_TOOL_RESULT_SURFACES: dict[LLMApiSurface, ToolResultSurfaceC
     LLMApiSurface.DEEPSEEK_RESPONSES: ToolResultSurfaceCapability(modalities=()),
 }
 
-# 单请求请求体上限 48 MiB（官方响应/图像理解文档；内联图片计入该预算）
-# Per-request body cap: 48 MiB (official Responses/vision docs; inline images count toward it)
+# 单请求请求体上限 48 MiB（官方响应/图像理解文档；内联图片计入该预算）。
+# 内核侧实测其部署网关在约 10 MB 请求体时断开，这是网关限制而非 DeepSeek API 的官方上限，
+# 因此不写入本字段；内核继续用自身的网关超限映射。
+# Per-request body cap: 48 MiB (official Responses/vision docs; inline images count toward it).
+# The kernel observed its deployment gateway dropping connections around a 10 MB request
+# body. That is a gateway limit, not an official DeepSeek API cap, so it is not recorded
+# here; the kernel keeps using its gateway-limit mapping.
 _DEEPSEEK_MAX_INLINE_MEDIA_BYTES = 48 * 1024 * 1024
 
 # V4 系列保守基线 / Conservative baseline for the V4 series

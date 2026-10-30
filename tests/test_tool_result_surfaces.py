@@ -36,6 +36,22 @@ REQUIRED_SURFACES = {
     "deepseek_responses",
 }
 
+GEMINI_AUDIO_MIME_TYPES = {
+    "audio/wav",
+    "audio/mp3",
+    "audio/aiff",
+    "audio/aac",
+    "audio/ogg",
+    "audio/flac",
+    "audio/mpeg",
+    "audio/m4a",
+    "audio/l16",
+    "audio/opus",
+    "audio/alaw",
+    "audio/mulaw",
+    "audio/webm",
+}
+
 
 class TestLLMApiSurface:
     """API surface 词表 / API surface vocabulary"""
@@ -190,6 +206,9 @@ class TestGeminiToolResults:
         assert surface.mime_types["audio"] == ["audio/wav"]
         assert surface.mime_types["video"] == ["video/mp4"]
 
+        # 用户消息音频输入 MIME（官方 2026-10-30 列表）/ User-message audio MIME (official list)
+        assert set(caps.supported_audio_mime_type) == GEMINI_AUDIO_MIME_TYPES
+
         # 官方未公布单文件 PDF 上限（inline payload 100 MB / PDF 50 MB 均为请求级）
         # No per-file PDF cap is documented; the inline payload caps are request-level
         assert caps.max_pdf_size_mb is None
@@ -219,6 +238,7 @@ class TestGeminiToolResults:
         assert caps.max_pdf_pages == 1000
         assert caps.max_pdf_size_mb is None
         assert caps.max_inline_file_bytes == 50_000_000
+        assert set(caps.supported_audio_mime_type) == GEMINI_AUDIO_MIME_TYPES
 
     def test_image_only_model_has_no_surface(self) -> None:
         """无 function calling 的模型不登记 surface / Models without function calling declare no surface"""
