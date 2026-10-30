@@ -7,7 +7,7 @@
 LLMeta - 统一的大语言模型版本和能力管理库 / A unified LLM model version and capability management library
 """
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 from whosellm.capabilities import (
     UNLIMITED,
